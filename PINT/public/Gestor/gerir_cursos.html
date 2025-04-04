@@ -13,7 +13,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 
     <!-- CSS File -->
-     <link rel="stylesheet" href="assets/css/style_index.css">
+     <link rel="stylesheet" href="assets/css/style.css">
+     
 </head>
 <body>
     <!-- Sidebar -->
@@ -44,14 +45,22 @@
                 <img src="assets/img/profile_pic.png" class="me-3" alt="Foto de perfil">
                 <span class="fw-bold fs-5">Olá, Francisco Duarte 👋</span>
             </div>
-            <button class="btn btn-sm">Sair</button>
+            <button class="btn btn-leave btn-sm">Sair</button>
         </div>
 
         <!-- Tabela -->
         <div class="container mt-4">
-            <div class="row">
-                <div class="col-12">
-                    <div class="table-responsive">
+            <div class="row d-flex justify-content-between">
+                <button class="btn btn-sm me-4 btn-filtro"><i class="fa-solid fa-filter me-2"></i>Filtros</button>
+                <button class="btn btn-sm me-3 btn-adicionar"><i class="fa-solid fa-plus me-2"></i>Adicionar</button>
+                <form class="input-group d-flex mx-auto border border-opacity-50 rounded w-50 barra-pesquisa" role="search">
+                    <span class="input-group-text bg-transparent border-0">
+                        <i class="fa-solid fa-magnifying-glass icon-lupa"></i>
+                    </span>
+                <input class="form-control no-outline bg-transparent border-0 shadow-none" type="search" placeholder="Procurar utilizador" aria-label="Search">
+                </form>
+                <div class="col-12 mt-3">
+                    <div class="table-responsive" style="max-height: 755px; overflow-y: auto;">
                         <table class="table table-hover tabela-users">
                             <thead class="shadow-sm tabela-header">
                                 <tr>
@@ -73,9 +82,93 @@
                                     <td class="text-center align-middle">Formando</td>
                                     <td class="text-center align-middle">01/01/2025</td>
                                     <td class="text-center align-middle">
-                                        <a href="#" ><i class="fa-regular fa-pen-to-square me-3"></i></a>
-                                        <a href="#"><i class="fa-regular fa-trash-can me-3"></i></a>
-                                        <a href="#"><i class="fa-regular fa-eye"></i></a>
+                                        <i class="fa-regular fa-pen-to-square me-3" data-bs-toggle="modal" data-bs-target="#editModal" style="cursor: pointer;"></i>
+
+                                        <!-- Modal para editar -->
+                                        <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered">
+                                                <div class="modal-content">
+                                                    <div class="modal-header text-white py-5 position-relative" style="background: linear-gradient(90deg, #39639D, #1C4072);">
+                                                        <h5 class="modal-title fw-bold" id="editModalLabel" style="margin-right: 75px; margin-left: auto;">Editar dados</h5>
+                                                            <div class="position-absolute top-100 start-0 translate-middle-y ms-5">
+                                                                <img src="assets/img/formando_pic.png" alt="Profile" class="rounded" style="width: 125px; height: 125px;">
+                                                            </div>
+                                                    </div>
+                                    
+                                                    <div class="modal-body mt-5" style="color: #f5f9ff;">
+                                                        <form>
+                                                            <h5 class="fw-bold fs-3 mt-3 ms-4 text-start" style="color: #39639D;">Dados Atuais</h5>
+                                                            <div class="mb-3 ms-4 text-start">
+                                                                <label class="form-label fw-semibold fs-6 text-start" style="color: #39639D;">Nome</label>
+                                                                <input type="text" class="form-control text-muted" value="Marta Almeida Soares">
+                                                            </div>
+                                                            <div class="mb-3 ms-4 text-start">
+                                                                <label class="form-label fw-semibold fs-6 text-start" style="color: #39639D;" >Tipo da conta</label>
+                                                                <select class="form-select w-50 text-muted">
+                                                                    <option selected>Formador</option>
+                                                                    <option selected>Formando</option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="mb-3 ms-4 position-relative text-start">
+                                                                <label class="form-label text-start fw-semibold fs-6" style="color: #39639D;">Palavra-passe</label>
+                                                                <input type="password" id="password" class="form-control text-muted">
+                                                                <button type="button" class="btn position-absolute bottom-0 end-0 btn-eye" style="box-shadow: none; outline: none;" onclick="togglePassword('password')"><i class="fa-regular fa-eye-slash"></i></button>
+                                                            </div>
+                                                            <div class="mb-3 ms-4 position-relative text-start">
+                                                                <label class="form-label fw-semibold fs-6 text-start" style="color: #39639D;">Confirmar palavra-passe</label>
+                                                                <input type="password" id="confirmPassword" class="form-control text-muted focus-ring">
+                                                                <button type="button" class="btn position-absolute top-50 bottom-0 end-0 btn-eye" style="box-shadow: none; outline: none;" onclick="togglePassword('confirmPassword')"><i class="fa-regular fa-eye-slash"></i></button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                    <div class="modal-footer d-flex justify-content-center">
+                                                        <button type="button" class="btn btn-cancelar me-4" data-bs-dismiss="modal">Cancelar</button>
+                                                        <button type="button" class="btn btn-editar">Editar</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Modal para Remover -->
+                                        <i class="fa-regular fa-trash-can me-3" data-bs-toggle="modal" data-bs-target="#deleteAccountModal" style="cursor: pointer;"></i>
+                                        <div class="modal fade" id="deleteAccountModal" tabindex="-1" aria-labelledby="deleteAccountModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered" style="max-width: 550px;">
+                                                    <div class="modal-content">
+                                                        <div class="modal-body py-4">
+                                                            <div class="d-flex flex-column align-items-center mb-3">  
+                                                                <img src="assets/svg/warning_vector.svg" alt="Ícone de Aviso">
+                                                                <h1 class="text-center fs-2 fw-bold mt-3">Apagar conta!</h1>
+                                                            </div>
+                                                            <p class="text-center fs-5">Ao confirmar, a conta será apagada! Não será possível recuperar os dados!</p>
+                                                        </div>
+                                                            <div class="modal-footer justify-content-center py-3">
+                                                                <button type="button" class="btn btn-voltar px-4" data-bs-dismiss="modal">Voltar</button>
+                                                                <button type="button" class="btn btn-continuar px-4"  onclick="handleDeleteAccount()">Continuar</button>
+                                                            </div>
+                                                    </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Modal Sucesso -->
+                                        <div class="modal fade" id="deleteAccountSuccessModal" tabindex="-1" aria-labelledby="deleteAccountSuccessModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered" style="max-width: 550px;">
+                                                <div class="modal-content">
+                                                    <div class="modal-body py-4">
+                                                        <div class="d-flex flex-column align-items-center mb-3">
+                                                            <img src="assets/svg/success_vector.svg" alt="Ícone de sucesso">
+                                                            <h1 class="text-center fs-2 fw-bold mt-3">Conta Apagada!</h1>
+                                                        </div>
+                                                        <p class="text-center fs-5">A conta foi apagada com sucesso.</p>
+                                                    </div>
+                                                    <div class="modal-footer justify-content-center py-3">
+                                                        <button type="button" class="btn btn-continuar rounded px-4" onclick="closeSuccessModal()">Continuar</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                                                                
+                                        <i class="fa-solid fa-bars-progress"></i>
                                     </td>
                                 </tr>
                             </tbody>
@@ -91,9 +184,10 @@
                                     <td class="text-center align-middle">Formando</td>
                                     <td class="text-center align-middle">01/01/2025</td>
                                     <td class="text-center align-middle">
-                                        <a href="#" ><i class="fa-regular fa-pen-to-square me-3"></i></a>
-                                        <a href="#"><i class="fa-regular fa-trash-can me-3"></i></a>
-                                        <a href="#"><i class="fa-regular fa-eye"></i></a>
+                                        <i class="fa-regular fa-pen-to-square me-3" data-bs-toggle="modal" data-bs-target="#editModal" style="cursor: pointer;"></i>
+                                        
+                                        <i class="fa-regular fa-trash-can me-3"></i>
+                                        <i class="fa-solid fa-bars-progress"></i>
                                     </td>
                                 </tr>
                             </tbody>
@@ -109,19 +203,164 @@
                                     <td class="text-center align-middle">Formando</td>
                                     <td class="text-center align-middle">01/01/2025</td>
                                     <td class="text-center align-middle">
-                                        <a href="#" ><i class="fa-regular fa-pen-to-square me-3"></i></a>
-                                        <a href="#"><i class="fa-regular fa-trash-can me-3"></i></a>
-                                        <a href="#"><i class="fa-regular fa-eye"></i></a>
+                                        <i class="fa-regular fa-pen-to-square me-3"></i>
+
+                                        <i class="fa-regular fa-trash-can me-3"></i>
+                                        
+                                        <i class="fa-solid fa-bars-progress"></i>
                                     </td>
                                 </tr>
                             </tbody>
+
+                            <tbody>
+                                <tr>
+                                    <td class="d-flex p-3">
+                                        <img src="assets/img/formando_pic.png" class="ms-3" alt="" style="width: 50px; height: 50px;">
+                                        <div>
+                                            <h5 class="ms-3">Marta Almeida</h5>
+                                            <small class="text-muted d-block ms-3">martaalmeida@gmail.com</small>
+                                        </div>
+                                    </td>
+                                    <td class="text-center align-middle">Formando</td>
+                                    <td class="text-center align-middle">01/01/2025</td>
+                                    <td class="text-center align-middle">
+                                        <i class="fa-regular fa-pen-to-square me-3" style="cursor: pointer;"></i>
+
+                        
+                                        <i class="fa-regular fa-trash-can me-3" style="cursor: pointer;"></i>
+                                        
+                                        
+                                        <i class="fa-solid fa-bars-progress" style="cursor: pointer;"></i>
+                                    </td>
+                                </tr>
+                            </tbody>
+                
+                            
+                            <tbody>
+                                <tr>
+                                    <td class="d-flex p-3">
+                                        <img src="assets/img/formando_pic.png" class="ms-3" alt="" style="width: 50px; height: 50px;">
+                                        <div>
+                                            <h5 class="ms-3">Marta Almeida</h5>
+                                            <small class="text-muted d-block ms-3">martaalmeida@gmail.com</small>
+                                        </div>
+                                    </td>
+                                    <td class="text-center align-middle">Formando</td>
+                                    <td class="text-center align-middle">01/01/2025</td>
+                                    <td class="text-center align-middle">
+                                        <i class="fa-regular fa-pen-to-square me-3" style="cursor: pointer;"></i>
+
+                        
+                                        <i class="fa-regular fa-trash-can me-3" style="cursor: pointer;"></i>
+                                        
+                                        
+                                        <i class="fa-solid fa-bars-progress" style="cursor: pointer;"></i>
+                                    </td>
+                                </tr>
+                            </tbody>
+                
+                            
+                            <tbody>
+                                <tr>
+                                    <td class="d-flex p-3">
+                                        <img src="assets/img/formando_pic.png" class="ms-3" alt="" style="width: 50px; height: 50px;">
+                                        <div>
+                                            <h5 class="ms-3">Marta Almeida</h5>
+                                            <small class="text-muted d-block ms-3">martaalmeida@gmail.com</small>
+                                        </div>
+                                    </td>
+                                    <td class="text-center align-middle">Formando</td>
+                                    <td class="text-center align-middle">01/01/2025</td>
+                                    <td class="text-center align-middle">
+                                        <i class="fa-regular fa-pen-to-square me-3" style="cursor: pointer;"></i>
+
+                        
+                                        <i class="fa-regular fa-trash-can me-3" style="cursor: pointer;"></i>
+                                        
+                                        
+                                        <i class="fa-solid fa-bars-progress" style="cursor: pointer;"></i>
+                                    </td>
+                                </tr>
+                            </tbody>
+                
+                            <tbody>
+                                <tr>
+                                    <td class="d-flex p-3">
+                                        <img src="assets/img/formando_pic.png" class="ms-3" alt="" style="width: 50px; height: 50px;">
+                                        <div>
+                                            <h5 class="ms-3">Marta Almeida</h5>
+                                            <small class="text-muted d-block ms-3">martaalmeida@gmail.com</small>
+                                        </div>
+                                    </td>
+                                    <td class="text-center align-middle">Formando</td>
+                                    <td class="text-center align-middle">01/01/2025</td>
+                                    <td class="text-center align-middle">
+                                        <i class="fa-regular fa-pen-to-square me-3" style="cursor: pointer;"></i>
+
+                        
+                                        <i class="fa-regular fa-trash-can me-3" style="cursor: pointer;"></i>
+                                        
+                                        
+                                        <i class="fa-solid fa-bars-progress" style="cursor: pointer;"></i>
+                                    </td>
+                                </tr>
+                            </tbody>
+                
+                            <tbody>
+                                <tr>
+                                    <td class="d-flex p-3">
+                                        <img src="assets/img/formando_pic.png" class="ms-3" alt="" style="width: 50px; height: 50px;">
+                                        <div>
+                                            <h5 class="ms-3">Marta Almeida</h5>
+                                            <small class="text-muted d-block ms-3">martaalmeida@gmail.com</small>
+                                        </div>
+                                    </td>
+                                    <td class="text-center align-middle">Formando</td>
+                                    <td class="text-center align-middle">01/01/2025</td>
+                                    <td class="text-center align-middle">
+                                        <i class="fa-regular fa-pen-to-square me-3" style="cursor: pointer;"></i>
+
+                        
+                                        <i class="fa-regular fa-trash-can me-3" style="cursor: pointer;"></i>
+                                        
+                                        
+                                        <i class="fa-solid fa-bars-progress" style="cursor: pointer;"></i>
+                                    </td>
+                                </tr>
+                            </tbody>
+                
+                            <tbody>
+                                <tr>
+                                    <td class="d-flex p-3">
+                                        <img src="assets/img/formando_pic.png" class="ms-3" alt="" style="width: 50px; height: 50px;">
+                                        <div>
+                                            <h5 class="ms-3">Marta Almeida</h5>
+                                            <small class="text-muted d-block ms-3">martaalmeida@gmail.com</small>
+                                        </div>
+                                    </td>
+                                    <td class="text-center align-middle">Formando</td>
+                                    <td class="text-center align-middle">01/01/2025</td>
+                                    <td class="text-center align-middle">
+                                        <i class="fa-regular fa-pen-to-square me-3" style="cursor: pointer;"></i>
+
+                        
+                                        <i class="fa-regular fa-trash-can me-3" style="cursor: pointer;"></i>
+                                        
+                                        
+                                        <i class="fa-solid fa-bars-progress" style="cursor: pointer;"></i>
+                                    </td>
+                                </tr>
+                            </tbody>
+                
+                            
+
                         </table>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://kit.fontawesome.com/0694123a34.js" crossorigin="anonymous"></script>
     <script src="script.js"></script>
 </body>
