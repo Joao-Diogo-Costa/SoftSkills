@@ -198,6 +198,11 @@ body {
     
 }
 
+.icon-editar{
+
+    color: #39639D;
+
+}
 
 .icon-lupa{
 
@@ -266,6 +271,54 @@ body {
 
 .tabela-header{
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+
+.container-cursos{
+
+    background-color: #F5F9FF;
+}
+
+
+.card-curso{
+
+    border: none;
+    background-color: #f5f9ff;
+}
+
+.wrapper-curso {
+    width: 100%;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+}
+
+.imagem-curso { 
+    position: relative; 
+    overflow: hidden; 
+}
+
+.detalhes-imagem {
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    position: absolute;
+    background: rgba(57, 99, 157, 0.5); 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out; 
+    cursor: pointer; 
+    text-align: center; 
+    color: white;
+    border-radius: 10px;
+}
+
+.imagem-curso:hover .detalhes-imagem {
+    opacity: 1;
 }
 
 @media (max-width: 768px) {

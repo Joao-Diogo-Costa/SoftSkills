@@ -1,3 +1,5 @@
+
+// Isto é para o menu da sidebar, vai ativar na página em que estamos
 document.addEventListener("DOMContentLoaded", function() {
     // Obtém o caminho da URL atual
     let path = window.location.pathname;
@@ -32,6 +34,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 });
 
+// Mostrar palavra-passe
 function togglePassword(id) {
     var input = document.getElementById(id);
     var eyeIcon = input.nextElementSibling.querySelector('i'); 
@@ -51,7 +54,29 @@ function togglePassword(id) {
     }
 }
 
+// Vai servir para dar upload a imagem em Gerir_cursos no adicionar utilizador
+document.addEventListener('DOMContentLoaded', function() {
+    const profileImage = document.getElementById('profileImage');
+    const imageUpload = document.getElementById('imageUpload');
 
+    profileImage.addEventListener('click', function() {
+        imageUpload.click();
+    });
+
+    imageUpload.addEventListener('change', function() {
+        const file = this.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                profileImage.src = e.target.result;
+                // Aqui você pode armazenar o 'file' para posterior envio
+            }
+            reader.readAsDataURL(file);
+        }
+    });
+});
+
+// Mostrar o modal de editar utilizador
 const editModal = document.getElementById('editModal');
 editModal.addEventListener('show.bs.modal', event => {
     // Botão que disparou o modal
@@ -79,6 +104,8 @@ editModal.addEventListener('show.bs.modal', event => {
     
 });
 
+
+// Isto vai servir para apagar conta e mostrar os modais respetivos
 function handleDeleteAccount() {
     console.log("Apagando a conta...");
     // Aqui você faria a chamada para sua função real de apagar a conta no backend
