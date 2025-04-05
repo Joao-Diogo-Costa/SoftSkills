@@ -25,16 +25,16 @@ html, body {
 }
 
 .blue-text {
-  color: #01b9e0;
+  color: #39639d;
   font-family: 'Inter', sans-serif;
 }
 .blue-text:hover {
-  color: #01b9e0;
+  color: #39639d;
   font-family: 'Inter', sans-serif;
 }
 
 .blue-text:active {
-  color: #01b9e0;
+  color: #39639d;
   font-family: 'Inter', sans-serif;
 }
 
@@ -72,7 +72,7 @@ html, body {
     bottom: 0;
     width: 0;
     height: 2px; 
-    background-color: #01b9e0; 
+    background-color: #39639d; 
     transition: width 0.5s ease; 
 }
 
@@ -86,7 +86,6 @@ html, body {
   border-color: #39639d;
   color: white;
   font-weight: bold;
-  width: 15%;
 }
 
 .botao:hover {
@@ -107,6 +106,12 @@ html, body {
   color: #39639d;
   font-weight: bold;
   width: 15%;
+}
+
+.botao-light {
+  background-color: #ffffff;
+  border-color: #39639d;
+  color: #39639d;
 }
 
 .bg-blue-grad {
@@ -146,10 +151,27 @@ html, body {
 }
 
 .começar:hover{
-    background-color: #ffffff;
-    color: #39639d;
-    border-color:transparent ;
+    background-color: transparent;
+    color: #ffffff;
+    border-color:#ffffff;
 }
+
+.começar-blue{
+    background-color: #39639d;
+    border-color: #39639d;
+    border-radius: 15px;
+    border-width: 2px;
+    color: white;
+    font-weight: bold;
+}
+
+.começar-blue:hover{
+    background-color: #39639d;
+    color: #ffffff;
+    border-color:white ;
+}
+
+
 
 .default-container{
     margin-top: 3%;
@@ -183,7 +205,6 @@ html, body {
 
 ::-webkit-scrollbar {
   width: 8px;
-  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
@@ -198,3 +219,30 @@ html, body {
   background: #39639D;
 }
 
+.botao-light:hover {
+  background-color: #39639D; 
+  color: white; 
+  transition: background-color 0.3s ease; 
+  font-weight: bold;
+}
+
+
+
+
+div[style*="overflow-y:auto"]::-webkit-scrollbar {
+  width: 8px; /* Largura da scrollbar */
+}
+
+div[style*="overflow-y:auto"]::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+div[style*="overflow-y:auto"]::-webkit-scrollbar-thumb {
+  background: #39639d;
+  border-radius: 10px;
+}
+
+div[style*="overflow-y:auto"]::-webkit-scrollbar-thumb:hover {
+  background: #2c4a7a;
+}

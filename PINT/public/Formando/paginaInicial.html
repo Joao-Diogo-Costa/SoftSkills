@@ -12,11 +12,11 @@
 </head>
 
 <body>
-    <div class="row container-fluid min-vh-100 m-0 p-0 bg-blue-grad">
-        <nav class="col-md-12 navbar navbar-expand-lg bg-body-tertiary border-bottom border-secondary shadow-lg ">
+    <div class="row container-fluid min-vh-100 m-0 p-0 ">
+        <nav class="navbar navbar-expand-lg bg-body-tertiary border-bottom border-secondary shadow-lg ">
             <div class="container-fluid">
                 <a class="navbar-brand me-0 ms-4" href="#">
-                    <img src="../img/Logo.png" alt="">
+                    <img src="../img/Logo.png" alt="" onclick="window.location.href='index.html'">
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
@@ -36,98 +36,123 @@
                             class="input-group d-flex mx-auto border border-secondary border-opacity-50 rounded-pill shadow w-50"
                             role="search">
                             <span class="input-group-text bg-transparent border-0">
-                                <img src="../img/Icon-lupa.png" alt="Lupa" class="../img-fluid">
+                                <img src="../img/Icon-lupa.png" alt="Lupa" class="img-fluid">
                             </span>
                             <input class="form-control no-outline bg-transparent border-0" type="search"
                                 placeholder="Procurar" aria-label="Search">
                         </form>
-                        <button class="btn mx-auto botao">Entrar</button>
+                        <li class="nav-item d-flex align-items-center">
+                            <img src="../img/profile-picture.png" alt="profile-picture" class="me-3"
+                                style="width: 50px; height: 50px; border-radius: 50%;" 
+                                onclick="window.location.href='perfil.html'">
+                            <div class="d-flex flex-column">
+                                <a href="perfil.html" class="fw-bold text-decoration-none">Francisco Duarte</a>
+                                <a href="perfil.html" class="grey-text text-decoration-none">franciscopereira312@gmail.com</a>
+                            </div>
+                        </li>
                     </ul>
                 </div>
             </div>
         </nav>
 
         <div class="default-container">
-            <h2 class="container-fluid mb-3 text-light">Cursos Vistos Recentemente</h2>
-            <div class="container-fluid mb-5">
+            <h2 class="container-fluid mb-3 blue-text fw-bold " style="margin-top: 2%;">Cursos Vistos Recentemente</h2>
+            <div class="container-fluid " style="margin-bottom: 6%;">
                 <div class="row ">
-                    <div class="row col-md-6">
-                        <div class="col-md-5">
-                            <img src="../img/MariaDB.png" alt="MariaDB">
+                    <div class="row col-md-6 d-flex align-items-center ">
+                        <div class="col-md-6">
+                            <img src="../img/MariaDB.png" alt="MariaDB" style="width: 100%;">
                         </div>
-                        <div class="column col-md-6 text-light">
-                            <h3>MariaDB - Base de dados Avançado 2025</h3>
+                        <div class="column col-md-6 blue-text">
+                            <h3 class="fw-bold">MariaDB - Base de dados Avançado 2025</h3>
                             <p>Torna-te um expert em MariaDB com apenas um curso.</p>
                             <button class="btn  começar mb-3">Continuar curso</button>
                         </div>
                     </div>
-                    <div class="row col-md-6">
-                        <div class="col-md-5">
-                            <img src="../img/MariaDB.png" alt="MariaDB">
+                    <div class="row col-md-6 d-flex align-items-center ">
+                        <div class="col-md-6">
+                            <img src="../img/MariaDB.png" alt="MariaDB" style="width: 100%;">
                         </div>
-                        <div class="column col-md-6 text-light">
-                            <h3>MariaDB - Base de dados Avançado 2025</h3>
+                        <div class="column col-md-6 blue-text">
+                            <h3 class="fw-bold">MariaDB - Base de dados Avançado 2025</h3>
                             <p>Torna-te um expert em MariaDB com apenas um curso.</p>
                             <button class="btn começar ">Continuar curso</button>
                         </div>
                     </div>
                 </div>
             </div>
-            <h2 class="container-fluid mb-3 text-light">Cursos Populares</h2>
+            <h2 class="container-fluid mb-3 blue-text fw-bold">Cursos Populares</h2>
             <div class="container-fluid row d-flex justify-content-around p-0 gap-5 ">
-                <div class=" row card col-md-2 bg-transparent border-0 shadow p-0" style="width: 18rem;">
+                <div class=" row card col-md-2 bg-transparent border-0 shadow-lg p-0" style="width: 18rem;">
                     <div class="p-0">
-                        <img src="../img/CursoPython.png" class="../img-fluid" alt="Python">
+                        <img src="../img/CursoPython.png" style="width: 100%;" alt="Python">
                     </div>
-                    <div class="card-body text-light">
-                        <h3 class="card-title">Python - Aprende a programar em Python</h3>
+                    <div class="card-body blue-text">
+                        <h3 class="card-title fw-bold fw-bold">Python - Aprende a programar em Python</h3>
                         <p class="card-text">Com este curso, vais aprender a programar em Python de forma simples e
                             rápida.</p>
                     </div>
                 </div>
-                <div class=" row card col-md-2 bg-transparent border-0 shadow m-0 p-0 " style="width: 18rem;">
+                <div class=" row card col-md-2 bg-transparent border-0 shadow-lg m-0 p-0 " style="width: 18rem;">
                     <div class="p-0">
-                        <img src="../img/CursoPython.png" class="../img-fluid" alt="Python">
+                        <img src="../img/CursoPython.png" style="width: 100%;" alt="Python">
                     </div>
-                    <div class="card-body text-light">
-                        <h3 class="card-title">Python - Aprende a programar em Python</h3>
+                    <div class="card-body blue-text">
+                        <h3 class="card-title fw-bold">Python - Aprende a programar em Python</h3>
                         <p class="card-text">Com este curso, vais aprender a programar em Python de forma simples e
                             rápida.</p>
                     </div>
                 </div>
-                <div class=" row card col-md-2 bg-transparent border-0 shadow m-0 p-0 " style="width: 18rem;">
+                <div class=" row card col-md-2 bg-transparent border-0 shadow-lg m-0 p-0 " style="width: 18rem;">
                     <div class="p-0">
-                        <img src="../img/CursoPython.png" class="../img-fluid" alt="Python">
+                        <img src="../img/CursoPython.png" style="width: 100%;" alt="Python">
                     </div>
-                    <div class="card-body text-light">
-                        <h3 class="card-title">Python - Aprende a programar em Python</h3>
+                    <div class="card-body blue-text">
+                        <h3 class="card-title fw-bold">Python - Aprende a programar em Python</h3>
                         <p class="card-text">Com este curso, vais aprender a programar em Python de forma simples e
                             rápida.</p>
                     </div>
                 </div>
-                <div class=" row card col-md-2 bg-transparent border-0 shadow m-0 p-0 " style="width: 18rem;">
+                <div class=" row card col-md-2 bg-transparent border-0 shadow-lg m-0 p-0 " style="width: 18rem;">
                     <div class="p-0">
-                        <img src="../img/CursoPython.png" class="../img-fluid" alt="Python">
+                        <img src="../img/CursoPython.png" style="width: 100%;" alt="Python">
                     </div>
-                    <div class="card-body text-light">
-                        <h3 class="card-title">Python - Aprende a programar em Python</h3>
+                    <div class="card-body blue-text">
+                        <h3 class="card-title fw-bold">Python - Aprende a programar em Python</h3>
                         <p class="card-text">Com este curso, vais aprender a programar em Python de forma simples e
                             rápida.</p>
                     </div>
                 </div>
-                <div class=" row card col-md-2 bg-transparent border-0 shadow m-0 p-0 " style="width: 18rem;">
-                    <div class="p-0">
-                        <img src="../img/CursoPython.png" class="../img-fluid" alt="Python">
+
+            </div>
+        </div>
+        <div class="row container-fluid p-0 " style="margin-top: 10%;">
+            <div class="col-md-6 ms-5">
+                <div class="d-flex align-items-end">
+                    <div class="d-flex justify-content-center">
+                        <p class="fw-bold mb-0" style="font-size: 96px; color: #39639D;">Vocês escolheram!</p>
+                        <p class="" style="font-size: 32px; color: #39639D;">Curso do mês!</p>
                     </div>
-                    <div class="card-body text-light">
-                        <h3 class="card-title">Python - Aprende a programar em Python</h3>
-                        <p class="card-text">Com este curso, vais aprender a programar em Python de forma simples e
-                            rápida.</p>
+                </div>
+                <div class="row mt-5 d-flex align-items-center">
+                    <div class="col-md-6">
+                        <img src="../img/MariaDB.png" alt="MariaDB" style="width: 100%;">
+                    </div>
+                    <div class="column col-md-6 ">
+                            <h3 class="fw-bold" style="color: #39639D;">MariaDB - Base de dados Avançado 2025</h3>
+                            <p style="color: #39639D;">Torna-te um expert em MariaDB com apenas um curso.</p>
+                            <button class="btn btn-primary começar-blue mb-3">Continuar curso</button>
                     </div>
                 </div>
             </div>
+            <div class="col-md-5">
+                <img src="../img/Man.png" alt="">
+            </div>
         </div>
     </div>
+    <footer class=" text-light text-center py-3 " style="background-color: #40659d;">
+        &copy; 2025 Meu Site. Todos os direitos reservados.
+    </footer>
 </body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
