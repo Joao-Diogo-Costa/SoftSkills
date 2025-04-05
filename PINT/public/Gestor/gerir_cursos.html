@@ -51,59 +51,7 @@
         <div class="container mt-4">
             <div class="row d-flex justify-content-between">
                 <button class="btn btn-sm me-4 btn-filtro"><i class="fa-solid fa-filter me-2"></i>Filtros</button>
-                <button class="btn btn-sm me-3 btn-adicionar" data-bs-toggle="modal" data-bs-target="#addUserModal"><i class="fa-solid fa-plus me-2"></i>Adicionar</button>
-                <!-- Modal para adicionar curso -->
-                <div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered">
-                        <div class="modal-content">
-                            <div class="modal-header text-white py-5 position-relative" style="background: linear-gradient(90deg, #294873, #1C4072);">
-                                <h5 class="modal-title fw-bold" id="addUserModalLabel" style="margin-right: 75px; margin-left: auto;">Adicionar Curso</h5>
-                                <div class="position-absolute top-100 start-0 translate-middle-y ms-5" style="cursor: pointer;">
-                                    <img id="profileImage" src="assets/img/default_profile_pic.jpg" alt="Novo Curso" class="rounded" style="width: 125px; height: 125px; object-fit: cover;">
-                                    <input type="file" id="imageUpload" accept="image/*" style="display: none;">
-                                </div>
-                            </div>
-                            
-                            <div class="modal-body mt-5" style="color: #f5f9ff;">
-                                <form>
-                                    <h5 class="fw-bold fs-3 mt-3 ms-4 text-start" style="color: #294873;">Dados do Novo Curso</h5>
-                                    <div class="mb-3 ms-4 text-start">
-                                        <label class="form-label fw-semibold fs-6 text-start" style="color: #294873;">Nome</label>
-                                        <input type="text" class="form-control text-muted" placeholder="Nome completo">
-                                    </div>
-                                    <div class="mb-3 ms-4 text-start">
-                                        <label class="form-label fw-semibold fs-6 text-start" style="color: #294873;">Email</label>
-                                        <input type="email" class="form-control text-muted" placeholder="Endereço de email">
-                                    </div>
-                                    <div class="mb-3 ms-4 text-start">
-                                        <label class="form-label fw-semibold fs-6 text-start" style="color: #294873;">Tipo de Conta</label>
-                                        <select class="form-select w-50 text-muted">
-                                            <option selected>Selecionar tipo</option>
-                                            <option value="formador">Formador</option>
-                                            <option value="formando">Formando</option>
-                                            <option value="admin">Administrador</option>
-                                        </select>
-                                    </div>
-                                    <div class="mb-3 ms-4 position-relative text-start">
-                                        <label class="form-label text-start fw-semibold fs-6" style="color: #294873;">Palavra-passe</label>
-                                        <input type="password" id="newPassword" class="form-control text-muted" placeholder="Nova palavra-passe">
-                                        <button type="button" class="btn position-absolute bottom-0 end-0 btn-eye" style="box-shadow: none; outline: none;" onclick="togglePassword('newPassword')"><i class="fa-regular fa-eye-slash"></i></button>
-                                    </div>
-                                    <div class="mb-3 ms-4 position-relative text-start">
-                                        <label class="form-label fw-semibold fs-6 text-start" style="color: #294873;">Confirmar Palavra-passe</label>
-                                        <input type="password" id="confirmNewPassword" class="form-control text-muted focus-ring" placeholder="Confirmar nova palavra-passe">
-                                        <button type="button" class="btn position-absolute top-50 bottom-0 end-0 btn-eye" style="box-shadow: none; outline: none;" onclick="togglePassword('confirmNewPassword')"><i class="fa-regular fa-eye-slash"></i></button>
-                                    </div>
-                                </form>
-                            </div>
-                            <div class="modal-footer d-flex justify-content-center">
-                                <button type="button" class="btn btn-cancelar me-4" data-bs-dismiss="modal">Cancelar</button>
-                                <button type="button" class="btn btn-adicionar">Adicionar</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
+                <button id="btnAdicionarCurso" class="btn btn-sm me-3 btn-adicionar"><i class="fa-solid fa-plus me-2"></i>Adicionar</button>
                 <form class="input-group d-flex mx-auto border border-opacity-50 rounded w-50 barra-pesquisa" role="search">
                     <span class="input-group-text bg-transparent border-0">
                         <i class="fa-solid fa-magnifying-glass icon-lupa"></i>
@@ -112,8 +60,69 @@
                 </form>
                 
                 <div class="col-12 mt-3">
-                    <div class="container container-cursos rounded mt-3" style="max-height: 700px; overflow-y: auto;">
-                        <div class="row row-cols-1 row-cols-md-3 mb-5">
+                    <div class="container container-cursos rounded mt-3 shadow-sm" style="max-height: 665px; overflow-y: auto;">
+                        <div class="row row-cols-1 row-cols-md-3 mb-3">
+                            <div class="col">
+                                <div class="card card-curso h-100 mt-3 mx-3">
+                                    <div class="card-body">
+                                        <div class="wrapper-curso">
+                                            <div class="imagem-curso d-flex justify-content-left mb-3">
+                                                <img src="assets/img/mariadb_curso.png" alt="" srcset="" class="rounded" style="width: 312px; height: 175px; cursor: pointer;">
+                                                <div class="detalhes-imagem">
+                                                    <a href="gerir_curso_detalhes.html">
+                                                    <img src="assets/svg/mais_detalhes_vector.svg" alt="">
+                                                    <h1 class="fw-semibold fs-5 text-white">Clique para mais detalhes</h1>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <h5 class="card-title fs-5 fw-semibold" style="color: #39639D;">MariaDB - Base de dados</h5>
+                                        <p class="card-text fs-5 fw-semibold" style="color: #39639D;">Avançado 2025</p>
+                                    </div>
+                                </div>
+                            </div>
+                
+                            <div class="col">
+                                <div class="card card-curso h-100 mt-3 mx-3">
+                                    <div class="card-body">
+                                        <div class="wrapper-curso">
+                                            <div class="imagem-curso d-flex justify-content-left mb-3">
+                                                <img src="assets/img/mariadb_curso.png" alt="" srcset="" class="rounded" style="width: 312px; height: 175px; cursor: pointer;">
+                                                <div class="detalhes-imagem">
+                                                    <img src="assets/svg/mais_detalhes_vector.svg" alt="">
+                                                    <h1 class="fw-semibold fs-5 text-white">Clique para mais detalhes</h1>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <h5 class="card-title fs-5 fw-semibold" style="color: #39639D;">MariaDB - Base de dados</h5>
+                                        <p class="card-text fs-5 fw-semibold" style="color: #39639D;">Avançado 2025</p>
+                                    </div>
+                                </div>
+                            </div>
+                
+                            <div class="col">
+                                <div class="card card-curso h-100 mt-3 mx-3">
+                                    <div class="card-body">
+                                        <div class="wrapper-curso">
+                                            <div class="imagem-curso d-flex justify-content-left mb-3">
+                                                <img src="assets/img/mariadb_curso.png" alt="" srcset="" class="rounded" style="width: 312px; height: 175px; cursor: pointer;">
+                                                <div class="detalhes-imagem">
+                                                    <img src="assets/svg/mais_detalhes_vector.svg" alt="">
+                                                    <h1 class="fw-semibold fs-5 text-white">Clique para mais detalhes</h1>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <h5 class="card-title fs-5 fw-semibold" style="color: #39639D;">MariaDB - Base de dados</h5>
+                                        <p class="card-text fs-5 fw-semibold" style="color: #39639D;">Avançado 2025</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                
+                        <div class="row row-cols-1 row-cols-md-3 mb-3">
                             <div class="col">
                                 <div class="card card-curso h-100 mt-3 mx-3">
                                     <div class="card-body">
@@ -172,66 +181,7 @@
                             </div>
                         </div>
                 
-                        <div class="row row-cols-1 row-cols-md-3 mb-5">
-                            <div class="col">
-                                <div class="card card-curso h-100 mt-3 mx-3">
-                                    <div class="card-body">
-                                        <div class="wrapper-curso">
-                                            <div class="imagem-curso d-flex justify-content-left mb-3">
-                                                <img src="assets/img/mariadb_curso.png" alt="" srcset="" class="rounded" style="width: 312px; height: 175px; cursor: pointer;">
-                                                <div class="detalhes-imagem">
-                                                    <img src="assets/svg/mais_detalhes_vector.svg" alt="">
-                                                    <h1 class="fw-semibold fs-5 text-white">Clique para mais detalhes</h1>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        
-                                        <h5 class="card-title fs-5 fw-semibold" style="color: #39639D;">MariaDB - Base de dados</h5>
-                                        <p class="card-text fs-5 fw-semibold" style="color: #39639D;">Avançado 2025</p>
-                                    </div>
-                                </div>
-                            </div>
-                
-                            <div class="col">
-                                <div class="card card-curso h-100 mt-3 mx-3">
-                                    <div class="card-body">
-                                        <div class="wrapper-curso">
-                                            <div class="imagem-curso d-flex justify-content-left mb-3">
-                                                <img src="assets/img/mariadb_curso.png" alt="" srcset="" class="rounded" style="width: 312px; height: 175px; cursor: pointer;">
-                                                <div class="detalhes-imagem">
-                                                    <img src="assets/svg/mais_detalhes_vector.svg" alt="">
-                                                    <h1 class="fw-semibold fs-5 text-white">Clique para mais detalhes</h1>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        
-                                        <h5 class="card-title fs-5 fw-semibold" style="color: #39639D;">MariaDB - Base de dados</h5>
-                                        <p class="card-text fs-5 fw-semibold" style="color: #39639D;">Avançado 2025</p>
-                                    </div>
-                                </div>
-                            </div>
-                
-                            <div class="col">
-                                <div class="card card-curso h-100 mt-3 mx-3">
-                                    <div class="card-body">
-                                        <div class="wrapper-curso">
-                                            <div class="imagem-curso d-flex justify-content-left mb-3">
-                                                <img src="assets/img/mariadb_curso.png" alt="" srcset="" class="rounded" style="width: 312px; height: 175px; cursor: pointer;">
-                                                <div class="detalhes-imagem">
-                                                    <img src="assets/svg/mais_detalhes_vector.svg" alt="">
-                                                    <h1 class="fw-semibold fs-5 text-white">Clique para mais detalhes</h1>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        
-                                        <h5 class="card-title fs-5 fw-semibold" style="color: #39639D;">MariaDB - Base de dados</h5>
-                                        <p class="card-text fs-5 fw-semibold" style="color: #39639D;">Avançado 2025</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                
-                        <div class="row row-cols-1 row-cols-md-3 mb-5">
+                        <div class="row row-cols-1 row-cols-md-3 mb-3">
                             <div class="col">
                                 <div class="card card-curso h-100 mt-3 mx-3">
                                     <div class="card-body">

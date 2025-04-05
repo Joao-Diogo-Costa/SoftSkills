@@ -76,6 +76,19 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
+// para botão do adicioanr curso
+document.addEventListener('DOMContentLoaded', function() {
+    const botaoAdicionarCurso = document.getElementById('btnAdicionarCurso');
+
+    if (botaoAdicionarCurso) {
+        botaoAdicionarCurso.addEventListener('click', function() {
+            window.location.href = 'criar_curso.html';
+        });
+    } else {
+        console.error('Botão "Adicionar Curso" não encontrado!');
+    }
+});
+
 // Mostrar o modal de editar utilizador
 const editModal = document.getElementById('editModal');
 editModal.addEventListener('show.bs.modal', event => {

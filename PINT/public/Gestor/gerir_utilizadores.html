@@ -17,6 +17,7 @@
      
 </head>
 <body>
+
     <!-- Sidebar -->
     <div class="sidebar">
         <div class="sidebar-header d-flex align-items-center justify-content-center">
@@ -112,7 +113,7 @@
                 <input class="form-control no-outline bg-transparent border-0 shadow-none" type="search" placeholder="Procurar utilizador" aria-label="Search">
                 </form>
                 <div class="col-12 mt-3">
-                    <div class="table-responsive" style="max-height: 755px; overflow-y: auto;">
+                    <div class="table-responsive" style="max-height: 755px; overflow-y: auto; border: 1px solid #ccc;">
                         <table class="table table-hover tabela-users">
                             <thead class="shadow-sm tabela-header">
                                 <tr>
@@ -183,7 +184,7 @@
 
                                         <!-- Modal para Remover -->
                                         <i class="fa-regular fa-trash-can me-3" data-bs-toggle="modal" data-bs-target="#deleteAccountModal" style="cursor: pointer;"></i>
-                                        <div class="modal fade" id="deleteAccountModal" tabindex="-1" aria-labelledby="deleteAccountModalLabel" aria-hidden="true">
+                                        <div class="modal fade" id="deleteAccountModal" tabindex="-1" aria-labelledby="deleteAccountModalLabel" aria-hidden="true" style="background: rgba(57, 99, 157, 0.5)">
                                             <div class="modal-dialog modal-dialog-centered" style="max-width: 550px;">
                                                     <div class="modal-content">
                                                         <div class="modal-body py-4">
@@ -202,7 +203,7 @@
                                         </div>
                                         
                                         <!-- Modal Sucesso -->
-                                        <div class="modal fade" id="deleteAccountSuccessModal" tabindex="-1" aria-labelledby="deleteAccountSuccessModalLabel" aria-hidden="true">
+                                        <div class="modal fade" id="deleteAccountSuccessModal" tabindex="-1" aria-labelledby="deleteAccountSuccessModalLabel" aria-hidden="true" style="background: rgba(57, 99, 157, 0.5)">
                                             <div class="modal-dialog modal-dialog-centered" style="max-width: 550px;">
                                                 <div class="modal-content">
                                                     <div class="modal-body py-4">

@@ -218,12 +218,18 @@ body {
 
 }
 
+.icon-seta{
+
+    position: relative;
+    top: 2px; /* Ajuste este valor conforme necessário */
+}
+
 .btn-editar{
 
     color: #fff;
     background-color: #39639D;
     width: 150px;
-    border-radius: 12px;
+    border-radius: 8px;
 }
 
 .btn-cancelar{
@@ -232,7 +238,7 @@ body {
     border: 1px solid #A7A7A7;
     margin-left: 12px;
     width: 150px;
-    border-radius: 12px;
+    border-radius: 8px;
 
 }
 
@@ -277,6 +283,7 @@ body {
 .container-cursos{
 
     background-color: #F5F9FF;
+    border: 1px solid #ccc;
 }
 
 
@@ -319,6 +326,18 @@ body {
 
 .imagem-curso:hover .detalhes-imagem {
     opacity: 1;
+}
+
+
+.container-criar-curso{
+
+    background-color: #f5f9ff;
+}
+
+.fa-arrow-left:hover {
+    color: #39639D;
+    transform: scale(1.1);
+    transition: all 0.2s ease-in-out;
 }
 
 @media (max-width: 768px) {
