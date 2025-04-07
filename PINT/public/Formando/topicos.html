@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicial</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="row container-fluid min-vh-100 m-0 p-0 ">
+        <nav class="navbar navbar-expand-lg bg-body-tertiary border-bottom border-secondary shadow-lg ">
+            <div class="container-fluid">
+                <a class="navbar-brand me-0 ms-4" href="#">
+                    <img src="assets/img/Logo.png" alt="" onclick="window.location.href='index.html'">
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse " id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0 w-100 ">
+                        <li class="nav-item mx-auto mt-2 fs-5 fw-bold">
+                            <a class="nav-link blue-text underline-animation" href="#">Categorias</a>
+                        </li>
+                        <li class="nav-item mx-auto mt-2 fs-5 fw-bold">
+                            <a class="nav-link blue-text underline-animation" href="topicos.html">Tópicos</a>
+                        </li>
+                        <form
+                            class="input-group d-flex mx-auto border border-secondary border-opacity-50 rounded-pill shadow w-50"
+                            role="search">
+                            <span class="input-group-text bg-transparent border-0">
+                                <img src="assets/img/Icon-lupa.png" alt="Lupa" class="img-fluid">
+                            </span>
+                            <input class="form-control no-outline bg-transparent border-0" type="search"
+                                placeholder="Procurar" aria-label="Search">
+                        </form>
+                        <li class="nav-item d-flex align-items-center">
+                            <img src="assets/img/profile-picture.png" alt="profile-picture" class="me-3"
+                                style="width: 50px; height: 50px; border-radius: 50%;"
+                                onclick="window.location.href='perfil.html'">
+                            <div class="d-flex flex-column">
+                                <a href="perfil.html" class="fw-bold text-decoration-none">Francisco Duarte</a>
+                                <a href="perfil.html"
+                                    class="grey-text text-decoration-none">franciscopereira312@gmail.com</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div class="row default-container d-flex  align-items-center  mb-4 ">
+            <div class="row mb-2">
+                <div class="col-md-6">
+                    <h2 class="container-fluid mb-0 blue-text fw-bold ">Descobre ideias que fazem a diferença </h2>
+                    <h3 class="container-fluid mb-5 grey-text ">Área de tópicos</h3>
+                </div>
+                <div class="col-md-6 d-flex align-items-start">
+                    <div class="col-md-4"></div>
+                    <div class="col-md-4 d-flex justify-content-start">
+                        <p class=" blue-text">Estás à procura de algo específico e não encontras? Sugere!</p>
+                    </div>
+                    <div class="col-md-4 d-flex justify-content-sm-center justify-content-md-start">
+                        <button class=" btn btn-primary botao rounded-pill " data-bs-toggle="modal"
+                        data-bs-target="#editModal" style="cursor: pointer;" >Sugerir tópico</button>
+                        <!-- MODAL -->
+                        <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true" style="background: rgba(57, 99, 157, 0.5);" >
+                            <div class="modal-dialog modal-dialog-centered">
+                                >
+                                <div class="modal-content">
+                                    <div class="modal-header text-white py-5 position-relative d-flex justify-content-center" style="background: linear-gradient(90deg, #39639D, #1C4072);">
+                                        <h5 class=" fw-bold " id="editModalLabel">Sugerir Tópico</h5>
+                                    </div>
+                    
+                                    <div class="modal-body" style="color: #f5f9ff;">
+                                        <form>
+                                            <h5 class="fw-bold fs-3 ms-4 text-start" style="color: #39639D;">Novo Tópico</h5>
+                                            <div class="mb-3 ms-4 text-start">
+                                                <label class="form-label fw-semibold fs-6 text-start" style="color: #39639D;">Título</label>
+                                                <input type="text" class="form-control text-muted" placeholder="JavaScript" >
+                                            </div>
+                                            <div class="mb-3 ms-4 text-start">
+                                                <label class="form-label fw-semibold fs-6 text-start" style="color: #39639D;" >Categoria</label>
+                                                <select class="form-select w-50 text-muted">
+                                                    <option selected>Web Development</option>
+                                                    <option selected>Mobile</option>
+                                                </select>
+                                            </div>
+                                            <div class="mb-3 ms-4 text-start">
+                                                <label class="form-label fw-semibold fs-6 text-start" style="color: #39639D;" >Área</label>
+                                                <select class="form-select w-50 text-muted">
+                                                    <option selected>FrontEnd</option>
+                                                    <option selected>BackEnd</option>
+                                                </select>
+                                            </div>
+                                           
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer d-flex justify-content-center">
+                                        <button type="button" class="btn btn-light  me-4" data-bs-dismiss="modal">Cancelar</button>
+                                        <button type="button" class="btn btn-primary botao" onclick="handleSugestTopic()">Sugerir</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Modal Sucesso -->
+                        <div class="modal fade" id="sugestSuccessModal" tabindex="-1"
+                        aria-labelledby="sugestSuccessModalLabel" aria-hidden="true"
+                        style="background: rgba(57, 99, 157, 0.5)">
+                        <div class="modal-dialog modal-dialog-centered" style="max-width: 550px;">
+                            <div class="modal-content">
+                                <div class="modal-body py-4">
+                                    <div class="d-flex flex-column align-items-center mb-3">
+                                        <img src="assets/img/success_vector.svg"
+                                            alt="Ícone de sucesso">
+                                        <h1 class="text-center fs-2 fw-bold mt-3">Sucesso</h1>
+                                    </div>
+                                    <p class="text-center fs-5">O seu Tópico foi sugerido com sucesso!</p>
+                                </div>
+                                <div class="modal-footer justify-content-center py-3">
+                                    <button type="button" class="btn btn-primary botao rounded "
+                                        onclick="closeSuccessModal()">Continuar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                    
+                </div>
+            </div>
+            <div class=" row d-flex justify-content-evenly gap-5" style="width: 95%;">
+                <div class=" row card col-md-4 bg-transparent border-0 shadow-lg p-0" style="width: 18rem;">
+                    <div class="p-0">
+                        <img src="assets/img/CursoPython.png" style="width: 100%;" alt="Python">
+                    </div>
+                    <div class="card-body blue-text">
+                        <h3 class="card-title fw-bold fw-bold">Tudo sobre python</h3>
+                        <p class="card-text">Torna-te um expert em HTML5 com apenas um curso.</p>
+                        <p class="card-text d-flex justify-content-end mt-5">(120 participantes)</p>
+                    </div>
+                </div>
+                <div class=" row card col-md-4 bg-transparent border-0 shadow-lg p-0" style="width: 18rem;">
+                    <div class="p-0">
+                        <img src="assets/img/CursoPython.png" style="width: 100%;" alt="Python">
+                    </div>
+                    <div class="card-body blue-text">
+                        <h3 class="card-title fw-bold fw-bold">Tudo sobre python</h3>
+                        <p class="card-text">Torna-te um expert em HTML5 com apenas um curso.</p>
+                        <p class="card-text d-flex justify-content-end mt-5">(120 participantes)</p>
+                    </div>
+                </div>
+                <div class=" row card col-md-4 bg-transparent border-0 shadow-lg p-0" style="width: 18rem;">
+                    <div class="p-0">
+                        <img src="assets/img/CursoPython.png" style="width: 100%;" alt="Python">
+                    </div>
+                    <div class="card-body blue-text">
+                        <h3 class="card-title fw-bold fw-bold">Tudo sobre python</h3>
+                        <p class="card-text">Torna-te um expert em HTML5 com apenas um curso.</p>
+                        <p class="card-text d-flex justify-content-end mt-5">(120 participantes)</p>
+                    </div>
+                </div>
+                <div class=" row card col-md-4 bg-transparent border-0 shadow-lg p-0" style="width: 18rem;">
+                    <div class="p-0">
+                        <img src="assets/img/CursoPython.png" style="width: 100%;" alt="Python">
+                    </div>
+                    <div class="card-body blue-text">
+                        <h3 class="card-title fw-bold fw-bold">Tudo sobre python</h3>
+                        <p class="card-text">Torna-te um expert em HTML5 com apenas um curso.</p>
+                        <p class="card-text d-flex justify-content-end mt-5">(120 participantes)</p>
+                    </div>
+                </div>
+                <div class=" row card col-md-4 bg-transparent border-0 shadow-lg p-0" style="width: 18rem;">
+                    <div class="p-0">
+                        <img src="assets/img/CursoPython.png" style="width: 100%;" alt="Python">
+                    </div>
+                    <div class="card-body blue-text">
+                        <h3 class="card-title fw-bold fw-bold">Tudo sobre python</h3>
+                        <p class="card-text">Torna-te um expert em HTML5 com apenas um curso.</p>
+                        <p class="card-text d-flex justify-content-end mt-5">(120 participantes)</p>
+                    </div>
+                </div>
+                <div class=" row card col-md-4 bg-transparent border-0 shadow-lg p-0" style="width: 18rem;">
+                    <div class="p-0">
+                        <img src="assets/img/CursoPython.png" style="width: 100%;" alt="Python">
+                    </div>
+                    <div class="card-body blue-text">
+                        <h3 class="card-title fw-bold fw-bold">Tudo sobre python</h3>
+                        <p class="card-text">Torna-te um expert em HTML5 com apenas um curso.</p>
+                        <p class="card-text d-flex justify-content-end mt-5">(120 participantes)</p>
+                    </div>
+                </div>
+                <div class=" row card col-md-4 bg-transparent border-0 shadow-lg p-0" style="width: 18rem;">
+                    <div class="p-0">
+                        <img src="assets/img/CursoPython.png" style="width: 100%;" alt="Python">
+                    </div>
+                    <div class="card-body blue-text">
+                        <h3 class="card-title fw-bold fw-bold">Tudo sobre python</h3>
+                        <p class="card-text">Torna-te um expert em HTML5 com apenas um curso.</p>
+                        <p class="card-text d-flex justify-content-end mt-5">(120 participantes)</p>
+                    </div>
+                </div>
+                <div class=" row card col-md-4 bg-transparent border-0 shadow-lg p-0" style="width: 18rem;">
+                    <div class="p-0">
+                        <img src="assets/img/CursoPython.png" style="width: 100%;" alt="Python">
+                    </div>
+                    <div class="card-body blue-text">
+                        <h3 class="card-title fw-bold fw-bold">Tudo sobre python</h3>
+                        <p class="card-text">Torna-te um expert em HTML5 com apenas um curso.</p>
+                        <p class="card-text d-flex justify-content-end mt-5">(120 participantes)</p>
+                    </div>
+                </div>
+                <div class=" row card col-md-4 bg-transparent border-0 shadow-lg p-0" style="width: 18rem;">
+                    <div class="p-0">
+                        <img src="assets/img/CursoPython.png" style="width: 100%;" alt="Python">
+                    </div>
+                    <div class="card-body blue-text">
+                        <h3 class="card-title fw-bold fw-bold">Tudo sobre python</h3>
+                        <p class="card-text">Torna-te um expert em HTML5 com apenas um curso.</p>
+                        <p class="card-text d-flex justify-content-end mt-5">(120 participantes)</p>
+                    </div>
+                </div>
+                <div class=" row card col-md-4 bg-transparent border-0 shadow-lg p-0" style="width: 18rem;">
+                    <div class="p-0">
+                        <img src="assets/img/CursoPython.png" style="width: 100%;" alt="Python">
+                    </div>
+                    <div class="card-body blue-text">
+                        <h3 class="card-title fw-bold fw-bold">Tudo sobre python</h3>
+                        <p class="card-text">Torna-te um expert em HTML5 com apenas um curso.</p>
+                        <p class="card-text d-flex justify-content-end mt-5">(120 participantes)</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+    <footer class=" text-light text-center py-3 " style="background-color: #40659d;">
+        &copy; 2025 Meu Site. Todos os direitos reservados.
+    </footer>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
+    </script>
+ <script src="script.js"></script>
+
+
+</html>
