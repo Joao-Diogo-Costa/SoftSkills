@@ -340,6 +340,24 @@ body {
     transition: all 0.2s ease-in-out;
 }
 
+.fa-trash-can:hover {
+    color: #39639D;
+    transform: scale(1.3);
+    transition: all 0.2s ease-in-out;
+}
+
+.fa-pen-to-square:hover {
+    color: #39639D;
+    transform: scale(1.3);
+    transition: all 0.2s ease-in-out;
+}
+
+.fa-bars-progress:hover {
+    color: #39639D;
+    transform: scale(1.3);
+    transition: all 0.2s ease-in-out;
+}
+
 @media (max-width: 768px) {
     .sidebar {
         width: 200px;

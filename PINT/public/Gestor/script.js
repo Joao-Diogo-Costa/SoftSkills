@@ -89,6 +89,21 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
+// para botão do adicioanr topico
+document.addEventListener('DOMContentLoaded', function() {
+    const botaoAdicionarTopico = document.getElementById('btnAdicionarTopico');
+
+    if (botaoAdicionarTopico) {
+        botaoAdicionarTopico.addEventListener('click', function() {
+            window.location.href = 'criar_topico.html';
+        });
+    } else {
+        console.error('Botão "Adicionar Topico" não encontrado!');
+    }
+});
+
+
+
 // Mostrar o modal de editar utilizador
 const editModal = document.getElementById('editModal');
 editModal.addEventListener('show.bs.modal', event => {
@@ -135,12 +150,39 @@ function handleDeleteAccount() {
     deleteAccountSuccessModal.show();
 }
 
-function closeSuccessModal() {
+function handleDeleteDenuncia() {
+    console.log("Apagando a denúncia...");
+    // Aqui você faria a chamada real ao backend para apagar a denúncia
+
+    // Fecha o modal de confirmação
+    const deleteDenunciaModalEl = document.getElementById('deleteAccountModal');
+    const deleteDenunciaModal = bootstrap.Modal.getInstance(deleteDenunciaModalEl);
+    if (deleteDenunciaModal) {
+        deleteDenunciaModal.hide();
+    }
+
+    // Mostra o modal de sucesso
+    const deleteSuccessModalEl = document.getElementById('deleteDenunciaSuccessModal');
+    const deleteSuccessModal = new bootstrap.Modal(deleteSuccessModalEl);
+    deleteSuccessModal.show();
+}
+
+function closeSuccessModalAccount() {
     const deleteAccountSuccessModalEl = document.getElementById('deleteAccountSuccessModal');
     const deleteAccountSuccessModal = bootstrap.Modal.getInstance(deleteAccountSuccessModalEl);
     if (deleteAccountSuccessModal) {
         deleteAccountSuccessModal.hide();
         // Opcional: Redirecionar o usuário ou realizar outra ação após o sucesso
         // window.location.href = "/pagina-inicial";
+    }
+}
+
+function closeSuccessModalDenuncia() {
+    const deleteSuccessModalEl = document.getElementById('deleteDenunciaSuccessModal');
+    const deleteSuccessModal = bootstrap.Modal.getInstance(deleteSuccessModalEl);
+    if (deleteSuccessModal) {
+        deleteSuccessModal.hide();
+        // Opcional: redirecionar ou atualizar a tabela
+        // location.reload(); ou window.location.href = "/denuncias";
     }
 }

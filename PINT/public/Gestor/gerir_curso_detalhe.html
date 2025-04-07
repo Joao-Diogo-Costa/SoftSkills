@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Criar cursos / SoftSkills</title>
+    <title>Detalhes - / SoftSkills</title>
 
     <!-- Bootstrap -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
@@ -40,23 +40,31 @@
     <!-- Perfil -->
     <div class="content flex-grow-1 p-4">
         <!-- Centro -->
-        <div class="container" style="background-color: #39639D; margin-top: 75px;">
-            a
+        <div class="container mt-3 d-flex justify-content-center align-items-center" style="width: 100%; background-color: #F5F9FF; border: 1px solid #ccc; border-bottom: none;">
+            <img src="assets/img/curso_banner.png" alt="">
         </div>
-        <div class="container container-criar-curso rounded-bottom" style="border: 1px solid #ccc;">
+        <div class="container container-criar-curso rounded-bottom" style="border: 1px solid #ccc; border-top: none;">
             <div class="row d-flex justify-content-between">
-                <div class="col-12">
+                <div class="col-md-9">
                     <div class="container rounded">
                         <div class="d-flex align-items-center mt-5">
                             <a href="gerir_curso.html" style="text-decoration: none; color: inherit;">
                                 <i class="fa-solid fa-arrow-left fa-2x me-3 mb-3" style="cursor: pointer;"></i>
                             </a>
-                            <h2 class="fs-1 fw-bold mb-3">Criar curso</h2>
+                            <h2 class="fs-1 fw-bold mb-3">Detalhes</h2>
                         </div>
                         <form class="mt-3">
                             <div class="mb-3">
                                 <label for="titulo" class="form-label">Título</label>
-                                <input type="text" class="form-control rounded" id="titulo">
+                                <div class="d-flex align-items-center flex-wrap gap-3">
+                                    <input type="text" class="form-control rounded" id="titulo" style="max-width: 500px;">
+                                    
+                                    <h1 class="fs-5 fw-bold text-success mb-0 ms-5 me-3">EM CURSO</h1>
+                            
+                                    <button type="submit" class="btn ms-5" style="background-color: #39639D; color: white; width: 150px;">
+                                        Ver aulas
+                                    </button>
+                                </div>
                             </div>
                             <div class="row mb-3">
                                 <div class="col-md-3">
@@ -130,13 +138,40 @@
                                     <label class="form-label">Descrição do curso</label>
                                     <textarea class="form-control mt-auto" rows="4" placeholder="Descrição do curso"></textarea>
                                 </div>
-                            </div>
-                            <div class="d-flex justify-content-end">
-                                <button type="submit" class="btn mt-3 mb-4" style="background-color: #39639D; color: white; width: 150px;">Criar</button>
-                            </div>
 
+                            </div>
                         </form>
                     </div>
+                </div>
+
+                <div class="col-md-3 mt-4">
+                    <label class="form-label"></label>
+                    <div class="border rounded p-3" style="min-height: 600px; background-color: #fff;">
+                        <p class="fw-semibold">Lista de membros</p>
+                        <ul class="list-group d-flex justify-content-start align-items-start" style="height: 100%;">
+                            <p class="text-center text-muted">Aqui fica a lista de membros</p>
+                            <li class="list-group-item d-flex justify-content-start align-items-start border-0 text-start">
+                                <img src="assets/img/default_profile_pic.jpg" class="rounded me-3" style="width: 20px; height: 20px;"> Carlos Daniel Almeida
+                                
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between border-0">
+                                <img src="assets/img/default_profile_pic.jpg" class="rounded me-3" style="width: 20px; height: 20px;">David Miguel Ferreira
+                                
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between border-0">
+                                <img src="assets/img/default_profile_pic.jpg" class="rounded me-3" style="width: 20px; height: 20px;">Íris Maria Marques
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center border-0">
+                                <img src="assets/img/default_profile_pic.jpg" class="rounded me-3" style="width: 20px; height: 20px;"> Alvaro Castro Jiménez
+                                
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-end">
+                    <button type="submit" class="btn mt-3 me-4 mb-2" style="background-color: red; color: white; width: 150px;">Apagar</button>
+                    <button type="submit" class="btn mt-3 mb-2" style="background-color: #39639D; color: white; width: 150px;">Editar</button>
                 </div>
             </div>
         </div>
