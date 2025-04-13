@@ -3,6 +3,7 @@ html, body {
   height: 100vh;
   margin: 0;
   font-family: 'Inter', sans-serif;
+  background: linear-gradient(180deg, #ffffff, #526e96);
 }
 
 .d-flex {
@@ -143,17 +144,17 @@ html, body {
 
 .começar{
     background-color: transparent;
-    border-color: #ffffff;
+    border-color: #39639D;
     border-radius: 15px;
     border-width: 2px;
-    color: white;
+    color: #39639D;
     font-weight: bold;
 }
 
 .começar:hover{
-    background-color: transparent;
+    background-color: #39639D;
     color: #ffffff;
-    border-color:#ffffff;
+    border-color:#39639D;
 }
 
 .começar-blue{
