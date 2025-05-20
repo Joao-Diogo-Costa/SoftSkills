@@ -8,6 +8,7 @@ import Topicos from './View/topicos';
 import Navbar from "./View/navbar";
 import Curso from "./View/curso";
 import VerAula from "./View/verAula";
+import CursoSincrono from "./View/cursoSincrono";
 import './App.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
@@ -39,6 +40,7 @@ function App() {
         <Route path="/topicos" element={<NavbarLayout><Topicos /></NavbarLayout>} />
         <Route path="/curso" element={<NavbarLayout><Curso /></NavbarLayout>} />
         <Route path="/verAula" element={<NavbarLayout><VerAula /></NavbarLayout>} />
+        <Route path="/cursoSincrono" element={<NavbarLayout><CursoSincrono/></NavbarLayout>} />
       </Routes>
     </>
   );

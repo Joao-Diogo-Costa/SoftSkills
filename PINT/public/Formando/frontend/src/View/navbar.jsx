@@ -31,7 +31,7 @@ const Navbar = () => {
                                 Categorias
                             </Link>
                         </li>
-                        <li className="nav-item mx-auto mt-2 fs-5 fw-bold">
+                        <li className="nav-item mx-auto mt-2 mb-2 fs-5 fw-bold">
                             <Link
                                 className="nav-link blue-text underline-animation"
                                 style={{ color: "#39639D" }}
@@ -55,7 +55,7 @@ const Navbar = () => {
                             />
                         </form>
                         <Link
-                            className="btn btn-primary mx-auto botao"
+                            className="btn btn-primary mx-auto botao mt-2"
                             style={{ width: "15%" }}
                             to={"/login"}
                         >

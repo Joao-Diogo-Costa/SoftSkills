@@ -6,7 +6,7 @@ function PaginaInicial() {
     const navigate = useNavigate();
 
     return (
-        <div className="row container-fluid min-vh-100 m-0 p-0">
+        <div className="row ">
             <nav className="navbar navbar-expand-lg bg-body-tertiary border-bottom border-secondary shadow-lg">
                 <div className="container-fluid">
                     <Link className="navbar-brand me-0 ms-4" to="/">
@@ -34,8 +34,8 @@ function PaginaInicial() {
                                     Categorias
                                 </Link>
                             </li>
-                            <li className="nav-item mx-auto mt-2 fs-5 fw-bold">
-                                <Link className="nav-link blue-text underline-animation" to="/">
+                            <li className="nav-item mx-auto mt-2 m-3 mb-md-0 fs-5 fw-bold">
+                                <Link className="nav-link blue-text underline-animation" to="/topicos">
                                     Tópicos
                                 </Link>
                             </li>
@@ -57,7 +57,7 @@ function PaginaInicial() {
                                     aria-label="Search"
                                 />
                             </form>
-                            <li className="nav-item d-flex align-items-center">
+                            <li className="nav-item d-flex align-items-center me-0 me-md-2 mt-3 mt-md-0 justify-content-center">
                                 <img
                                     src="/img/profile-picture.png"
                                     alt="profile-picture"
@@ -65,7 +65,7 @@ function PaginaInicial() {
                                     style={{ width: "50px", height: "50px", borderRadius: "50%" }}
                                     onClick={() => navigate("/perfil")}
                                 />
-                                <div className="d-flex flex-column">
+                                <div className="d-flex flex-column text-start">
                                     <Link to="/perfil" className="fw-bold text-decoration-none">
                                         Francisco Duarte
                                     </Link>
@@ -84,12 +84,12 @@ function PaginaInicial() {
                     Cursos Vistos Recentemente
                 </h2>
                 <div className="container-fluid" style={{ marginBottom: "6%" }}>
-                    <div className="row">
+                    <div className="row ">
                         <div className="row col-md-6 d-flex align-items-center">
                             <div className="col-md-6">
                                 <img src="/img/MariaDB.png" alt="MariaDB" style={{ width: "100%" }} />
                             </div>
-                            <div className="column col-md-6 blue-text">
+                            <div className="column col-md-6 blue-text text-center text-md-start mt-md-0 mt-3">
                                 <h3 className="fw-bold">MariaDB - Base de dados Avançado 2025</h3>
                                 <p>Torna-te um expert em MariaDB com apenas um curso.</p>
                                 <button className="btn btn-primary mb-3">Continuar curso</button>
@@ -99,12 +99,13 @@ function PaginaInicial() {
                             <div className="col-md-6">
                                 <img src="/img/MariaDB.png" alt="MariaDB" style={{ width: "100%" }} />
                             </div>
-                            <div className="column col-md-6 blue-text">
+                            <div className="column col-md-6 blue-text text-center text-md-start mt-md-0 mt-3">
                                 <h3 className="fw-bold">MariaDB - Base de dados Avançado 2025</h3>
                                 <p>Torna-te um expert em MariaDB com apenas um curso.</p>
                                 <button className="btn btn-primary mb-3">Continuar curso</button>
                             </div>
                         </div>
+
                     </div>
                 </div>
                 <h2 className="container-fluid mb-3 blue-text fw-bold">Cursos Populares</h2>
@@ -159,33 +160,39 @@ function PaginaInicial() {
                     </div>
                 </div>
             </div>
-            <div className="row container-fluid p-0" style={{ marginTop: "10%" }}>
-                <div className="col-md-6 ms-5">
-                    <div className="d-flex align-items-end">
-                        <div className="d-flex justify-content-center">
-                            <p className="fw-bold mb-0" style={{ fontSize: "96px", color: "#39639D" }}>
+            <div className="row p-0 justify-content-center align-items-center text-center" style={{ marginTop: "5%" }}>
+                <div className="col-12">
+                    <div className="d-flex flex-column align-items-center">
+                        <div className="row d-flex justify-content-center text-center">
+                            <p
+                                className="col-12 fw-bold mb-0 fs-1 fs-sm-3"
+                                style={{ fontSize: "70px", color: "#39639D" }}
+                            >
                                 Vocês escolheram!
                             </p>
-                            <p className="" style={{ fontSize: "32px", color: "#39639D" }}>
+                            <p className="col-12" style={{ fontSize: "32px", color: "#39639D" }}>
                                 Curso do mês!
                             </p>
                         </div>
                     </div>
-                    <div className="row mt-5 d-flex align-items-center">
-                        <div className="col-md-6">
-                            <img src="/img/MariaDB.png" alt="MariaDB" style={{ width: "100%" }} />
+                    <div className="row mt-5 mb-5 d-flex align-items-center justify-content-center">
+                        <div className="col-md-3 col-8 text-center">
+                            <img
+                                src="/img/MariaDB.png"
+                                alt="MariaDB"
+                                className="img-fluid"
+                            />
                         </div>
-                        <div className="column col-md-6">
+                        <div className="col-md-4 col-10 text-center text-md-start">
                             <h3 className="fw-bold" style={{ color: "#39639D" }}>
                                 MariaDB - Base de dados Avançado 2025
                             </h3>
-                            <p style={{ color: "#39639D" }}>Torna-te um expert em MariaDB com apenas um curso.</p>
+                            <p style={{ color: "#39639D" }}>
+                                Torna-te um expert em MariaDB com apenas um curso.
+                            </p>
                             <button className="btn btn-primary mb-3">Continuar curso</button>
                         </div>
                     </div>
-                </div>
-                <div className="col-md-5">
-                    <img src="/img/Man.png" alt="Man" />
                 </div>
             </div>
             <footer className="text-light text-center py-3" style={{ backgroundColor: "#40659d" }}>
@@ -195,4 +202,4 @@ function PaginaInicial() {
     );
 }
 
-export default PaginaInicial;
+export default PaginaInicial; 

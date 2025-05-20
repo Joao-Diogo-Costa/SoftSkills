@@ -1,6 +1,6 @@
 html,
 body {
-  overflow-x: hidden;
+  overflow-x:hidden;
   font-family: "Inter", sans-serif;
 }
 
@@ -224,4 +224,17 @@ body {
   font-weight: bold;
 }
 
+.scrollbar-translucent::-webkit-scrollbar-track {
+  background: #cfe1ff;
+}
+.scrollbar-translucent::-webkit-scrollbar-thumb {
+  background: #39639d;
+}
+.scrollbar-translucent::-webkit-scrollbar {
+  width: 8px;
+}
+.scrollbar-cfe1ff {
+  scrollbar-color: #39639d #cfe1ff;
+  scrollbar-width: thin;
+}
 

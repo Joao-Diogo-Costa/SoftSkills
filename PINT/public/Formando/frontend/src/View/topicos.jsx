@@ -7,6 +7,7 @@ const Topicos = () => {
     const navigate = useNavigate();
     const [isEditModalOpen, setEditModalOpen] = useState(false);
     const [isSuccessModalOpen, setSuccessModalOpen] = useState(false);
+    const [cursos, setCursos] = useState([]);
 
     function handleSugestTopic() {
         console.log("A sugerir tópico...");
@@ -20,6 +21,20 @@ const Topicos = () => {
     function closeSuccessModal() {
         setSuccessModalOpen(false);
     }
+
+
+
+    useEffect(() => {
+        fetch("http://localhost:3000/curso/list")
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) setCursos(data.data);
+            })
+            .catch(err => {
+                console.error("Erro ao buscar cursos:", err);
+            });
+    }, []);
+
 
     return (
         <div>
@@ -162,127 +177,23 @@ const Topicos = () => {
                             </div>
                         </div>
                     </div>
-                    <div className=" row d-flex justify-content-evenly gap-5" style={{ width: '95%' }}>
-                        <div className=" row card col-md-4 bg-transparent border-0 shadow-lg p-0" style={{ width: '18rem' }}>
-                            <Link className="p-0" to={"/curso"} style={{ textDecoration: 'none' }}>
-                            <div className="p-0">
-                                <img src="/img/CursoPython.png" style={{ width: '100%' }} alt="Python" />
+                    <div className="row d-flex justify-content-evenly gap-5" style={{ width: '95%' }}>
+                        {cursos.map((curso) => (
+                            <div key={curso.id} className="row card col-md-4 bg-transparent border-0 shadow-lg p-0" style={{ width: '18rem' }}>
+                                <Link className="p-0" to={`/curso`} style={{ textDecoration: 'none' }}>
+                                    <div className="p-0">
+                                        <img src="/img/CursoPython.png" style={{ width: '100%' }} alt={curso.nome} />
+                                    </div>
+                                </Link>
+                                <div className="card-body blue-text">
+                                    <h3 className="card-title fw-bold">{curso.nome}</h3>
+                                    <p className="card-text">{curso.descricaoCurso}</p>
+                                    <p className="card-text d-flex justify-content-end mt-5">
+                                        ({curso.participantes || 0} participantes)
+                                    </p>
+                                </div>
                             </div>
-                            </Link>
-                            <div className="card-body blue-text">
-                                <h3 className="card-title fw-bold fw-bold">Tudo sobre python</h3>
-                                <p className="card-text">Torna-te um expert em HTML5 com apenas um curso.</p>
-                                <p className="card-text d-flex justify-content-end mt-5">(120 participantes)</p>
-                            </div>
-                        </div>
-                        <div className=" row card col-md-4 bg-transparent border-0 shadow-lg p-0" style={{ width: '18rem' }}>
-                            <Link className="p-0" to={"/curso"} style={{ textDecoration: 'none' }}>
-                            <div className="p-0">
-                                <img src="/img/CursoPython.png" style={{ width: '100%' }} alt="Python" />
-                            </div>
-                            </Link>
-                            <div className="card-body blue-text">
-                                <h3 className="card-title fw-bold fw-bold">Tudo sobre python</h3>
-                                <p className="card-text">Torna-te um expert em HTML5 com apenas um curso.</p>
-                                <p className="card-text d-flex justify-content-end mt-5">(120 participantes)</p>
-                            </div>
-                        </div>
-                        <div className=" row card col-md-4 bg-transparent border-0 shadow-lg p-0" style={{ width: '18rem' }}>
-                            <Link className="p-0" to={"/curso"} style={{ textDecoration: 'none' }}>
-                            <div className="p-0">
-                                <img src="/img/CursoPython.png" style={{ width: '100%' }} alt="Python" />
-                            </div>
-                            </Link>
-                            <div className="card-body blue-text">
-                                <h3 className="card-title fw-bold fw-bold">Tudo sobre python</h3>
-                                <p className="card-text">Torna-te um expert em HTML5 com apenas um curso.</p>
-                                <p className="card-text d-flex justify-content-end mt-5">(120 participantes)</p>
-                            </div>
-                        </div>
-                        <div className=" row card col-md-4 bg-transparent border-0 shadow-lg p-0" style={{ width: '18rem' }}>
-                            <Link className="p-0" to={"/curso"} style={{ textDecoration: 'none' }}>
-                            <div className="p-0">
-                                <img src="/img/CursoPython.png" style={{ width: '100%' }} alt="Python" />
-                            </div>
-                            </Link>
-                            <div className="card-body blue-text">
-                                <h3 className="card-title fw-bold fw-bold">Tudo sobre python</h3>
-                                <p className="card-text">Torna-te um expert em HTML5 com apenas um curso.</p>
-                                <p className="card-text d-flex justify-content-end mt-5">(120 participantes)</p>
-                            </div>
-                        </div>
-                        <div className=" row card col-md-4 bg-transparent border-0 shadow-lg p-0" style={{ width: '18rem' }}>
-                            <Link className="p-0" to={"/curso"} style={{ textDecoration: 'none' }}>
-                            <div className="p-0">
-                                <img src="/img/CursoPython.png" style={{ width: '100%' }} alt="Python" />
-                            </div>
-                            </Link>
-                            <div className="card-body blue-text">
-                                <h3 className="card-title fw-bold fw-bold">Tudo sobre python</h3>
-                                <p className="card-text">Torna-te um expert em HTML5 com apenas um curso.</p>
-                                <p className="card-text d-flex justify-content-end mt-5">(120 participantes)</p>
-                            </div>
-                        </div>
-                        <div className=" row card col-md-4 bg-transparent border-0 shadow-lg p-0" style={{ width: '18rem' }}>
-                            <Link className="p-0" to={"/curso"} style={{ textDecoration: 'none' }}>
-                            <div className="p-0">
-                                <img src="/img/CursoPython.png" style={{ width: '100%' }} alt="Python" />
-                            </div>
-                            </Link>
-                            <div className="card-body blue-text">
-                                <h3 className="card-title fw-bold fw-bold">Tudo sobre python</h3>
-                                <p className="card-text">Torna-te um expert em HTML5 com apenas um curso.</p>
-                                <p className="card-text d-flex justify-content-end mt-5">(120 participantes)</p>
-                            </div>
-                        </div>
-                        <div className=" row card col-md-4 bg-transparent border-0 shadow-lg p-0" style={{ width: '18rem' }}>
-                            <Link className="p-0" to={"/curso"} style={{ textDecoration: 'none' }}>
-                            <div className="p-0">
-                                <img src="/img/CursoPython.png" style={{ width: '100%' }} alt="Python" />
-                            </div>
-                            </Link>
-                            <div className="card-body blue-text">
-                                <h3 className="card-title fw-bold fw-bold">Tudo sobre python</h3>
-                                <p className="card-text">Torna-te um expert em HTML5 com apenas um curso.</p>
-                                <p className="card-text d-flex justify-content-end mt-5">(120 participantes)</p>
-                            </div>
-                        </div>
-                        <div className=" row card col-md-4 bg-transparent border-0 shadow-lg p-0" style={{ width: '18rem' }}>
-                            <Link className="p-0" to={"/curso"} style={{ textDecoration: 'none' }}>
-                            <div className="p-0">
-                                <img src="/img/CursoPython.png" style={{ width: '100%' }} alt="Python" />
-                            </div>
-                            </Link>
-                            <div className="card-body blue-text">
-                                <h3 className="card-title fw-bold fw-bold">Tudo sobre python</h3>
-                                <p className="card-text">Torna-te um expert em HTML5 com apenas um curso.</p>
-                                <p className="card-text d-flex justify-content-end mt-5">(120 participantes)</p>
-                            </div>
-                        </div>
-                        <div className=" row card col-md-4 bg-transparent border-0 shadow-lg p-0" style={{ width: '18rem' }}>
-                            <Link className="p-0" to={"/curso"} style={{ textDecoration: 'none' }}>
-                            <div className="p-0">
-                                <img src="/img/CursoPython.png" style={{ width: '100%' }} alt="Python" />
-                            </div>
-                            </Link>
-                            <div className="card-body blue-text">
-                                <h3 className="card-title fw-bold fw-bold">Tudo sobre python</h3>
-                                <p className="card-text">Torna-te um expert em HTML5 com apenas um curso.</p>
-                                <p className="card-text d-flex justify-content-end mt-5">(120 participantes)</p>
-                            </div>
-                        </div>
-                        <div className=" row card col-md-4 bg-transparent border-0 shadow-lg p-0" style={{ width: '18rem' }}>
-                            <Link className="p-0" to={"/curso"} style={{ textDecoration: 'none' }}>
-                            <div className="p-0">
-                                <img src="/img/CursoPython.png" style={{ width: '100%' }} alt="Python" />
-                            </div>
-                            </Link>
-                            <div className="card-body blue-text">
-                                <h3 className="card-title fw-bold fw-bold">Tudo sobre python</h3>
-                                <p className="card-text">Torna-te um expert em HTML5 com apenas um curso.</p>
-                                <p className="card-text d-flex justify-content-end mt-5">(120 participantes)</p>
-                            </div>
-                        </div>
+                        ))}
                     </div>
                 </div>
             </div>
@@ -290,8 +201,8 @@ const Topicos = () => {
                 © 2025 Meu Site. Todos os direitos reservados.
             </footer>
         </div>
-
     );
 };
+
 
 export default Topicos;

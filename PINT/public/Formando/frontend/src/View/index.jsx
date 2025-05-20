@@ -1,11 +1,23 @@
-import React from "react";
-import { useNavigate, Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";import { useNavigate, Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 function MainView() {
+    const [cursos, setCursos] = useState([]);
+
+    useEffect(() => {
+            fetch("http://localhost:3000/curso/list")
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) setCursos(data.data);
+                })
+                .catch(err => {
+                    console.error("Erro ao buscar cursos:", err);
+                });
+        }, []);
+    
 
     return (
-        <div className="container-fluid p-0 m-0">
+        <div className="default-container p-0 m-0">
             <div className="row col-md-12 align-items-center bg-blue-grad m-0">
                 <div className="row col-md-6 col-sm-6 d-flex flex-grow-1 justify-content-center align-items-center">
                     <h3 className="col-md-10 col-sm-10 texto ms-5 me-5">
@@ -71,147 +83,78 @@ function MainView() {
                 </div>
             </div>
 
-            <div className="row mt-5 d-flex justify-content-center" style={{ width: '100%' }}>
-                <div className="col-md-4 d-flex justify-content-center">
-                    <div className="d-flex justify-content-center">
-                        <img src="/img/curs-javascriptAvan;ado.png" className="rounded-4" alt="Curso Javascript Avançado" />
-                        <p className="fw-bold mb-0 mt-2" style={{ color: '#39639D' }}>Javascript Avançado 2025</p>
-                        <p style={{ color: '#39639D' }}>Torna-te um expert em HTML5 com apenas um curso.</p>
+            <div className="row mt-5 d-flex justify-content-center w-100 m-0 p-0" >
+                    {cursos.slice(0, 3).map((curso) => (
+                <div key={curso.id} className="col-md-4 d-flex justify-content-center mb-3">
+                    <div className="row d-flex justify-content-center">
+                        <img src={curso.imagemBanner ||"/img/curs-javascriptAvan;ado.png"} className="rounded-5 " alt={curso.nome} />
+                        <p className="fw-bold mb-0 mt-2 text-center" style={{ color: '#39639D' }}>{curso.nome}</p>
+                        <p className="blue-text text-center ms-3">{curso.descricaoCurso}</p>
                         <div
-                            className="row  bg-white border shadow-lg rounded-4 d-flex align-items-center"
+                            className="row bg-white border shadow-lg rounded-4 d-flex align-items-center"
                             style={{ maxWidth: '60%', maxHeight: '50%' }}
                         >
-                            <div className="col-md-4 d-flex justify-content-center">
+                            <div className="col-md-4 col-4 d-flex justify-content-center">
                                 <img src="/img/icon-alunos.svg" alt="Ícone Alunos" />
                                 <div>
                                     <p className="fw-bold mb-0" style={{ color: '#39639D' }}>Inscritos</p>
-                                    <p className="text-center" style={{ color: '#39639D' }}>161 alunos</p>
+                                    <p className="text-center" style={{ color: '#39639D' }}>{curso.participantes || 0}</p>
                                 </div>
                             </div>
 
-                            <div className="col-md-4 d-flex justify-content-center">
+                            <div className="col-md-4 col-4 d-flex justify-content-center">
                                 <img src="/img/icon-tempo.svg" alt="Ícone Tempo" />
                                 <div>
                                     <p className="fw-bold mb-0" style={{ color: '#39639D' }}>Tempo</p>
-                                    <p className="text-center" style={{ color: '#39639D' }}>25 horas</p>
+                                    <p className="text-center" style={{ color: '#39639D' }}>{curso.duracao || "25 horas"}</p>
                                 </div>
                             </div>
-                            <div className="col-md-4 d-flex justify-content-center">
+                            <div className="col-md-4 col-4 d-flex justify-content-center">
                                 <img src="/img/icon-certificado.svg" alt="Ícone Certificado" />
                                 <div>
                                     <p className="fw-bold mb-0 text-center" style={{ color: '#39639D' }}>Certificado</p>
-                                    <p className="text-center" style={{ color: '#39639D' }}>Sim</p>
+                                    <p className="text-center" style={{ color: '#39639D' }}>{curso.certificado ? "Sim" : "Não"}</p>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
-                <div className="col-md-4 d-flex justify-content-center">
-                    <div className="d-flex justify-content-center">
-                        <img src="/img/curs-javascriptAvan;ado.png" className="rounded-4" alt="Curso Javascript Avançado" />
-                        <p className="fw-bold mb-0 mt-2" style={{ color: '#39639D' }}>Javascript Avançado 2025</p>
-                        <p style={{ color: '#39639D' }}>Torna-te um expert em HTML5 com apenas um curso.</p>
-                        <div
-                            className="row container bg-white border shadow-lg rounded-4 d-flex align-items-center"
-                            style={{ maxWidth: '60%', maxHeight: '50%' }}
-                        >
-                            <div className="col-md-4 d-flex justify-content-center">
-                                <img src="/img/icon-alunos.svg" alt="Ícone Alunos" />
-                                <div>
-                                    <p className="fw-bold mb-0" style={{ color: '#39639D' }}>Inscritos</p>
-                                    <p className="text-center" style={{ color: '#39639D' }}>161 alunos</p>
-                                </div>
-                            </div>
-                            <div className="col-md-4 d-flex justify-content-center">
-                                <img src="/img/icon-tempo.svg" alt="Ícone Tempo" />
-                                <div>
-                                    <p className="fw-bold mb-0" style={{ color: '#39639D' }}>Tempo</p>
-                                    <p className="text-center" style={{ color: '#39639D' }}>25 horas</p>
-                                </div>
-                            </div>
-                            <div className="col-md-4 d-flex justify-content-center">
-                                <img src="/img/icon-certificado.svg" alt="Ícone Certificado" />
-                                <div>
-                                    <p className="fw-bold mb-0 text-center" style={{ color: '#39639D' }}>Certificado</p>
-                                    <p className="text-center" style={{ color: '#39639D' }}>Sim</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="col-md-4 d-flex justify-content-center">
-                    <div className="d-flex justify-content-center">
-                        <img src="/img/curs-javascriptAvan;ado.png" className="rounded-4" alt="Curso Javascript Avançado" />
-                        <p className="fw-bold mb-0 mt-2" style={{ color: '#39639D' }}>Javascript Avançado 2025</p>
-                        <p style={{ color: '#39639D' }}>Torna-te um expert em HTML5 com apenas um curso.</p>
-                        <div
-                            className="row container bg-white border shadow-lg rounded-4 d-flex align-items-center"
-                            style={{ maxWidth: '60%', maxHeight: '50%' }}
-                        >
-                            <div className="col-md-4 d-flex justify-content-center">
-                                <img src="/img/icon-alunos.svg" alt="Ícone Alunos" />
-                                <div>
-                                    <p className="fw-bold mb-0" style={{ color: '#39639D' }}>Inscritos</p>
-                                    <p className="text-center" style={{ color: '#39639D' }}>161 alunos</p>
-                                </div>
-                            </div>
-                            <div className="col-md-4 d-flex justify-content-center">
-                                <img src="/img/icon-tempo.svg" alt="Ícone Tempo" />
-                                <div>
-                                    <p className="fw-bold mb-0" style={{ color: '#39639D' }}>Tempo</p>
-                                    <p className="text-center" style={{ color: '#39639D' }}>25 horas</p>
-                                </div>
-                            </div>
-                            <div className="col-md-4 d-flex justify-content-center">
-                                <img src="/img/icon-certificado.svg" alt="Ícone Certificado" />
-                                <div>
-                                    <p className="fw-bold mb-0 text-center" style={{ color: '#39639D' }}>Certificado</p>
-                                    <p className="text-center" style={{ color: '#39639D' }}>Sim</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                 ))}
             </div>
 
-            <div className="row container-fluid p-0" style={{ marginTop: "10%" }}>
-                <div className="col-md-6 ms-5">
-                    <div className="d-flex align-items-end">
-                        <div className="d-flex justify-content-center">
+            <div className="row p-0 justify-content-center align-items-center text-center" style={{ marginTop: "5%" }}>
+                <div className="col-12">
+                    <div className="d-flex flex-column align-items-center">
+                        <div className="row d-flex justify-content-center text-center">
                             <p
-                                className="fw-bold mb-0"
-                                style={{ fontSize: "96px", color: "#39639D" }}
+                                className="col-12 fw-bold mb-0 fs-1 fs-sm-3"
+                                style={{ fontSize: "70px", color: "#39639D" }}
                             >
                                 Vocês escolheram!
                             </p>
-                            <p className="" style={{ fontSize: "32px", color: "#39639D" }}>
+                            <p className="col-12" style={{ fontSize: "32px", color: "#39639D" }}>
                                 Curso do mês!
                             </p>
                         </div>
                     </div>
-                    <div className="row mt-5 d-flex align-items-center">
-                        <div className="col-md-6">
+                    <div className="row mt-5 mb-5 d-flex align-items-center justify-content-center">
+                        <div className="col-md-3 col-8 text-center">
                             <img
                                 src="/img/MariaDB.png"
                                 alt="MariaDB"
-                                style={{ width: "100%" }}
+                                className="img-fluid"
                             />
                         </div>
-                        <div className="column col-md-6">
+                        <div className="col-md-4 col-10 text-center text-md-start">
                             <h3 className="fw-bold" style={{ color: "#39639D" }}>
                                 MariaDB - Base de dados Avançado 2025
                             </h3>
                             <p style={{ color: "#39639D" }}>
                                 Torna-te um expert em MariaDB com apenas um curso.
                             </p>
-                            <button class="btn btn-primary mb-3">Continuar curso</button>
+                            <button className="btn btn-primary mb-3">Continuar curso</button>
                         </div>
                     </div>
-                </div>
-                <div className="col-md-5">
-                    <img src="/img/Man.png" alt="Man" />
                 </div>
             </div>
 
