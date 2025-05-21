@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -52,115 +52,24 @@ function Perfil() {
         setEditProfileSuccessModalOpen(false);
     }
 
-    const cursos = [
-        {
-            imagem: "/img/curso-mariadb.png",
-            nome: "MariaDB - Base de dados Avançado 2025",
-            formador: "Marco Roberto",
-            dataRegisto: "05/01/2025",
-            dataTermino: "POR TERMINAR",
-            nota: "???"
-        },
-        {
-            imagem: "/img/curso-java.png",
-            nome: "Javascript - Curso avançado",
-            formador: "Sem Formador",
-            dataRegisto: "05/01/2025",
-            dataTermino: "POR TERMINAR",
-            nota: "???"
-        },
-        {
-            imagem: "/img/curso-kotlin.png",
-            nome: "Kotlin - O futuro",
-            formador: "Leandro Loureiro",
-            dataRegisto: "05/01/2025",
-            dataTermino: "10/01/2025",
-            nota: "???"
-        },
-        {
-            imagem: "/img/curso-mariadb.png",
-            nome: "MariaDB - Base de dados Avançado 2025",
-            formador: "Marco Roberto",
-            dataRegisto: "05/01/2025",
-            dataTermino: "POR TERMINAR",
-            nota: "???"
-        },
-    ];
+
+    const [cursos, setCursos] = useState([]);
+
+    useEffect(() => {
+        fetch("http://localhost:3000/curso/list")
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) setCursos(data.data);
+            })
+            .catch(err => {
+                console.error("Erro ao buscar cursos:", err);
+            });
+    }, []);
+
 
     return (
         <div>
             <div className="scrollbar" style={{ height: 'min-content' }} />
-            <nav className="navbar navbar-expand-lg bg-body-tertiary border-bottom border-secondary shadow-lg">
-                <div className="container-fluid">
-                    <Link className="navbar-brand me-0 ms-4" to="/">
-                        <img
-                            src="/img/Logo.png"
-                            alt="Logo"
-                        />
-                    </Link>
-                    <button
-                        className="navbar-toggler"
-                        type="button"
-                        data-bs-toggle="collapse"
-                        data-bs-target="#navbarSupportedContent"
-                        aria-controls="navbarSupportedContent"
-                        aria-expanded="false"
-                        aria-label="Toggle navigation"
-                    >
-                        <span className="navbar-toggler-icon"></span>
-                    </button>
-
-                    <div className="collapse navbar-collapse" id="navbarSupportedContent">
-                        <ul className="navbar-nav me-auto mb-2 mb-lg-0 w-100">
-                            <li className="nav-item mx-auto mt-2 fs-5 fw-bold">
-                                <Link className="nav-link blue-text underline-animation" to="/">
-                                    Categorias
-                                </Link>
-                            </li>
-                            <li className="nav-item mx-auto mt-2 m-3 mb-md-0 fs-5 fw-bold">
-                                <Link className="nav-link blue-text underline-animation" to="/topicos">
-                                    Tópicos
-                                </Link>
-                            </li>
-                            <form
-                                className="input-group d-flex mx-auto border border-secondary border-opacity-50 rounded-pill shadow w-50"
-                                role="search"
-                            >
-                                <span className="input-group-text bg-transparent border-0">
-                                    <img
-                                        src="/img/Icon-lupa.png"
-                                        alt="Lupa"
-                                        className="img-fluid"
-                                    />
-                                </span>
-                                <input
-                                    className="form-control no-outline bg-transparent border-0"
-                                    type="search"
-                                    placeholder="Procurar"
-                                    aria-label="Search"
-                                />
-                            </form>
-                            <li className="nav-item d-flex align-items-center me-0 me-md-2 mt-3 mt-md-0 justify-content-center">
-                                <img
-                                    src="/img/profile-picture.png"
-                                    alt="profile-picture"
-                                    className="me-3"
-                                    style={{ width: "50px", height: "50px", borderRadius: "50%" }}
-                                    onClick={() => navigate("/perfil")}
-                                />
-                                <div className="d-flex flex-column text-start">
-                                    <Link to="/perfil" className="fw-bold text-decoration-none">
-                                        Francisco Duarte
-                                    </Link>
-                                    <Link to="/perfil" className="grey-text text-decoration-none">
-                                        franciscopereira312@gmail.com
-                                    </Link>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </nav>
             <div className="container2 mt-4">
                 <div className="row bg-translucent rounded d-flex justify-content-center">
                     <div className="col-12 row" style={{ minHeight: 250 }}>
@@ -282,7 +191,15 @@ function Perfil() {
                         </p>
                         <div className="row mt-4 bg-translucent p-0 m-0 scrollbar-translucent" style={{ maxHeight: 600, overflowY: 'auto', overflowX: 'hidden' }}>
                             {cursos.map((curso, idx) => (
-                                <CursoCard key={idx} {...curso} />
+                                <CursoCard
+                                    key={curso.id || idx}
+                                    imagem={curso.imagem || "/img/curso-kotlin.png"}
+                                    nome={curso.nome}
+                                    formador={curso.formador || "Desconhecido"}
+                                    dataRegisto={curso.dataRegisto || "-"}
+                                    dataTermino={curso.dataTermino || "-"}
+                                    nota={curso.nota || "???"}
+                                />
                             ))}
                         </div>
                     </div>

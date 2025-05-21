@@ -1,20 +1,20 @@
-import React, { useState, useEffect } from "react";import { useNavigate, Link } from "react-router-dom";
+import React, { useState, useEffect } from "react"; import { useNavigate, Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 function MainView() {
     const [cursos, setCursos] = useState([]);
 
     useEffect(() => {
-            fetch("http://localhost:3000/curso/list")
-                .then(res => res.json())
-                .then(data => {
-                    if (data.success) setCursos(data.data);
-                })
-                .catch(err => {
-                    console.error("Erro ao buscar cursos:", err);
-                });
-        }, []);
-    
+        fetch("http://localhost:3000/curso/list")
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) setCursos(data.data);
+            })
+            .catch(err => {
+                console.error("Erro ao buscar cursos:", err);
+            });
+    }, []);
+
 
     return (
         <div className="default-container p-0 m-0">
@@ -29,7 +29,7 @@ function MainView() {
                         cursos.
                     </p>
                     <div className="col-md-10 col-sm-10 mt-3 mb-3">
-                        <button className="btn btn-primary">Regista-te</button>
+                        <Link className="btn btn-primary" to={"/login"}>Regista-te</Link>
                     </div>
                 </div>
                 <div className="row col-md-6 d-none d-md-block">
@@ -62,100 +62,105 @@ function MainView() {
                 }}
             >
                 <div className="col-md-6 row d-flex justify-content-center">
-                    <button
+                    <Link
                         className="col-md-3 btn botao-light rounded-0 border-0 fw-normal"
                         style={{ fontSize: "20px" }}
+                        to={"/categorias"}
                     >
                         Populares
-                    </button>
-                    <button
+                    </Link>
+                    <Link
                         className="col-md-3 btn botao-light rounded-0 border-0 fw-normal"
                         style={{ fontSize: "20px" }}
+                        to={"/categorias"}
                     >
                         Novos
-                    </button>
-                    <button
+                    </Link>
+                    <Link
                         className="col-md-3 btn botao-light rounded-0 border-0 fw-normal"
                         style={{ fontSize: "20px" }}
+                        to={"/categorias"}
                     >
                         Vistos
-                    </button>
+                    </Link>
                 </div>
             </div>
 
-            <div className="row mt-5 d-flex justify-content-center w-100 m-0 p-0" >
-                    {cursos.slice(0, 3).map((curso) => (
-                <div key={curso.id} className="col-md-4 d-flex justify-content-center mb-3">
-                    <div className="row d-flex justify-content-center">
-                        <img src={curso.imagemBanner ||"/img/curs-javascriptAvan;ado.png"} className="rounded-5 " alt={curso.nome} />
-                        <p className="fw-bold mb-0 mt-2 text-center" style={{ color: '#39639D' }}>{curso.nome}</p>
-                        <p className="blue-text text-center ms-3">{curso.descricaoCurso}</p>
-                        <div
-                            className="row bg-white border shadow-lg rounded-4 d-flex align-items-center"
-                            style={{ maxWidth: '60%', maxHeight: '50%' }}
-                        >
-                            <div className="col-md-4 col-4 d-flex justify-content-center">
-                                <img src="/img/icon-alunos.svg" alt="Ícone Alunos" />
-                                <div>
-                                    <p className="fw-bold mb-0" style={{ color: '#39639D' }}>Inscritos</p>
-                                    <p className="text-center" style={{ color: '#39639D' }}>{curso.participantes || 0}</p>
+            <Link className="row mt-5 d-flex justify-content-center w-100 m-0 p-0 text-decoration-none" >
+                {cursos.slice(0, 3).map((curso) => (
+                    <div key={curso.id} className="col-md-4 d-flex justify-content-center mb-3">
+                        <div className="row d-flex justify-content-center">
+                            <img src={curso.imagemBanner || "/img/curs-javascriptAvan;ado.png"} className="rounded-5 " alt={curso.nome} />
+                            <p className="fw-bold mb-0 mt-2 text-center" style={{ color: '#39639D' }}>{curso.nome}</p>
+                            <p className="blue-text text-center ms-3">{curso.descricaoCurso}</p>
+                            <div
+                                className="row bg-white border shadow-lg rounded-4 d-flex align-items-center"
+                                style={{ maxWidth: '60%', maxHeight: '50%' }}
+                            >
+                                <div className="col-md-4 col-4 d-flex justify-content-center">
+                                    <img src="/img/icon-alunos.svg" alt="Ícone Alunos" />
+                                    <div>
+                                        <p className="fw-bold mb-0" style={{ color: '#39639D' }}>Inscritos</p>
+                                        <p className="text-center" style={{ color: '#39639D' }}>{curso.participantes || 0}</p>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div className="col-md-4 col-4 d-flex justify-content-center">
-                                <img src="/img/icon-tempo.svg" alt="Ícone Tempo" />
-                                <div>
-                                    <p className="fw-bold mb-0" style={{ color: '#39639D' }}>Tempo</p>
-                                    <p className="text-center" style={{ color: '#39639D' }}>{curso.duracao || "25 horas"}</p>
+                                <div className="col-md-4 col-4 d-flex justify-content-center">
+                                    <img src="/img/icon-tempo.svg" alt="Ícone Tempo" />
+                                    <div>
+                                        <p className="fw-bold mb-0" style={{ color: '#39639D' }}>Tempo</p>
+                                        <p className="text-center" style={{ color: '#39639D' }}>{curso.duracao || "25 horas"}</p>
+                                    </div>
                                 </div>
-                            </div>
-                            <div className="col-md-4 col-4 d-flex justify-content-center">
-                                <img src="/img/icon-certificado.svg" alt="Ícone Certificado" />
-                                <div>
-                                    <p className="fw-bold mb-0 text-center" style={{ color: '#39639D' }}>Certificado</p>
-                                    <p className="text-center" style={{ color: '#39639D' }}>{curso.certificado ? "Sim" : "Não"}</p>
+                                <div className="col-md-4 col-4 d-flex justify-content-center">
+                                    <img src="/img/icon-certificado.svg" alt="Ícone Certificado" />
+                                    <div>
+                                        <p className="fw-bold mb-0 text-center" style={{ color: '#39639D' }}>Certificado</p>
+                                        <p className="text-center" style={{ color: '#39639D' }}>{curso.certificado ? "Sim" : "Não"}</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                 ))}
-            </div>
+                ))}
+            </Link>
 
             <div className="row p-0 justify-content-center align-items-center text-center" style={{ marginTop: "5%" }}>
-                <div className="col-12">
-                    <div className="d-flex flex-column align-items-center">
-                        <div className="row d-flex justify-content-center text-center">
-                            <p
-                                className="col-12 fw-bold mb-0 fs-1 fs-sm-3"
-                                style={{ fontSize: "70px", color: "#39639D" }}
-                            >
-                                Vocês escolheram!
-                            </p>
-                            <p className="col-12" style={{ fontSize: "32px", color: "#39639D" }}>
-                                Curso do mês!
-                            </p>
+                {cursos.slice(0, 1).map((curso) => (
+                    <div className="col-12">
+                        <div className="d-flex flex-column align-items-center">
+                            <div className="row d-flex justify-content-center text-center">
+                                <p
+                                    className="col-12 fw-bold mb-0 fs-1 fs-sm-3"
+                                    style={{ fontSize: "70px", color: "#39639D" }}
+                                >
+                                    Vocês escolheram!
+                                </p>
+                                <p className="col-12" style={{ fontSize: "32px", color: "#39639D" }}>
+                                    Curso do mês!
+                                </p>
+                            </div>
+                        </div>
+                        <div key={curso.id} className="row mt-5 mb-5 d-flex align-items-center justify-content-center">
+                            <div className="col-md-3 col-8 text-center">
+                                <img
+                                    src={curso.imagem || "/img/MariaDB.png"}
+                                    alt="MariaDB"
+                                    className="img-fluid"
+                                />
+                            </div>
+                            <div className="col-md-4 col-10 text-center text-md-start">
+                                <h3 className="fw-bold" style={{ color: "#39639D" }}>
+                                    {curso.nome}
+                                </h3>
+                                <p style={{ color: "#39639D" }}>
+                                    {curso.descricaoCurso}
+                                </p>
+                                <Link className="btn btn-primary mb-3" to={"/curso"}>Ver Curso</Link>
+                            </div>
                         </div>
                     </div>
-                    <div className="row mt-5 mb-5 d-flex align-items-center justify-content-center">
-                        <div className="col-md-3 col-8 text-center">
-                            <img
-                                src="/img/MariaDB.png"
-                                alt="MariaDB"
-                                className="img-fluid"
-                            />
-                        </div>
-                        <div className="col-md-4 col-10 text-center text-md-start">
-                            <h3 className="fw-bold" style={{ color: "#39639D" }}>
-                                MariaDB - Base de dados Avançado 2025
-                            </h3>
-                            <p style={{ color: "#39639D" }}>
-                                Torna-te um expert em MariaDB com apenas um curso.
-                            </p>
-                            <button className="btn btn-primary mb-3">Continuar curso</button>
-                        </div>
-                    </div>
-                </div>
+                ))}
             </div>
 
             <footer

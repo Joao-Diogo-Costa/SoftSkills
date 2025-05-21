@@ -4,7 +4,7 @@ import Login from './View/login';
 import MainView from './View/index';
 import PaginaInicial from './View/paginaInicial';
 import Perfil from './View/perfil';
-import Topicos from './View/topicos';
+import Categorias from './View/categorias';
 import Navbar from "./View/navbar";
 import Curso from "./View/curso";
 import VerAula from "./View/verAula";
@@ -24,20 +24,16 @@ function App() {
     );
   };
 
-  const NoNavbarLayout = ({ children }) => {
-    return <>{children}</>;
-  };
-
 
 
   return (
     <>
       <Routes>
         <Route path="/" element={<NavbarLayout><MainView /></NavbarLayout>} />
-        <Route path="/paginaInicial" element={<NoNavbarLayout><PaginaInicial /></NoNavbarLayout>} />
-        <Route path="/login" element={<NoNavbarLayout><Login /></NoNavbarLayout>} />
-        <Route path="/perfil" element={<NoNavbarLayout><Perfil /></NoNavbarLayout>} />
-        <Route path="/topicos" element={<NavbarLayout><Topicos /></NavbarLayout>} />
+        <Route path="/paginaInicial" element={<NavbarLayout><PaginaInicial /></NavbarLayout>} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/perfil" element={<NavbarLayout><Perfil /></NavbarLayout>} />
+        <Route path="/categorias" element={<NavbarLayout><Categorias /></NavbarLayout>} />
         <Route path="/curso" element={<NavbarLayout><Curso /></NavbarLayout>} />
         <Route path="/verAula" element={<NavbarLayout><VerAula /></NavbarLayout>} />
         <Route path="/cursoSincrono" element={<NavbarLayout><CursoSincrono/></NavbarLayout>} />

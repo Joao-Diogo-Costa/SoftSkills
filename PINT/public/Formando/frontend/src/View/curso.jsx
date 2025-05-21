@@ -22,6 +22,25 @@ const Curso = () => {
     }
 
 
+    const [aulas, setAulas] = useState([]);
+
+    useEffect(() => {
+        fetch("http://localhost:3000/aula-assincrona/list") // ajuste o endpoint conforme o seu backend
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) setAulas(data.data);
+            })
+            .catch(err => {
+                console.error("Erro ao buscar aulas:", err);
+            });
+    }, []);
+
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
+
+
     return (
         <div className="container-fluid min-vh-100 m-0 p-0">
             <div className="container-fluid row m-0 p-0 d-flex justify-content-center align-items-center position-relative"
@@ -69,7 +88,7 @@ const Curso = () => {
                                                     <h5 className="fw-bold fs-3 ms-4 text-center" style={{
                                                         color: "#39639D"
                                                     }}>
-                                                        Curso - JavaScript 
+                                                        Curso - JavaScript
                                                     </h5>
                                                     <div className="mb-3 ms-4 text-start">
                                                         <label className="form-label fw-semibold fs-6 text-center " style={{
@@ -79,7 +98,7 @@ const Curso = () => {
                                                             Para confirmar a tua inscrição no curso - nome - clica no botão abaixo
                                                         </label>
                                                     </div>
-                                                    
+
                                                 </form>
                                             </div>
                                             <div className="modal-footer d-flex justify-content-center">
@@ -129,140 +148,34 @@ const Curso = () => {
             </div>
             <div className="container2">
                 <div className="container-fluid row mt-5 bg-translucent p-0 m-0 rounded-start-4 overflow-x-hidden" style={{ maxHeight: 600, overflowY: 'auto' }}>
-                    <div className="container-fluid row mt-5 p-0 ms-2">
-                        <div className="col-md-3 d-flex align-items-center">
-                            <img className="rounded-4" src="/img/video-curso.png" onClick={() => navigate("/verAula")}/>
-                        </div>
-                        <div className="row col-md-9">
-                            <div className="col-md-6 position-relative">
-                                <h4 className="fw-bold" style={{ color: '#39639d' }}>
-                                    Aula #1 - Os primeiros passos em Javascript!
-                                </h4>
-                                <p className="" style={{ color: '#39639d' }}>
-                                    Nesta aula iremos abordar o que é o Javascript e para que ele serve.
-                                </p>
-                                <div className="d-flex align-items-center position-absolute" style={{ bottom: 0 }}>
-                                    <img className="me-2" src="/img/icon-laptop.png" alt="" />
-                                    <p className="grey-text mb-0">Aula 1 - 2 horas 38 minutos</p>
+                    {aulas.slice(0, 4).map((aula, idx) => (
+                        <div className="container-fluid row mt-5 p-0 ms-2" key={aula.id || idx}>
+                            <div className="col-md-3 d-flex align-items-center">
+                                <img
+                                    className="rounded-4"
+                                    src={aula.imagem || "/img/video-curso.png"}
+                                    alt={aula.titulo}
+                                    onClick={() => navigate(`/verAula`)} // /${aula.id} <--adicionar quando estiver mesmo  funcionar
+                                />
+                            </div>
+                            <div className="row col-md-9">
+                                <div className="col-md-6 position-relative">
+                                    <h4 className="fw-bold" style={{ color: '#39639d' }}>
+                                        {aula.tituloAssincrona}
+                                    </h4>
+                                    <p style={{ color: '#39639d' }}>
+                                        {aula.descricaoAssincrona}
+                                    </p>
+                                    <div className="d-flex align-items-center position-absolute" style={{ bottom: 0 }}>
+                                        <img className="me-2" src="/img/icon-laptop.png" alt="" />
+                                        <p className="grey-text mb-0">
+                                            {aula.dataLancAssincrona || "Duração não informada"}
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div className="container-fluid row mt-5 p-0 ms-2">
-                        <div className="col-md-3 d-flex align-items-center">
-                            <img className="rounded-4" src="/img/video-curso.png" onClick={() => navigate("/verAula")}/>
-                        </div>
-                        <div className="row col-md-9">
-                            <div className="col-md-6 position-relative">
-                                <h4 className="fw-bold" style={{ color: '#39639d' }}>
-                                    Aula #1 - Os primeiros passos em Javascript!
-                                </h4>
-                                <p className="" style={{ color: '#39639d' }}>
-                                    Nesta aula iremos abordar o que é o Javascript e para que ele serve.
-                                </p>
-                                <div className="d-flex align-items-center position-absolute" style={{ bottom: 0 }}>
-                                    <img className="me-2" src="/img/icon-laptop.png" alt="" />
-                                    <p className="grey-text mb-0">Aula 1 - 2 horas 38 minutos</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="container-fluid row mt-5 p-0 ms-2">
-                        <div className="col-md-3 d-flex align-items-center">
-                            <img className="rounded-4" src="/img/video-curso.png" onClick={() => navigate("/verAula")}/>
-                        </div>
-                        <div className="row col-md-9">
-                            <div className="col-md-6 position-relative">
-                                <h4 className="fw-bold" style={{ color: '#39639d' }}>
-                                    Aula #1 - Os primeiros passos em Javascript!
-                                </h4>
-                                <p className="" style={{ color: '#39639d' }}>
-                                    Nesta aula iremos abordar o que é o Javascript e para que ele serve.
-                                </p>
-                                <div className="d-flex align-items-center position-absolute" style={{ bottom: 0 }}>
-                                    <img className="me-2" src="/img/icon-laptop.png" alt="" />
-                                    <p className="grey-text mb-0">Aula 1 - 2 horas 38 minutos</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="container-fluid row mt-5 p-0 ms-2">
-                        <div className="col-md-3 d-flex align-items-center">
-                            <img className="rounded-4" src="/img/video-curso.png" onClick={() => navigate("/verAula")}/>
-                        </div>
-                        <div className="row col-md-9">
-                            <div className="col-md-6 position-relative">
-                                <h4 className="fw-bold" style={{ color: '#39639d' }}>
-                                    Aula #1 - Os primeiros passos em Javascript!
-                                </h4>
-                                <p className="" style={{ color: '#39639d' }}>
-                                    Nesta aula iremos abordar o que é o Javascript e para que ele serve.
-                                </p>
-                                <div className="d-flex align-items-center position-absolute" style={{ bottom: 0 }}>
-                                    <img className="me-2" src="/img/icon-laptop.png" alt="" />
-                                    <p className="grey-text mb-0">Aula 1 - 2 horas 38 minutos</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="container-fluid row mt-5 p-0 ms-2">
-                        <div className="col-md-3 d-flex align-items-center">
-                            <img className="rounded-4" src="/img/video-curso.png" onClick={() => navigate("/verAula")}/>
-                        </div>
-                        <div className="row col-md-9">
-                            <div className="col-md-6 position-relative">
-                                <h4 className="fw-bold" style={{ color: '#39639d' }}>
-                                    Aula #1 - Os primeiros passos em Javascript!
-                                </h4>
-                                <p className="" style={{ color: '#39639d' }}>
-                                    Nesta aula iremos abordar o que é o Javascript e para que ele serve.
-                                </p>
-                                <div className="d-flex align-items-center position-absolute" style={{ bottom: 0 }}>
-                                    <img className="me-2" src="/img/icon-laptop.png" alt="" />
-                                    <p className="grey-text mb-0">Aula 1 - 2 horas 38 minutos</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="container-fluid row mt-5 p-0 ms-2">
-                        <div className="col-md-3 d-flex align-items-center">
-                            <img className="rounded-4" src="/img/video-curso.png" onClick={() => navigate("/verAula")}/>
-                        </div>
-                        <div className="row col-md-9">
-                            <div className="col-md-6 position-relative">
-                                <h4 className="fw-bold" style={{ color: '#39639d' }}>
-                                    Aula #1 - Os primeiros passos em Javascript!
-                                </h4>
-                                <p className="" style={{ color: '#39639d' }}>
-                                    Nesta aula iremos abordar o que é o Javascript e para que ele serve.
-                                </p>
-                                <div className="d-flex align-items-center position-absolute" style={{ bottom: 0 }}>
-                                    <img className="me-2" src="/img/icon-laptop.png" alt="" />
-                                    <p className="grey-text mb-0">Aula 1 - 2 horas 38 minutos</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="container-fluid row mt-5 p-0 ms-2 mb-4">
-                        <div className="col-md-3 d-flex align-items-center">
-                            <img className="rounded-4" src="/img/video-curso.png" onClick={() => navigate("/verAula")}/>
-                        </div>
-                        <div className="row col-md-9">
-                            <div className="col-md-6 position-relative">
-                                <h4 className="fw-bold" style={{ color: '#39639d' }}>
-                                    Aula #1 - Os primeiros passos em Javascript!
-                                </h4>
-                                <p className="" style={{ color: '#39639d' }}>
-                                    Nesta aula iremos abordar o que é o Javascript e para que ele serve.
-                                </p>
-                                <div className="d-flex align-items-center position-absolute" style={{ bottom: 0 }}>
-                                    <img className="me-2" src="/img/icon-laptop.png" alt="" />
-                                    <p className="grey-text mb-0">Aula 1 - 2 horas 38 minutos</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                   
+                    ))}
                 </div>
             </div>
             <footer className="text-light text-center py-3 mt-4" style={{ backgroundColor: '#40659d' }}>

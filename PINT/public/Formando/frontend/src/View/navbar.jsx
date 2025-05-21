@@ -1,7 +1,27 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 const Navbar = () => {
+    // Simulação de autenticação (substitua por contexto ou props no seu projeto)
+    const [user, setUser] = useState(() => {
+        const stored = localStorage.getItem("user");
+        return stored ? JSON.parse(stored) : null;
+    });
+
+    const fakeLogout = () => {
+    localStorage.removeItem("user");
+    setUser(null);
+    window.location.reload();
+};
+
+    // Exemplo de login/logout para testar
+    const fakeLogin = () =>
+        setUser({
+            name: "João Silva",
+            email: "joao@email.com",
+            avatar: "/img/avatar.png", // coloque uma imagem de perfil padrão
+        });
+
     return (
         <nav className="navbar navbar-expand-lg bg-body-tertiary border-bottom border-secondary shadow-lg">
             <div className="container-fluid">
@@ -26,7 +46,7 @@ const Navbar = () => {
                             <Link
                                 className="nav-link blue-text underline-animation"
                                 style={{ color: "#39639D" }}
-                                to={"/"}
+                                to={"/categorias"}
                             >
                                 Categorias
                             </Link>
@@ -35,9 +55,9 @@ const Navbar = () => {
                             <Link
                                 className="nav-link blue-text underline-animation"
                                 style={{ color: "#39639D" }}
-                                to={"/topicos"}
+                                to={"/"}
                             >
-                                Tópicos
+                                Fóruns
                             </Link>
                         </li>
                         <form
@@ -54,13 +74,33 @@ const Navbar = () => {
                                 aria-label="Search"
                             />
                         </form>
-                        <Link
-                            className="btn btn-primary mx-auto botao mt-2"
-                            style={{ width: "15%" }}
-                            to={"/login"}
-                        >
-                            Entrar
-                        </Link>
+                        {/* Troca entre botão Entrar e perfil do utilizador */}
+                        {!user ? (
+                            <Link
+                                className="btn btn-primary mx-auto botao mt-2"
+                                style={{ width: "15%" }}
+                                to={"/login"}
+                                onClick={fakeLogin} // Remova isto no seu projeto real
+                            >
+                                Entrar
+                            </Link>
+                        ) : (
+                            <div className="d-flex align-items-center mx-auto mt-2" style={{ width: "20%" }}>
+                                <img
+                                    src={user.avatar}
+                                    alt="Avatar"
+                                    className="rounded-circle me-2"
+                                    style={{ width: "40px", height: "40px", objectFit: "cover" }}
+                                />
+                                <Link to={"/perfil"} className="text-decoration-none">
+                                    <p className="fw-bold p-0 m-0">{user.nome}</p>
+                                    <p className="small text-muted p-0 m-0">{user.email}</p>
+                                    <button className="btn btn-link p-0 text-danger" onClick={fakeLogout}>
+                                        Sair
+                                    </button>
+                                </Link>
+                            </div>
+                        )}
                     </ul>
                 </div>
             </div>
