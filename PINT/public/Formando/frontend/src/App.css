@@ -140,6 +140,11 @@ body {
   margin-top: 10%;
 }
 
+.navbar {
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+}
+
 .começar {
   background-color: transparent;
   border-color: #39639d;
