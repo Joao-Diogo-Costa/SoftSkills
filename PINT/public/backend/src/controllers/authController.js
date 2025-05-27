@@ -4,7 +4,7 @@ const crypto = require("crypto");
 const nodemailer = require("nodemailer");
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
-const { Op } = require('sequelize')
+const { Op } = require("sequelize");
 
 const controllers = {};
 
@@ -16,7 +16,10 @@ controllers.register = async (req, res) => {
     const { nomeUtilizador, dataNasc, nTel, email, password, role } = req.body;
 
     if (!nomeUtilizador || !dataNasc || !nTel || !email || !password) {
-      return res.status(400).json({ message: "Nome, data de nascimento, telefone, email e password são obrigatórios." });
+      return res.status(400).json({
+        message:
+          "Nome, data de nascimento, telefone, email e password são obrigatórios.",
+      });
     }
 
     const utilizadorExistente = await Utilizador.findOne({ where: { email } });
@@ -33,11 +36,12 @@ controllers.register = async (req, res) => {
       nTel,
       email,
       password: hashedPassword,
-      role: "formando", 
+      role: "formando",
       emailConfirmado: false,
       tokenConfirmacaoEmail: null,
       mustChangePassword: true,
-      imagemPerfil: null,
+      imagemPerfil:
+        "https://pint-2025.s3.eu-north-1.amazonaws.com/imagem-perfil/default_profile_pic.jpg",
       pontos: 0,
       dataRegisto: new Date(),
     });
@@ -54,7 +58,7 @@ controllers.register = async (req, res) => {
     const mailOptions = {
       from: process.env.EMAIL_FROM,
       to: utilizador.email,
-      subject: 'Registo na plataforma SoftSkills',
+      subject: "Registo na plataforma SoftSkills",
       html: `
         <h3>Bem-vindo à plataforma SoftSkills, ${nomeUtilizador}!</h3>
         <p>O seu registo foi efetuado com sucesso.</p>
@@ -70,16 +74,23 @@ controllers.register = async (req, res) => {
 
     await transporter.sendMail(mailOptions);
 
-    res.status(201).json({ success: true, message: "Utilizador registado com sucesso. Os dados foram enviados por e-mail",});
+    res.status(201).json({
+      success: true,
+      message:
+        "Utilizador registado com sucesso. Os dados foram enviados por e-mail",
+    });
   } catch (error) {
-    res.status(500).json({ message: "Erro ao registar utilizador.", details: error.message });
+    res.status(500).json({
+      message: "Erro ao registar utilizador.",
+      details: error.message,
+    });
   }
 };
 
 // Função para gerar um token JWT
 const signToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRES_IN, 
+    expiresIn: process.env.JWT_EXPIRES_IN,
   });
 };
 
@@ -89,7 +100,9 @@ controllers.login = async (req, res) => {
     const { email, password } = req.body;
 
     if (!email || !password) {
-      return res.status(400).json({ message: "Email e password são obrigatórios." });
+      return res
+        .status(400)
+        .json({ message: "Email e password são obrigatórios." });
     }
 
     const utilizador = await Utilizador.findOne({ where: { email } });
@@ -106,26 +119,32 @@ controllers.login = async (req, res) => {
 
     const token = signToken(utilizador.id);
 
-
-    res.json({success: true, message: "Login bem-sucedido.", token,});
+    const { password: _, ...utilizadorSemPassword } = utilizador.toJSON();
+    res.json({
+      success: true,
+      message: "Login bem-sucedido.",
+      token,
+      data: utilizadorSemPassword,
+    });
   } catch (error) {
     res.status(500).json({ message: "Erro no login.", details: error.message });
   }
 };
 
 const createResetPasswordToken = () => {
+  const resetToken = crypto.randomBytes(32).toString("hex");
 
-    const resetToken = crypto.randomBytes(32).toString('hex');
+  const hashedToken = crypto
+    .createHash("sha256")
+    .update(resetToken)
+    .digest("hex");
 
-    const hashedToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+  return { token: resetToken, hashedToken };
+};
 
-    return {token: resetToken, hashedToken};
-
-}
-
-controllers.forgotPassword = async( req, res) => {
+controllers.forgotPassword = async (req, res) => {
   try {
-    const {email} = req.body;
+    const { email } = req.body;
 
     if (!email) {
       return res.status(400).json({ message: "Email é obrigatório." });
@@ -137,7 +156,7 @@ controllers.forgotPassword = async( req, res) => {
       return res.status(401).json({ message: "Este e-mail não existe" });
     }
 
-    const { token , hashedToken } = createResetPasswordToken();
+    const { token, hashedToken } = createResetPasswordToken();
     const passwordResetTokenExpires = Date.now() + 10 * 60 * 1000; // 10 minutos
 
     await utilizador.update({
@@ -146,7 +165,9 @@ controllers.forgotPassword = async( req, res) => {
     });
 
     // *** Envio de e-mail ***
-    const resetLink = `${req.protocol}://${req.get('host')}/reset-password/${encodeURIComponent(token)}`;
+    const resetLink = `${req.protocol}://${req.get(
+      "host"
+    )}/reset-password/${encodeURIComponent(token)}`;
 
     const transporter = nodemailer.createTransport({
       host: process.env.EMAIL_HOST,
@@ -160,7 +181,7 @@ controllers.forgotPassword = async( req, res) => {
     const mailOptions = {
       from: process.env.EMAIL_FROM,
       to: utilizador.email,
-      subject: 'SoftSkills - Link para fazer reset á palavra-passe',
+      subject: "SoftSkills - Link para fazer reset á palavra-passe",
       html: `
         <p>Você solicitou a redefinição da sua palavra-passe.</p>
         <p>Clique no link abaixo para criar uma palavra-passe:</p>
@@ -172,26 +193,33 @@ controllers.forgotPassword = async( req, res) => {
 
     await transporter.sendMail(mailOptions);
 
-    res.status(200).json({ message: "Um link para resetar a sua senha foi enviado para o seu e-mail." });
-
-    
+    res.status(200).json({
+      message:
+        "Um link para resetar a sua senha foi enviado para o seu e-mail.",
+    });
   } catch (error) {
     res.status(500).json({ message: "Erro no login.", details: error.message });
   }
-}
+};
 
-
-controllers.resetPassword = async( req, res) => {
+controllers.resetPassword = async (req, res) => {
   try {
-    
-    const token =  crypto.createHash('sha256').update(req.params.token).digest('hex');
+    const token = crypto
+      .createHash("sha256")
+      .update(req.params.token)
+      .digest("hex");
 
-    const utilizador = await Utilizador.findOne({ where: { passwordResetToken: token, passwordResetTokenExpires: {[Op.gt]: Date.now()}} });
+    const utilizador = await Utilizador.findOne({
+      where: {
+        passwordResetToken: token,
+        passwordResetTokenExpires: { [Op.gt]: Date.now() },
+      },
+    });
 
-    if(!utilizador){
+    if (!utilizador) {
       return res.status(400).json({ message: "Token é inválido ou expirou!" });
     }
-    
+
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
     utilizador.password = hashedPassword;
@@ -200,29 +228,35 @@ controllers.resetPassword = async( req, res) => {
 
     await utilizador.save();
 
-    res.status(200).json({ success: true, message: "Palavra-passe redefinida com sucesso." });
-
+    res.status(200).json({
+      success: true,
+      message: "Palavra-passe redefinida com sucesso.",
+    });
   } catch (error) {
-    res.status(500).json({ message: "Erro ao redefinir palavra-passe.", details: error.message });
+    res.status(500).json({
+      message: "Erro ao redefinir palavra-passe.",
+      details: error.message,
+    });
   }
-}
+};
 
-controllers.updatePassword = async( req, res) => {
+controllers.updatePassword = async (req, res) => {
   try {
-
     const { currentPassword, newPassword } = req.body;
 
     if (!currentPassword || !newPassword) {
-      return res.status(400).json({ message: "As passwords atual e nova são obrigatórias." });
+      return res
+        .status(400)
+        .json({ message: "As passwords atual e nova são obrigatórias." });
     }
 
-    const utilizador = Utilizador.findOne(req.utilizador.id);
+    const utilizador = req.utilizador; // <-- aqui está a diferença!
 
     const isMatch = await bcrypt.compare(currentPassword, utilizador.password);
     if (!isMatch) {
       return res.status(401).json({ message: "Password atual incorreta." });
     }
-    
+
     const hashedPassword = await bcrypt.hash(newPassword, 10);
     utilizador.password = hashedPassword;
     utilizador.passwordResetToken = null;
@@ -231,12 +265,17 @@ controllers.updatePassword = async( req, res) => {
 
     await utilizador.save();
 
-    res.status(200).json({ success: true, message: "Password atualizada com sucesso" });
-
+    res
+      .status(200)
+      .json({ success: true, message: "Password atualizada com sucesso" });
   } catch (error) {
-    res.status(500).json({ message: "Erro ao redefinir palavra-passe.", details: error.message });
+    res
+      .status(500)
+      .json({
+        message: "Erro ao redefinir palavra-passe.",
+        details: error.message,
+      });
   }
-
-}
+};
 
 module.exports = controllers;
