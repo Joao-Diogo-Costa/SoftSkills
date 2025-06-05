@@ -39,7 +39,7 @@ Curso.hasMany(AvaliacaoCursoUtilizador, { foreignKey: 'cursoId' });
 AvisoCurso.belongsTo(Utilizador, { foreignKey: 'utilizadorId' });
 Utilizador.hasMany(AvisoCurso, { foreignKey: 'utilizadorId' });
 AvisoCurso.belongsTo(Curso, { foreignKey: 'cursoId'});
-Curso.hasMany(AvisoCurso, { foreignKey: 'cursoId'});
+Curso.hasMany(AvisoCurso, { foreignKey: 'cursoId', as: 'avisos'});
 
 // CategoriaC
 CategoriaC.hasMany(AreaC, { foreignKey: 'categoriaId'});
@@ -55,7 +55,7 @@ Comentario.belongsTo(Utilizador, { foreignKey: 'utilizadorId' });
 Utilizador.hasMany(Comentario, { foreignKey: 'utilizadorId' });
 
 // Conteudo
-Curso.hasMany(Conteudo, { foreignKey: 'cursoId' });
+Curso.hasMany(Conteudo, { foreignKey: 'cursoId', as: 'conteudos' });
 Conteudo.belongsTo(Curso, { foreignKey: 'cursoId' });
 
 // Curso 
@@ -103,8 +103,10 @@ SugestaoForum.belongsTo(Utilizador, { foreignKey: "utilizadorId"});
 Utilizador.hasMany(SugestaoForum, { foreignKey: "utilizadorId"});
 
 // Tarefa
-Tarefa.belongsTo(AulaSincrona, { foreignKey: "idAulaSinc" });
-AulaSincrona.hasMany(Tarefa, { foreignKey: "idAulaSinc" });
+Tarefa.belongsTo(Curso, { foreignKey: "cursoId" });
+Curso.hasMany(Tarefa, { foreignKey: "cursoId", as: 'tarefas' });
+Tarefa.belongsTo(Utilizador, { foreignKey: 'utilizadorId' });
+Utilizador.hasMany(Tarefa, { foreignKey: 'utilizadorId' });
 
 // TopicoC
 TopicoC.belongsTo(AreaC, { foreignKey: "areaId" });

@@ -1,5 +1,6 @@
 const Tarefa = require("../model/Tarefa");
-const AulaSincrona = require("../model/AulaSincrona");
+const Curso = require("../model/Curso");
+const Utilizador = require("../model/Utilizador");
 
 const controllers = {};
 
@@ -7,7 +8,7 @@ const controllers = {};
 controllers.tarefa_list = async (req, res) => {
   try {
     const tarefas = await Tarefa.findAll({
-      include: [AulaSincrona],
+      include: [Curso],
       order: [["dataLimite", "ASC"]],
     });
     res.json({ success: true, data: tarefas });
@@ -20,7 +21,7 @@ controllers.tarefa_list = async (req, res) => {
 controllers.tarefa_detail = async (req, res) => {
   try {
     const tarefa = await Tarefa.findByPk(req.params.id, {
-      include: [AulaSincrona],
+      include: [Curso],
     });
 
     if (!tarefa) {
@@ -36,17 +37,22 @@ controllers.tarefa_detail = async (req, res) => {
 // Criar Tarefa
 controllers.tarefa_create = async (req, res) => {
   try {
-    const { titulo, descricao, dataLimite, ficheiroEnunciado, idAulaSinc } = req.body;
+    const { titulo, descricao, dataLimite, ficheiroEnunciado, utilizadorId, cursoId } = req.body;
 
-    if (!titulo || !descricao || !dataLimite) {
+    if (!titulo || !descricao || !dataLimite || !utilizadorId || !cursoId) {
       return res.status(400).json({ success: false, message: "Campos obrigatórios em falta." });
     }
 
-    if (idAulaSinc) {
-      const aulaSincronaExiste = await AulaSincrona.findByPk(idAulaSinc);
-      if (!aulaSincronaExiste) {
-        return res.status(400).json({ success: false, message: "ID de Aula Síncrona inválido." });
+    if (cursoId) {
+      const cursoIdExiste = await Curso.findByPk(cursoId);
+      if (!cursoIdExiste) {
+        return res.status(400).json({ success: false, message: "ID de curso inválido." });
       }
+    }
+
+    const utilizadorExiste = await Utilizador.findByPk(utilizadorId);
+    if (!utilizadorExiste) {
+      return res.status(400).json({ success: false, message: "ID de utilizador inválido ou utilizador não encontrado." });
     }
 
     const novaTarefa = await Tarefa.create({
@@ -54,7 +60,8 @@ controllers.tarefa_create = async (req, res) => {
       descricao,
       dataLimite,
       ficheiroEnunciado,
-      idAulaSinc,
+      utilizadorId,
+      cursoId,
     });
 
     res.status(201).json({ success: true, data: novaTarefa });
@@ -66,17 +73,17 @@ controllers.tarefa_create = async (req, res) => {
 // Atualizar Tarefa
 controllers.tarefa_update = async (req, res) => {
   try {
-    const { titulo, descricao, dataLimite, ficheiroEnunciado, idAulaSinc } = req.body;
+    const { titulo, descricao, dataLimite, ficheiroEnunciado, cursoId } = req.body;
     const tarefa = await Tarefa.findByPk(req.params.id);
 
     if (!tarefa) {
       return res.status(404).json({ success: false, message: "Tarefa não encontrada." });
     }
 
-    if (idAulaSinc) {
-      const aulaSincronaExiste = await AulaSincrona.findByPk(idAulaSinc);
-      if (!aulaSincronaExiste) {
-        return res.status(400).json({ success: false, message: "ID de Aula Síncrona inválido." });
+    if (cursoId !== undefined && cursoId !== null) {
+      const cursoExiste = await Curso.findByPk(cursoId);
+      if (!cursoExiste) {
+        return res.status(400).json({ success: false, message: "ID de Curso inválido." });
       }
     }
 
@@ -85,11 +92,12 @@ controllers.tarefa_update = async (req, res) => {
       descricao: descricao ?? tarefa.descricao,
       dataLimite: dataLimite ?? tarefa.dataLimite,
       ficheiroEnunciado: ficheiroEnunciado ?? tarefa.ficheiroEnunciado,
-      idAulaSinc: idAulaSinc ?? tarefa.idAulaSinc,
+      cursoId: cursoId ?? tarefa.cursoId,
     });
 
     res.json({ success: true, data: tarefa });
   } catch (error) {
+    console.error("Erro ao atualizar tarefa:", error);
     res.status(500).json({ success: false, message: "Erro ao atualizar tarefa.",details: error.message,});
   }
 };
@@ -104,6 +112,7 @@ controllers.tarefa_delete = async (req, res) => {
     }
 
     await tarefa.destroy();
+    
     res.json({ success: true, message: "Tarefa eliminada com sucesso." });
   } catch (error) {
     res.status(500).json({ success: false, message: "Erro ao eliminar tarefa.", details: error.message, });

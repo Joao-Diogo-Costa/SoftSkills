@@ -1,5 +1,6 @@
 const Curso = require("../model/Curso");
 const AvaliacaoCursoUtilizador = require("../model/AvaliacaoCursoUtilizador");
+const Inscricao = require("../model/Inscricao");
 
 const controllers = {};
 
@@ -51,12 +52,29 @@ controllers.avaliacao_create = async (req, res) => {
     const utilizador = await Utilizador.findByPk(utilizadorId);
 
     if (!curso) {
-      return res.status(400).json({ success: false, message: "ID de curso inválido." });
+      return res.status(404).json({ success: false, message: "ID de curso inválido." });
     }
 
     if (!utilizador) {
-      return res.status(400).json({ success: false, message: "ID de utilizador inválido." });
+      return res.status(404).json({ success: false, message: "ID de utilizador inválido." });
     }
+
+     // VERIFICAR SE O CURSO FOI CONCLUIDO PELO UTILIZADOR
+    const inscricao = await Inscricao.findOne({
+      where: {
+        utilizadorId: utilizadorId,
+        cursoId: cursoId,
+      },
+    });
+
+    if (!inscricao) {
+      return res.status(404).json({ success: false, message: "Inscrição do utilizador neste curso não encontrada." });
+    }
+
+    if (!inscricao.concluido) {
+      return res.status(403).json({ success: false, message: "O curso ainda não foi concluído por este utilizador. A avaliação só pode ser feita após a conclusão." });
+    }
+
 
     const novaAvaliacao = await AvaliacaoCursoUtilizador.create({
       nota,

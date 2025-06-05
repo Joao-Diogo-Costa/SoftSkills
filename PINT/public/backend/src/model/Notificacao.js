@@ -14,6 +14,12 @@ var Notificacao = sequelize.define(
       autoIncrement: true,
     },
 
+    titulo: { 
+      type: Sequelize.STRING,
+      field: "TITULO",
+      allowNull: true,
+    },
+
     mensagem: {
       type: Sequelize.STRING,
       field: "MENSAGEM",

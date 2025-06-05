@@ -19,4 +19,7 @@ router.put("/update/:id", middleware.checkToken, certificadoController.certifica
 // DELETE: Apagar um certificado
 router.delete("/delete/:id", middleware.checkToken, certificadoController.certificado_delete);
 
+router.get('/download/:inscricaoId', middleware.checkToken, certificadoController.gerarCertificado);
+
+
 module.exports = router;

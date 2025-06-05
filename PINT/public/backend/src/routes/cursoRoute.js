@@ -3,18 +3,25 @@ const router = express.Router();
 
 const cursoController = require("../controllers/cursoController");
 const middleware = require("../middlewares/middleware");
+const upload = require("../config/multerConfig");
 
 // GET: Listar todos os cursos
 router.get("/list", cursoController.curso_list);
 
-// GET: Detalhar um curso por ID
+// GET: Detail curso por ID
 router.get("/get/:id", cursoController.curso_detail);
+
+// GET: Detailcurso por ID para utilizador
+router.get('get/:id/restrito', middleware.checkToken, cursoController.acessoAreaRestritaCurso);
 
 // POST: Criar um novo curso
 router.post("/create", middleware.checkToken, cursoController.curso_create);
 
-// PUT: Atualizar um curso existente
+// PUT: Atualizar curso 
 router.put("/update/:id", middleware.checkToken, cursoController.curso_update);
+
+// POST: Renovar curso
+router.post('/:id/renovar', middleware.checkToken, cursoController.curso_renew);
 
 // DELETE: Apagar um curso
 router.delete("/delete/:id", middleware.checkToken, cursoController.curso_delete);
@@ -24,5 +31,8 @@ router.get("/categoria/:idCategoria", cursoController.listarCursosPorCategoria);
 
 //GET curso por Area
 router.get("/area/:idArea", cursoController.listarCursosPorArea);
+
+// Upload imagem banner curso
+router.post("/upload-imagem-curso", middleware.checkToken , upload.single("imagem-curso"), cursoController.uploadImagemCurso );
 
 module.exports = router;

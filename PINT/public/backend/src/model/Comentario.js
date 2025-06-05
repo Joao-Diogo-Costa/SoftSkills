@@ -22,7 +22,7 @@ var Comentario = sequelize.define(
 
     ficheiroNome: {
       type: Sequelize.STRING,
-      field: "FICHEIRO__NOME",
+      field: "FICHEIRO_NOME",
       allowNull: true, 
     },
 

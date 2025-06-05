@@ -14,6 +14,7 @@ router.post("/forgot-password", authController.forgotPassword);
 router.post("/reset-password/:token", authController.resetPassword);
 // PATCH : updatePassword
 router.patch('/updatePassword', middleware.checkToken, authController.updatePassword);
-
+//PATCH: só no primeiro login
+router.patch('/forceUpdatePassword', authController.forceUpdatePassword); 
 
 module.exports = router;

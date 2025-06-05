@@ -104,9 +104,15 @@ controllers.login = async (req, res) => {
       return res.status(401).json({ message: "Credenciais inválidas." });
     }
 
-    const token = signToken(utilizador.id);
-
     const { password: _, utilizadorSemPassword } = utilizador.toJSON();
+    
+    if (utilizador.mustChangePassword) {
+      return res.status(200).json({ success: true,message: "Primeiro login - alteração de palavra-passe necessária.", mustChangePassword: true,
+        data: utilizadorSemPassword,
+      });
+    }
+
+    const token = signToken(utilizador.id);
 
     res.json({success: true, message: "Login bem-sucedido.", token, data: utilizadorSemPassword });
   } catch (error) {
@@ -238,6 +244,56 @@ controllers.updatePassword = async (req, res) => {
     res
       .status(500)
       .json({ message: "Erro ao redefinir palavra-passe.", details: error.message, });
+  }
+};
+
+controllers.forceUpdatePassword = async (req, res) => {
+  try {
+    const { email, newPassword, confirmNewPassword } = req.body;
+    
+
+    if (!email || !newPassword || !confirmNewPassword) {
+      return res.status(400).json({ message: "Email, nova palavra-passe e confirmação são obrigatórios." });
+    }
+
+    if (newPassword !== confirmNewPassword) {
+      return res.status(400).json({ message: "A nova palavra-passe e a confirmação não coincidem." });
+    }
+
+    const utilizador = await Utilizador.findOne({ where: { email } });
+
+    if (!utilizador) {
+      return res.status(404).json({ message: "Utilizador não encontrado." });
+    }
+
+    // VERIFICAÇÃO CRUCIAL: O utilizador só pode usar esta rota se mustChangePassword for true
+    if (!utilizador.mustChangePassword) {
+      return res.status(403).json({ message: "Não é necessário alterar a palavra-passe. Por favor, use a rota de login normal." });
+    }
+
+    // Hashear a nova password
+    const hashedPassword = await bcrypt.hash(newPassword, 10); 
+
+    await utilizador.update({
+      password: hashedPassword,
+      mustChangePassword: false,
+      passwordResetToken: null, 
+      passwordResetTokenExpires: null,
+    });
+
+    const token = signToken(utilizador.id);
+    const { password: _, ...utilizadorSemPassword } = utilizador.toJSON();
+
+    res.json({
+      success: true,
+      message: "Palavra-passe alterada com sucesso. Login efetuado.",
+      token,
+      data: utilizadorSemPassword,
+    });
+
+  } catch (error) {
+    console.error("Erro ao forçar atualização de palavra-passe:", error);
+    res.status(500).json({ message: "Erro ao forçar atualização de palavra-passe.", details: error.message });
   }
 };
 

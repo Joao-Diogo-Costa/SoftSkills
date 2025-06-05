@@ -1,8 +1,6 @@
 var Sequelize = require("sequelize");
 var sequelize = require("./database");
 
-var AulaSincrona = require("./AulaSincrona");
-
 var Tarefa = sequelize.define(
   "TAREFA",
   {
@@ -36,13 +34,24 @@ var Tarefa = sequelize.define(
       allowNull: true,
     },
 
-    idAulaSinc: {
+    utilizadorId: {
+      // Quem publicou o aviso
       type: Sequelize.INTEGER,
-      field: "ID_AULASINC",
-      allowNull: true,
+      field: "ID_UTILIZADOR",
+      allowNull: false,
       references: {
-        model: "AULA_SINCRONA",
-        key: "ID_AULASINC",
+        model: "UTILIZADOR",
+        key: "ID_UTILIZADOR",
+      },
+    },
+
+    cursoId: {
+      type: Sequelize.INTEGER,
+      field: "ID_CURSO",
+      allowNull: false,
+      references: {
+        model: "CURSO",
+        key: "ID_CURSO",
       },
     },
   },

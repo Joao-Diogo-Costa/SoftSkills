@@ -6,7 +6,7 @@ const initializeData = require('./model/insert.js');
 require("dotenv").config();
 
 require('./model/Associations.js');
-require('./cron/atualizarEstadoCurso'); 
+const cronCurso = require('./cron/atualizarEstadoCurso.js');
 
 //Configurações
 app.set("port", process.env.PORT || 3000);
@@ -102,6 +102,9 @@ async function startServer() {
     app.listen(app.get("port"), () => {
       console.log("Start server on port " + app.get("port"));
     });
+
+    cronCurso();
+
   } catch (error) {
     console.error("Erro ao iniciar o servidor:", error);
   }

@@ -1,6 +1,8 @@
 const AvisoCurso = require("../model/AvisoCurso");
 const Curso = require("../model/Curso");
 const Utilizador = require("../model/Utilizador");
+const Inscricao = require("../model/Inscricao")
+const Notificacao = require("../model/Notificacao")
 
 const controllers = {};
 
@@ -64,34 +66,54 @@ controllers.aviso_create = async (req, res) => {
       dataPublicacao: dataPublicacao || new Date(),
     });
 
+    const inscricoesDoCurso = await Inscricao.findAll({
+      where: { cursoId: cursoId },
+      attributes: ['utilizadorId']
+    });
+
+    const notificacoesCriadas = [];
+    for (const inscricao of inscricoesDoCurso) {
+      const notificacao = await Notificacao.create({
+        utilizadorId: inscricao.utilizadorId,
+        titulo: `Novo Aviso no Curso: ${curso.nome} - ${titulo}`,
+        mensagem: `Um novo aviso foi publicado: "${descricao.substring(0, 100)}..."`,
+        dataEnvio: new Date(),
+        lida: false,
+        cursoId: cursoId,
+      });
+      notificacoesCriadas.push(notificacao);
+    }
+
+
     res.status(201).json({ success: true, data: novoAviso });
   } catch (error) {
     res.status(500).json({success: false, message: "Erro ao criar aviso.",details: error.message, });
   }
 };
+
 // Atualizar aviso
 controllers.aviso_update = async (req, res) => {
   try {
     const id = req.params.id;
     const { descricao, titulo, cursoId, utilizadorId, dataPublicacao } = req.body;
 
+    if (!descricao || !titulo || !cursoId || !utilizadorId) {
+      return res.status(400).json({ success: false, message: "Campos obrigatórios ausentes." });
+    }
+
     const aviso = await AvisoCurso.findByPk(id);
     if (!aviso) {
       return res.status(404).json({ success: false, message: "Aviso não encontrado." });
     }
 
-    if (cursoId) {
-      const curso = await Curso.findByPk(cursoId);
-      if (!curso) {
-        return res.status(400).json({ success: false, message: "ID de curso inválido." });
-      }
+    const curso = await Curso.findByPk(cursoId);
+    if (!curso) {
+      return res.status(400).json({ success: false, message: "ID de curso inválido." });
     }
-
-    if (utilizadorId) {
-      const utilizador = await Utilizador.findByPk(utilizadorId);
-      if (!utilizador) {
-        return res.status(400).json({ success: false, message: "ID de utilizador inválido." });
-      }
+    
+    const utilizador = await Utilizador.findByPk(utilizadorId);
+    if (!utilizador) {
+      return res.status(400).json({ success: false, message: "ID de utilizador inválido." });
     }
 
     await aviso.update({
@@ -99,7 +121,7 @@ controllers.aviso_update = async (req, res) => {
       titulo,
       cursoId,
       utilizadorId,
-      dataPublicacao,
+      dataPublicacao: dataPublicacao || new Date(),
     });
 
     res.json({ success: true, data: aviso });
