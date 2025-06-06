@@ -1,7 +1,7 @@
 require("dotenv").config();
 var Sequelize = require("sequelize");
 // LOCAL
-const sequelize = new Sequelize("PINT", "postgres", "111", {
+const sequelize = new Sequelize("PINT", "postgres", "pass123", {
   host: "localhost",
   port: "5432",
   dialect: "postgres",

@@ -104,7 +104,7 @@ controllers.login = async (req, res) => {
       return res.status(401).json({ message: "Credenciais inválidas." });
     }
 
-    const { password: _, utilizadorSemPassword } = utilizador.toJSON();
+    const { password: _, ...utilizadorSemPassword } = utilizador.toJSON();
     
     if (utilizador.mustChangePassword) {
       return res.status(200).json({ success: true,message: "Primeiro login - alteração de palavra-passe necessária.", mustChangePassword: true,

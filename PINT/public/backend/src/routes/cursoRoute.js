@@ -11,9 +11,6 @@ router.get("/list", cursoController.curso_list);
 // GET: Detail curso por ID
 router.get("/get/:id", cursoController.curso_detail);
 
-// GET: Detailcurso por ID para utilizador
-router.get('get/:id/restrito', middleware.checkToken, cursoController.acessoAreaRestritaCurso);
-
 // POST: Criar um novo curso
 router.post("/create", middleware.checkToken, cursoController.curso_create);
 

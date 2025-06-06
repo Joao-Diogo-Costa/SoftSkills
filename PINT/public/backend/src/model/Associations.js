@@ -113,7 +113,7 @@ TopicoC.belongsTo(AreaC, { foreignKey: "areaId" });
 AreaC.hasMany(TopicoC, { foreignKey: "areaId"});
 
 // Utilizador
-Curso.belongsTo(Utilizador, {foreignKey: "formadorId",});
+Curso.belongsTo(Utilizador, {foreignKey: "formadorId", as:"formador"});
 Utilizador.hasMany(Curso, {foreignKey: "formadorId",});
 
 

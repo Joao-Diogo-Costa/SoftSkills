@@ -4,6 +4,7 @@ var sequelize = require("./database");
 var TopicoC = require("./TopicoC");
 const { fields } = require("../config/multerConfig");
 
+
 var Curso = sequelize.define(
   "CURSO",
   {
