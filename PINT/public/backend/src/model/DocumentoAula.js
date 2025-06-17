@@ -33,6 +33,7 @@ var DocumentoAula = sequelize.define(
         model: "AULA_ASSINCRONA",
         key: "ID_AULAASSINC",
       },
+      onDelete: "CASCADE",
     },
   },
   {

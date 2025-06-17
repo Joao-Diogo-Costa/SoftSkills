@@ -43,6 +43,7 @@ var AvisoCurso = sequelize.define(
         model: "UTILIZADOR",
         key: "ID_UTILIZADOR",
       },
+      onDelete: "CASCADE",
     },
 
     cursoId: {
@@ -53,6 +54,7 @@ var AvisoCurso = sequelize.define(
         model: "CURSO",
         key: "ID_CURSO",
       },
+      onDelete: "CASCADE",
     },
   },
   {

@@ -13,10 +13,22 @@ var Forum = sequelize.define(
       autoIncrement: true,
     },
 
-    conteudo: {
+    nome: {
       type: Sequelize.STRING,
-      field: "CONTEUDO",
+      field: "NOME_FORUM",
       allowNull: false,
+    },
+
+    descricao: {
+      type: Sequelize.STRING,
+      field: "DESCRICAO_FORUM",
+      allowNull: true,
+    },
+
+    imagemForum: {
+      type: Sequelize.STRING,
+      field: "IMAGEM_FORUM",
+      allowNull: true,
     },
 
     topicoId: {
@@ -27,7 +39,9 @@ var Forum = sequelize.define(
         model: "TOPICOC",
         key: "ID_TOPICOC",
       },
+      onDelete: "CASCADE",
     },
+
   },
   {
     freezeTableName: true,

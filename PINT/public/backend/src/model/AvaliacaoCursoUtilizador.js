@@ -39,6 +39,7 @@ var AvaliacaoCursoUtilizador = sequelize.define(
         model: "UTILIZADOR",
         key: "ID_UTILIZADOR",
       },
+      onDelete: "CASCADE",
     },
 
     cursoId: {

@@ -62,6 +62,7 @@ var Notificacao = sequelize.define(
         model: "UTILIZADOR",
         key: "ID_UTILIZADOR",
       },
+      onDelete: "CASCADE",
     },
 
     cursoId: {
@@ -72,6 +73,7 @@ var Notificacao = sequelize.define(
         model: "CURSO",
         key: "ID_CURSO",
       },
+      onDelete: "CASCADE",
     },
   },
   {

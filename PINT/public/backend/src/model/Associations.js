@@ -51,7 +51,7 @@ Inscricao.hasOne(Certificado, { foreignKey: 'inscricaoId' });
 // Comentario
 Comentario.belongsTo(Forum, { foreignKey: 'forumId'});
 Forum.hasMany(Comentario, { foreignKey: 'forumId' });
-Comentario.belongsTo(Utilizador, { foreignKey: 'utilizadorId' });
+Comentario.belongsTo(Utilizador, { foreignKey: 'utilizadorId', as: 'Utilizador' });
 Utilizador.hasMany(Comentario, { foreignKey: 'utilizadorId' });
 
 // Conteudo
@@ -63,10 +63,10 @@ Curso.belongsTo(TopicoC, { foreignKey: 'topicoId'});
 TopicoC.hasMany(Curso, { foreignKey: 'topicoId',});
 
 // Denuncia
-Denuncia.belongsTo(Utilizador, { foreignKey: "utilizadorId"});
+Denuncia.belongsTo(Utilizador, { foreignKey: "utilizadorId", as: "Utilizador" });
 Utilizador.hasMany(Denuncia, { foreignKey: "utilizadorId" });
 
-Denuncia.belongsTo(Comentario, { foreignKey: "comentarioId"});
+Denuncia.belongsTo(Comentario, { foreignKey: "comentarioId", as: "Comentario" });
 Comentario.hasMany(Denuncia, { foreignKey: "comentarioId"});
 
 // DocumentoAula
@@ -118,14 +118,14 @@ Utilizador.hasMany(Curso, {foreignKey: "formadorId",});
 
 
 module.exports = {
-  Utilizador,
   CategoriaC,
   AreaC,
   TopicoC,
+  Utilizador,
   Curso,
   AulaSincrona,
   AulaAssincrona,
-  Tarefa,
+  DocumentoAula,
   Conteudo,
   Inscricao,
   Certificado,
@@ -136,6 +136,6 @@ module.exports = {
   Comentario,
   Denuncia,
   SugestaoForum,
+  Tarefa,
   SubmissaoTarefa,
-  DocumentoAula,
 };

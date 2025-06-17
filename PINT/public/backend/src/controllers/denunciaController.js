@@ -8,7 +8,14 @@ const controllers = {};
 controllers.denuncia_list = async (req, res) => {
   try {
     const denuncias = await Denuncia.findAll({
-      include: [Comentario, Utilizador],
+      include: [
+        { model: Utilizador, as: "Utilizador" },
+        {
+          model: Comentario,
+          as: "Comentario",
+          include: [{ model: Utilizador, as: "Utilizador" }]
+        }
+      ],
       order: [["dataDenuncia", "DESC"]],
     });
     res.json({ success: true, data: denuncias });

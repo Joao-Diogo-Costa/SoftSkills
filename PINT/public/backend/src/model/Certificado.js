@@ -29,7 +29,6 @@ var Certificado = sequelize.define(
         model: "INSCRICAO",
         key: "ID_INSCRICAO",
       },
-      onDelete: "CASCADE",
     },
   },
   {

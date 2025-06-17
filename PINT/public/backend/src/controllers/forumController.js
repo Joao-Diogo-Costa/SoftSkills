@@ -33,10 +33,10 @@ controllers.forum_detail = async (req, res) => {
 // Criar Fórum
 controllers.forum_create = async (req, res) => {
   try {
-    const { conteudo, topicoId } = req.body;
+    const { nome, descricao, imagemForum, topicoId } = req.body;
 
-    if (!conteudo || !topicoId) {
-      return res.status(400).json({ success: false, message: "Conteúdo e ID do tópico são obrigatórios." });
+    if (!nome || !topicoId) {
+      return res.status(400).json({ success: false, message: "Nome e ID do tópico são obrigatórios." });
     }
 
     const topico = await TopicoC.findByPk(topicoId);
@@ -44,17 +44,17 @@ controllers.forum_create = async (req, res) => {
       return res.status(400).json({ success: false, message: "Tópico inválido." });
     }
 
-    const novoForum = await Forum.create({ conteudo, topicoId });
+    const novoForum = await Forum.create({ nome, descricao, imagemForum, topicoId });
     res.status(201).json({ success: true, data: novoForum });
   } catch (error) {
-    res.status(500).json({ success: false, message: "Erro ao criar fórum.", details: error.message,});
+    res.status(500).json({ success: false, message: "Erro ao criar fórum.", details: error.message });
   }
 };
 
 // Atualizar Fórum
 controllers.forum_update = async (req, res) => {
   try {
-    const { conteudo, topicoId } = req.body;
+    const { nome, descricao, imagemForum, topicoId } = req.body;
     const forum = await Forum.findByPk(req.params.id);
 
     if (!forum) {
@@ -68,11 +68,11 @@ controllers.forum_update = async (req, res) => {
       }
     }
 
-    await forum.update({ conteudo, topicoId });
+    await forum.update({ nome, descricao, imagemForum, topicoId });
 
     res.json({ success: true, data: forum });
   } catch (error) {
-    res.status(500).json({ success: false, message: "Erro ao atualizar fórum.", details: error.message,});
+    res.status(500).json({ success: false, message: "Erro ao atualizar fórum.", details: error.message });
   }
 };
 

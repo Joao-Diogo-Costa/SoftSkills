@@ -60,7 +60,7 @@ async function initializeData() {
         tokenConfirmacaoEmail: null,
         password: "admin123",
         mustChangePassword: false,
-        imagemPerfil: null,
+        imagemPerfil: "https://pint-2025.s3.eu-north-1.amazonaws.com/imagem-perfil/user-admin.png",
         pontos: 0,
         role: "gestor",
         dataRegisto: new Date(),
@@ -1382,11 +1382,65 @@ async function initializeData() {
 
     // await checkAndInsert(SubmissaoTarefa, []);
 
-    // await checkAndInsert(Forum, []);
+    await checkAndInsert(Forum, [
+      {
+        nome: "Discussão sobre HTML",
+        descricao: "Fórum para dúvidas e dicas sobre HTML.",
+        imagemForum: null,
+        topicoId: 1, // Certifica-te que existe este tópico!
+      },
+      {
+        nome: "Dúvidas de CSS",
+        descricao: "Espaço para partilha de problemas e soluções em CSS.",
+        imagemForum: null,
+        topicoId: 2,
+      },
 
-    // await checkAndInsert(Comentario, []);
+    ]);
 
-    // await checkAndInsert(Denuncia, []);
+    await checkAndInsert(Comentario, [
+      {
+        texto: "Alguém sabe como usar <section> corretamente?",
+        ficheiroNome: null,
+        ficheiroCaminho: null,
+        dataComentario: new Date(),
+        forumId: 1, 
+        utilizadorId: 11, 
+      },
+      {
+        texto: "Não preciso que o formador explique melhor",
+        ficheiroNome: null,
+        ficheiroCaminho: null,
+        dataComentario: new Date(),
+        forumId: 1,
+        utilizadorId: 10,
+      },
+      {
+        texto: "O formador Ricardo é muito bom! Quando estiverem na aula pergunta-lhe isso.",
+        ficheiroNome: null,
+        ficheiroCaminho: null,
+        dataComentario: new Date(),
+        forumId: 1,
+        utilizadorId: 9,
+      },
+      {
+        texto: "Flexbox resolve muitos problemas de layout!",
+        ficheiroNome: null,
+        ficheiroCaminho: null,
+        dataComentario: new Date(),
+        forumId: 2,
+        utilizadorId: 11,
+      },
+    ]);
+
+    await checkAndInsert(Denuncia, [
+      {
+        descricao: "Comentário ofensivo.",
+        dataDenuncia: new Date(),
+        utilizadorId: 4, 
+        comentarioId: 1, 
+      },
+    ]);
 
     // await checkAndInsert(DocumentoAula, []);
 

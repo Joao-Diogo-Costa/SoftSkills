@@ -39,6 +39,7 @@ var SugestaoForum = sequelize.define(
         model: "UTILIZADOR",
         key: "ID_UTILIZADOR",
       },
+      onDelete: "CASCADE",
     },
     topicoId: {
       type: Sequelize.INTEGER,
@@ -48,6 +49,7 @@ var SugestaoForum = sequelize.define(
         model: "TOPICOC",
         key: "ID_TOPICOC",
       },
+      onDelete: "CASCADE",
     },
   },
 

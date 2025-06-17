@@ -43,6 +43,7 @@ var SubmissaoTarefa = sequelize.define(
         model: "UTILIZADOR",
         key: "ID_UTILIZADOR",
       },
+      onDelete: "CASCADE",
     },
 
     idTarefa: {
@@ -53,6 +54,7 @@ var SubmissaoTarefa = sequelize.define(
         model: "TAREFA",
         key: "ID_TAREFA",
       },
+      onDelete: "CASCADE",
     },
   },
   {

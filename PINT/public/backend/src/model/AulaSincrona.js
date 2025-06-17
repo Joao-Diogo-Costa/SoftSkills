@@ -40,6 +40,7 @@ var AulaSincrona = sequelize.define(
         model: "CURSO",
         key: "ID_CURSO",
       },
+      onDelete: "CASCADE",
     },
   },
   {

@@ -47,6 +47,7 @@ var Comentario = sequelize.define(
         model: "FORUM",
         key: "ID_FORUM",
       },
+      onDelete: "CASCADE",
     },
 
     utilizadorId: {
@@ -57,6 +58,7 @@ var Comentario = sequelize.define(
         model: "UTILIZADOR",
         key: "ID_UTILIZADOR",
       },
+      onDelete: "CASCADE",
     },
   },
   {

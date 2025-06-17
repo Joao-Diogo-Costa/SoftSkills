@@ -31,6 +31,12 @@ var AulaAssincrona = sequelize.define(
     allowNull: false,
   },
 
+  videoLink: {
+    type: Sequelize.STRING,
+    allowNull: true, 
+    field: "VIDEO_LINK",
+  },
+
   cursoId: {
     type: Sequelize.INTEGER,
     field: "ID_CURSO",
@@ -39,6 +45,7 @@ var AulaAssincrona = sequelize.define(
       model: "CURSO",
       key: "ID_CURSO",
     },
+    onDelete: "CASCADE",
   },
 },
 {

@@ -27,6 +27,7 @@ var TopicoC = sequelize.define(
         model: "AREAC",
         key: "ID_AREAC",
       },
+      onDelete: "CASCADE",
     },
   },
   {

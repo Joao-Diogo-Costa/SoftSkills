@@ -66,6 +66,9 @@ app.use("/inscricao", inscricaoRoute);
 const notificacaoRoute = require("./routes/notificacaoRoute");
 app.use("/notificacao", notificacaoRoute);
 
+const statRoute = require('./routes/statRoute');
+app.use('/estatistica', statRoute);
+
 const sugestaoTopicoRoute = require("./routes/sugestaoTopicoRoute");
 app.use("/sugestao-topico", sugestaoTopicoRoute);
 

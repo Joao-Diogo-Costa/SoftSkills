@@ -1,4 +1,6 @@
 const Utilizador = require("../model/Utilizador");
+const Curso = require("../model/Curso");
+const Inscricao = require("../model/Inscricao");
 const bcrypt = require("bcryptjs");
 const crypto = require("crypto");
 require("dotenv").config();
@@ -43,13 +45,13 @@ controllers.utilizador_create = async (req, res) => {
         const { nomeUtilizador,dataNasc,nTel,email,password, imagemPerfil, role, } = req.body;
 
         if (!nomeUtilizador || !dataNasc || !nTel || !email || !password || !role) {
-            return res.status(400).json({ erro: "Todos os campos são obrigatórios." });
+            return res.status(400).json({ success: false, message: "Todos os campos são obrigatórios." });
         }
 
         const utilizadorExistente = await Utilizador.findOne({ where: { email } });
 
         if (utilizadorExistente) {
-            return res.status(409).json({ message: "Já existe um utilizador com este email." });
+            return res.status(409).json({ success: false, message: "Já existe um utilizador com este email." });
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -65,8 +67,9 @@ controllers.utilizador_create = async (req, res) => {
 
         });
 
-        res.status(201).json({ success: true, data: novoUtilizador });
+        res.status(201).json({ success: true, message: "Utilizador criado com sucesso!", data: novoUtilizador });
     } catch (error) {
+        console.error("ERRO NO BACKEND:", error);
         res.status(500).json({ success: false, message: "Erro ao criar utilizador.", error: error.message });
     }
 };
@@ -75,7 +78,7 @@ controllers.utilizador_create = async (req, res) => {
 controllers.utilizador_update = async (req, res) => {
     try {
         const id = req.params.id;
-        const { nomeUtilizador, dataNasc, nTel, email, password } = req.body;
+        const { nomeUtilizador, dataNasc, nTel, email, password, imagemPerfil,role, pontos } = req.body;
 
         const utilizador = await Utilizador.findByPk(id);
 
@@ -83,24 +86,50 @@ controllers.utilizador_update = async (req, res) => {
             return res.status(404).json({ erro: "Utilizador não encontrado." });
         }
 
-        const dadosAtualizados = {
-        nomeUtilizador,
-        dataNasc,
-        nTel,
-        email,
-        imagemPerfil,
-        role,
-        pontos,
-        };
+        if (email && email !== utilizador.email) {
+        const emailExistente = await Utilizador.findOne({ where: { email } });
+        if (emailExistente) {
+            return res.status(409).json({ success: false, message: "Já existe um utilizador com este email." });
+        }
+        }
 
-        if (password) {
+        // Lógica especial para mudança de role
+        if (role && role !== utilizador.role) {
+            if (utilizador.role === "formador" && role === "formando") {
+                // Transferir cursos do formador para admin (id=1)
+                await Curso.update(
+                    { idFormador: 1 },
+                    { where: { idFormador: utilizador.id } }
+                );
+            }
+            if (utilizador.role === "formando" && role === "formador") {
+                // Remover inscrições do formando
+                if (Inscricao) {
+                    await Inscricao.destroy({
+                        where: { idUtilizador: utilizador.id }
+                    });
+                }
+            }
+        }
+
+        const dadosAtualizados = {};
+        if (nomeUtilizador !== undefined) dadosAtualizados.nomeUtilizador = nomeUtilizador;
+        if (dataNasc !== undefined) dadosAtualizados.dataNasc = dataNasc;
+        if (nTel !== undefined) dadosAtualizados.nTel = nTel;
+        if (email !== undefined) dadosAtualizados.email = email;
+        if (imagemPerfil !== undefined) dadosAtualizados.imagemPerfil = imagemPerfil;
+        if (role !== undefined) dadosAtualizados.role = role;
+        if (pontos !== undefined) dadosAtualizados.pontos = pontos;
+
+        if (password && password.trim() !== "") {
         const hashedPassword = await bcrypt.hash(password, 10);
         dadosAtualizados.password = hashedPassword;
         }
 
         await utilizador.update(dadosAtualizados);
+        const utilizadorAtualizado = await Utilizador.findByPk(id);
 
-        res.json({ success: true, data: utilizador });
+        res.json({ success: true, data: utilizadorAtualizado });
     } catch (error) {
         res.status(500).json({ success: false, message: "Erro ao atualizar utilizador.", error: error.message });
     }
@@ -116,6 +145,10 @@ controllers.utilizador_delete = async (req, res) => {
         if (!utilizador) {
             return res.status(404).json({ erro: "Utilizador não encontrado." });
         }
+        
+        if (utilizador.role === "admin") {
+            return res.status(403).json({ success: false, message: "Não é permitido apagar um utilizador admin." });
+        }
 
         await utilizador.destroy();
 
@@ -124,6 +157,9 @@ controllers.utilizador_delete = async (req, res) => {
         res.status(500).json({ success: false, message: "Erro ao eliminar utilizador.", error: error.message });
     }
 };
+
+const DEFAULT_ADMIN_URL = "https://pint-2025.s3.eu-north-1.amazonaws.com/imagem-perfil/user-admin.png"
+const DEFAULT_PROFILE_URL = "https://pint-2025.s3.eu-north-1.amazonaws.com/imagem-perfil/default_profile_pic.jpg";
 
 // Para as imagens de perfil utilizador
 controllers.uploadImagemPerfil = async (req, res) => {
@@ -141,10 +177,16 @@ controllers.uploadImagemPerfil = async (req, res) => {
     }
 
     // 1. Gerar um nome de arquivo único para evitar colisões e sobrescritas
-    // Usar o ID do utilizador (garantido por checkToken) e um UUID/timestamp
-    const utilizadorId = req.utilizador.id; 
+    // Permitir que o admin envie o id do utilizador a editar
+    const id = req.body.id || req.query.id || req.utilizador.id;
+    const utilizador = await Utilizador.findByPk(id);
+
+    if (!utilizador) {
+      return res.status(404).json({ success: false, message: "Utilizador não encontrado." });
+    }
+
     const fileExtension = path.extname(file.originalname); 
-    const uniqueFileName = `${utilizadorId}-${crypto.randomBytes(16).toString('hex')}${fileExtension}`;
+    const uniqueFileName = `${id}-${crypto.randomBytes(16).toString('hex')}${fileExtension}`;
     const key = `imagem-perfil/${uniqueFileName}`;
 
     const params = {
@@ -154,17 +196,17 @@ controllers.uploadImagemPerfil = async (req, res) => {
       ContentType: file.mimetype, 
     };
 
+
     await s3.send(new PutObjectCommand(params));
     const imageUrl = `https://${process.env.BUCKET_NAME}.s3.${process.env.BUCKET_REGION}.amazonaws.com/${key}`;
 
-    const oldImageUrl = req.utilizador.imagemPerfil;
+    const oldImageUrl = utilizador.imagemPerfil;
 
     // 2. Atualizar o utilizador no banco de dados
-    // req.utilizador é o objeto do utilizador vindo do middleware checkToken
-    await req.utilizador.update({ imagemPerfil: imageUrl });
+    await utilizador.update({ imagemPerfil: imageUrl });
 
-    // 5. Tentar remover a imagem antiga do S3 (se existir)
-    if (oldImageUrl) {
+    // 3. Tentar remover a imagem antiga do S3 (se existir)
+    if (oldImageUrl && oldImageUrl !== DEFAULT_PROFILE_URL && oldImageUrl !== DEFAULT_ADMIN_URL) {
       const oldImageKey = getKeyFromS3Url(oldImageUrl);
 
       if (oldImageKey) {
@@ -188,11 +230,5 @@ controllers.uploadImagemPerfil = async (req, res) => {
     res.status(500).json({ success: false, message: "Erro interno do servidor ao enviar imagem.", details: error.message });
   }
 };
-
-
-
-
-
-
 
 module.exports = controllers;
