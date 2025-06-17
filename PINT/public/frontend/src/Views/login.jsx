@@ -21,6 +21,16 @@ const Login = () => {
     };
   }, []);
 
+    // Função para redirecionar com base na role
+  const redirectToDashboard = (userRole) => {
+    if (userRole === "gestor") { 
+      navigate("/admin"); 
+    } else {
+      navigate("/paginaInicial"); 
+    }
+    window.location.reload();
+  };
+
   const handleLogin = async (e) => {
     e.preventDefault();
     setErro("");
@@ -37,8 +47,7 @@ const Login = () => {
         const userData = data.user || data.data || {};
         const userToStore = { ...userData, token: data.token };
         localStorage.setItem("user", JSON.stringify(userToStore));
-        navigate("/paginaInicial");
-        window.location.reload();
+        redirectToDashboard(userData.role); 
       } else {
         setErro(data.message || "Erro ao fazer login.");
       }

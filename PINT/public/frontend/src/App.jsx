@@ -16,7 +16,16 @@ import AuthService from "./Views/auth.service";
 import './App.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
-
+// Admin
+import AdminRoute from "./Views/admin/AdminRoute";
+import HomePageAdmin from './Views/admin/HomePageAdmin';
+import GerirCurso from './Views/admin/GerirCurso';
+import GerirCursoDetalhe from './Views/admin/GerirCursoDetalhe';
+import CriarCurso from './Views/admin/CriarCurso';
+import GerirUtilizador from './Views/admin/GerirUtilizador';
+import GerirForum from './Views/admin/GerirForum';
+import GerirDenuncia from './Views/admin/GerirDenuncia';
+import GerirSugestao from './Views/admin/GerirSugestao';
 
 
   function App() {
@@ -46,6 +55,17 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js';
           <Route path="/curso/:id" element={<NavbarLayout><Curso /></NavbarLayout>} />
           <Route path="/verAula/:aulaId" element={<NavbarLayout><VerAula /></NavbarLayout>} />
           <Route path="/cursoSincrono/:id" element={<NavbarLayout><CursoSincrono /></NavbarLayout>} />
+
+          {/* {Admin} */}
+          <Route path="/admin" element={<AdminRoute><HomePageAdmin /></AdminRoute>} />
+          <Route path="/admin/gerir-curso" element={<AdminRoute><GerirCurso /></AdminRoute>} />
+          <Route path="/admin/gerir-curso/detalhe/:id" element={<AdminRoute><GerirCursoDetalhe /></AdminRoute>} />
+          <Route path="/admin/gerir-curso/criar-curso" element={<AdminRoute><CriarCurso /></AdminRoute>} />
+          <Route path="/admin/gerir-utilizador" element={<AdminRoute><GerirUtilizador /></AdminRoute>} />
+          <Route path="/admin/gerir-forum" element={<AdminRoute><GerirForum /></AdminRoute>} />
+          <Route path="/admin/gerir-denuncia" element={<AdminRoute><GerirDenuncia /></AdminRoute>} />
+          <Route path="/admin/gerir-sugestao" element={<AdminRoute><GerirSugestao /></AdminRoute>} />
+
         </Routes>
       </>
     );
