@@ -1,6 +1,7 @@
 const Forum = require("../model/Forum");
 const Utilizador = require("../model/Utilizador");
 const ForumFicheiro = require("../model/ForumFicheiro");
+
 require("dotenv").config();
 const multer  = require('multer');
 const { s3, PutObjectCommand, DeleteObjectCommand, getKeyFromS3Url } = require("../config/s3Config");
@@ -20,13 +21,7 @@ controllers.listarFicheirosForum = async (req, res) => {
 
     const ficheiros = await ForumFicheiro.findAll({
       where: { forumId },
-      include: [
-        {
-          model: Utilizador,
-          attributes: ["id", "nomeUtilizador", "email"]
-        }
-      ],
-      order: [["id", "DESC"]]
+      order: [["ID_FORUM_FICHEIRO", "DESC"]]
     });
 
     res.json({
@@ -36,11 +31,7 @@ controllers.listarFicheirosForum = async (req, res) => {
         nomeOriginal: f.nomeOriginal,
         url: f.url,
         tipo: f.tipo,
-        utilizador: f.Utilizador ? {
-          id: f.Utilizador.id,
-          nomeUtilizador: f.Utilizador.nomeUtilizador,
-          email: f.Utilizador.email
-        } : null
+        utilizadorId: f.utilizadorId
       }))
     });
   } catch (err) {

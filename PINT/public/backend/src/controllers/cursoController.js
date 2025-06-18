@@ -13,7 +13,7 @@ const bcrypt = require("bcryptjs");
 const crypto = require("crypto");
 require("dotenv").config();
 const multer = require("multer");
-const Utilizador = require("../model/Utilizador"); // já deves ter isto no topo
+const Utilizador = require("../model/Utilizador"); 
 
 const {
   s3,
@@ -433,7 +433,7 @@ controllers.curso_delete = async (req, res) => {
 controllers.uploadImagemCurso = async (req, res) => {
   try {
     const file = req.file;
-    const cursoId = req.params.cursoId;
+    const cursoId = req.params.id;
 
     if (!file) {
       return res

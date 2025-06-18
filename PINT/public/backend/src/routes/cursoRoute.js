@@ -30,6 +30,6 @@ router.get("/categoria/:idCategoria", cursoController.listarCursosPorCategoria);
 router.get("/area/:idArea", cursoController.listarCursosPorArea);
 
 // Upload imagem banner curso
-router.post("/upload-imagem-curso", middleware.checkToken , upload.single("imagem-curso"), cursoController.uploadImagemCurso );
+router.post("/upload-imagem-banner/:id", middleware.checkToken , upload.single("imagem-banner"), cursoController.uploadImagemCurso );
 
 module.exports = router;

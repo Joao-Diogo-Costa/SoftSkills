@@ -1,6 +1,7 @@
 const Comentario = require("../model/Comentario");
 const Forum = require("../model/Forum");
 const Utilizador = require("../model/Utilizador");
+const Denuncia = require("../model/Denuncia");
 
 const controllers = {};
 
@@ -8,13 +9,16 @@ const controllers = {};
 controllers.comentario_list = async (req, res) => {
   try {
     const comentarios = await Comentario.findAll({
-      include: [Forum, Utilizador],
+      include: [
+        Forum,
+        { model: Utilizador, as: "Utilizador" }
+      ],
       order: [["dataComentario", "DESC"]],
     });
 
     res.json({ success: true, data: comentarios });
   } catch (error) {
-    res.status(500).json({success: false,message: "Erro ao listar comentários.", details: error.message,});
+    res.status(500).json({success: false, message: "Erro ao listar comentários.", details: error.message });
   }
 };
 
@@ -121,11 +125,13 @@ controllers.comentario_delete = async (req, res) => {
       return res.status(404).json({ success: false, message: "Comentário não encontrado." });
     }
 
+    await Denuncia.destroy({ where: { comentarioId: id } });
+
     await comentario.destroy();
 
     res.json({ success: true, message: "Comentário apagado com sucesso." });
   } catch (error) {
-    res.status(500).json({ success: false, message: "Erro ao apagar comentário.", details: error.message,});
+    res.status(500).json({ success: false, message: "Erro ao apagar comentário.", details: error.message });
   }
 };
 

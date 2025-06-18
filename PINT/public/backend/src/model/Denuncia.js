@@ -46,6 +46,7 @@ var Denuncia = sequelize.define(
         model: "COMENTARIO",
         key: "ID_COMENTARIO",
       },
+      onDelete: "CASCADE",
     },
   },
   {

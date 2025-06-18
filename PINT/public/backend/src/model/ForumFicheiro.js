@@ -1,7 +1,8 @@
 var Sequelize = require("sequelize");
 var sequelize = require("./database");
 
-const Forum = require("./Forum");
+var Forum = require("./Forum");
+var Utilizador= require("./Utilizador");
 
 var ForumFicheiro = sequelize.define(
     "FORUM_FICHEIRO", 
@@ -31,14 +32,14 @@ var ForumFicheiro = sequelize.define(
     },
 
     utilizadorId: {
-        type: Sequelize.INTEGER,
-        field: "ID_UTILIZADOR",
-        allowNull: false,
-        references: {
-          model: "UTILIZADOR",
-          key: "ID_UTILIZADOR",
-        },
-        onDelete: "CASCADE",
+      type: Sequelize.INTEGER,
+      field: "ID_UTILIZADOR",
+      allowNull: false,
+      references: {
+        model: "UTILIZADOR",
+        key: "ID_UTILIZADOR",
+      },
+      onDelete: "CASCADE",
     },
 
     forumId: {

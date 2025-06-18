@@ -116,6 +116,8 @@ Tarefa.hasMany(SubmissaoTarefa, { foreignKey: "idTarefa" });
 // SugestaoForum 
 SugestaoForum.belongsTo(Utilizador, { foreignKey: "utilizadorId"});
 Utilizador.hasMany(SugestaoForum, { foreignKey: "utilizadorId"});
+SugestaoForum.belongsTo(TopicoC, { foreignKey: "topicoId", });
+TopicoC.hasMany(SugestaoForum, { foreignKey: "topicoId" });
 
 // Tarefa
 Tarefa.belongsTo(Curso, { foreignKey: "cursoId" });

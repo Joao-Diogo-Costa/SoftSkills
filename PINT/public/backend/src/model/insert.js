@@ -1494,7 +1494,30 @@ async function initializeData() {
 
     // await checkAndInsert(Notificacao, []);
 
-    // await checkAndInsert(SugestaoForum, []);
+    await checkAndInsert(SugestaoForum, [
+      {
+        titulo: "Fórum sobre boas práticas em React",
+        dataSugestao: new Date(),
+        estado: null,
+        utilizadorId: 7, 
+        topicoId: 3,     
+      },
+      {
+        titulo: "Discussão sobre carreira em programação",
+        dataSugestao: new Date(),
+        estado: null,
+        utilizadorId: 8,
+        topicoId: 1,     
+      },
+      {
+        titulo: "Partilha de recursos para CSS avançado",
+        dataSugestao: new Date(),
+        estado: null,
+        utilizadorId: 9,
+        topicoId: 2,     
+      }
+    ]);
+
 
     console.log("Data initialization complete.");
   } catch (error) {

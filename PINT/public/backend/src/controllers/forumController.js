@@ -1,9 +1,12 @@
 const Forum = require("../model/Forum");
 const TopicoC = require("../model/TopicoC");
+const AreaC = require("../model/AreaC");
+const CategoriaC = require("../model/CategoriaC");
 require("dotenv").config();
 const multer  = require('multer');
 const { s3, PutObjectCommand, DeleteObjectCommand, getKeyFromS3Url } = require("../config/s3Config");
 const path = require('path');
+const crypto = require("crypto");
 
 const controllers = {};
 
@@ -11,12 +14,18 @@ const controllers = {};
 controllers.forum_list = async (req, res) => {
   try {
     const lista = await Forum.findAll({
-      include: [TopicoC],
+      include: [{
+        model: TopicoC,
+        include: [{
+          model: AreaC,
+          include: [CategoriaC]
+        }]
+      }],
       order: [["id", "ASC"]],
     });
     res.json({ success: true, data: lista });
   } catch (error) {
-    res.status(500).json({ success: false, message: "Erro ao listar fóruns.", details: error.message, });
+    res.status(500).json({ success: false, message: "Erro ao listar fÃ³runs.", details: error.message });
   }
 };
 
