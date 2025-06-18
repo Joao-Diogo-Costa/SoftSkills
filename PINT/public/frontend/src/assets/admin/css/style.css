@@ -400,6 +400,16 @@ body {
   }
 }
 
+.tag-azul {
+  display: inline-block;
+  background-color: #0d6efd;
+  color: #fff;
+  border-radius: 12px;
+  padding: 2px 12px;
+  font-size: 0.95em;
+  font-weight: 500;
+}
+
 /* datepicker */
 .react-datepicker {
     background-color: #F5F9FF;

@@ -24,6 +24,8 @@ import GerirCursoDetalhe from './Views/admin/GerirCursoDetalhe';
 import CriarCurso from './Views/admin/CriarCurso';
 import GerirUtilizador from './Views/admin/GerirUtilizador';
 import GerirForum from './Views/admin/GerirForum';
+import GerirForumDetalhe from './Views/admin/GerirForumDetalhe';
+import CriarForum from './Views/admin/CriarForum';
 import GerirDenuncia from './Views/admin/GerirDenuncia';
 import GerirSugestao from './Views/admin/GerirSugestao';
 
@@ -63,6 +65,8 @@ import GerirSugestao from './Views/admin/GerirSugestao';
           <Route path="/admin/gerir-curso/criar-curso" element={<AdminRoute><CriarCurso /></AdminRoute>} />
           <Route path="/admin/gerir-utilizador" element={<AdminRoute><GerirUtilizador /></AdminRoute>} />
           <Route path="/admin/gerir-forum" element={<AdminRoute><GerirForum /></AdminRoute>} />
+          <Route path="/admin/gerir-forum/detalhe/:id" element={<AdminRoute><GerirForumDetalhe /></AdminRoute>} />
+          <Route path="/admin/gerir-forum/criar-forum" element={<AdminRoute><CriarForum /></AdminRoute>} />
           <Route path="/admin/gerir-denuncia" element={<AdminRoute><GerirDenuncia /></AdminRoute>} />
           <Route path="/admin/gerir-sugestao" element={<AdminRoute><GerirSugestao /></AdminRoute>} />
 
