@@ -473,7 +473,7 @@ controllers.uploadImagemCurso = async (req, res) => {
     await s3.send(new PutObjectCommand(params));
     const imageUrl = `https://${process.env.BUCKET_NAME}.s3.${process.env.BUCKET_REGION}.amazonaws.com/${key}`;
 
-    const oldImageUrl = curso.imagemBanner; // assumir que tens este campo no model
+    const oldImageUrl = curso.imagemBanner;
 
     // Atualizar URL no banco
     await curso.update({ imagemBanner: imageUrl });

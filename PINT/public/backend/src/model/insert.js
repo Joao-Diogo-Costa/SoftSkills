@@ -14,6 +14,7 @@ const Curso = require("./Curso");
 const Denuncia = require("./Denuncia");
 const DocumentoAula = require("./DocumentoAula");
 const Forum = require("./Forum");
+const ForumFicheiro = require("./ForumFicheiro");
 const Inscricao = require("./Inscricao");
 const Notificacao = require("./Notificacao");
 const SubmissaoTarefa = require("./SubmissaoTarefa");
@@ -1440,11 +1441,48 @@ async function initializeData() {
         utilizadorId: 4, 
         comentarioId: 1, 
       },
+      {
+        descricao: "Comentário ofensivo.",
+        dataDenuncia: new Date(),
+        utilizadorId: 10, 
+        comentarioId: 1, 
+      },
+      {
+        descricao: "Comentário ofensivo.",
+        dataDenuncia: new Date(),
+        utilizadorId: 9, 
+        comentarioId: 1, 
+      },
     ]);
 
     // await checkAndInsert(DocumentoAula, []);
 
-    // await checkAndInsert(Conteudo, []);
+    await checkAndInsert(Conteudo, [
+      {
+        titulo: "Introdução ao HTML Semântico",
+        descricao: "Primeiro contacto com conceitos de HTML semântico.",
+        ordem: 1,
+        cursoId: 2,
+      },
+      {
+        titulo: "Estrutura de uma Página Web",
+        descricao: "Como organizar o conteúdo de uma página web de forma semântica.",
+        ordem: 2,
+        cursoId: 2,
+      },
+      {
+        titulo: "Elementos Semânticos Essenciais",
+        descricao: "Exploração dos principais elementos semânticos do HTML5.",
+        ordem: 3,
+        cursoId: 2,
+      },
+      {
+        titulo: "Prática: Criar uma Página Semântica",
+        descricao: "Exercício prático para aplicar os conceitos aprendidos.",
+        ordem: 4,
+        cursoId: 2,
+      },
+    ]);
 
     // await checkAndInsert(Inscricao, []);
 

@@ -1,5 +1,10 @@
 const Forum = require("../model/Forum");
 const TopicoC = require("../model/TopicoC");
+require("dotenv").config();
+const multer  = require('multer');
+const { s3, PutObjectCommand, DeleteObjectCommand, getKeyFromS3Url } = require("../config/s3Config");
+const path = require('path');
+
 const controllers = {};
 
 // Listar Fóruns
@@ -88,6 +93,91 @@ controllers.forum_delete = async (req, res) => {
     res.json({ success: true, message: "Fórum removido com sucesso." });
   } catch (error) {
     res.status(500).json({ success: false, message: "Erro ao remover fórum.", details: error.message,});
+  }
+};
+
+// Imagem Forum
+controllers.uploadImagemForum = async (req, res) => {
+  try {
+    const file = req.file;
+    const forumId = req.params.forumId;
+
+    if (!file) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Nenhum arquivo de imagem enviado." });
+    }
+
+    const allowedMimeTypes = ["image/jpeg", "image/png", "image/jpg"];
+    if (!allowedMimeTypes.includes(file.mimetype)) {
+      return res.status(400).json({
+        success: false,
+        message: "Apenas imagens JPEG, PNG ou JPG são permitidas.",
+      });
+    }
+
+    const forum = await Forum.findByPk(forumId);
+    if (!forum) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Forum não encontrado." });
+    }
+
+    // Gerar nome único para o ficheiro
+    const fileExtension = path.extname(file.originalname);
+    const uniqueFileName = `${forumId}-${crypto
+      .randomBytes(16)
+      .toString("hex")}${fileExtension}`;
+    const key = `imagem-forum/${uniqueFileName}`;
+
+    const params = {
+      Bucket: process.env.BUCKET_NAME,
+      Key: key,
+      Body: file.buffer,
+      ContentType: file.mimetype,
+    };
+
+    await s3.send(new PutObjectCommand(params));
+    const imageUrl = `https://${process.env.BUCKET_NAME}.s3.${process.env.BUCKET_REGION}.amazonaws.com/${key}`;
+
+    const oldImageUrl = forum.imagemForum;
+
+    // Atualizar URL no banco
+    await forum.update({ imagemForum: imageUrl });
+
+    // Remover imagem antiga do S3 se existir
+    if (oldImageUrl) {
+      const oldImageKey = getKeyFromS3Url(oldImageUrl);
+      if (oldImageKey) {
+        try {
+          await s3.send(
+            new DeleteObjectCommand({
+              Bucket: process.env.BUCKET_NAME,
+              Key: oldImageKey,
+            })
+          );
+          console.log(`Imagem antiga (${oldImageKey}) removida do S3.`);
+        } catch (err) {
+          console.error(
+            `Erro ao remover imagem antiga (${oldImageKey}):`,
+            err.message
+          );
+        }
+      }
+    }
+
+    res.json({
+      success: true,
+      message: "Imagem enviada e associada ao forum com sucesso!",
+      imageUrl,
+    });
+  } catch (error) {
+    console.error("Erro ao enviar imagem do forum:", error);
+    res.status(500).json({
+      success: false,
+      message: "Erro interno do servidor ao enviar imagem.",
+      details: error.message,
+    });
   }
 };
 

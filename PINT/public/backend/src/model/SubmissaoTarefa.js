@@ -15,15 +15,21 @@ var SubmissaoTarefa = sequelize.define(
       autoIncrement: true,
       allowNull: false,
     },
-    fichEntrega: {
+    nomeOriginal: {
       type: Sequelize.STRING,
-      field: "FICHENTREGA",
-      allowNull: true,
+      field: "NOME_ORIGINAL_FICHEIRO",
+      allowNull: false,
     },
-    dataEntrega: {
-      type: Sequelize.DATE,
-      field: "DATAENTREGA",
+
+    url: {
+      type: Sequelize.STRING,
+      field: "URL_FICHEIRO",
+      allowNull: false,
+    },
+    tipo: {
+      type: Sequelize.STRING,
       allowNull: true,
+      field: "TIPO_FICHEIRO",
     },
     nota: {
       type: Sequelize.FLOAT,

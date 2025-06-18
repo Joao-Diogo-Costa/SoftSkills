@@ -14,7 +14,6 @@ var SugestaoForum = sequelize.define(
       primaryKey: true,
       autoIncrement: true,
     },
-
     titulo: {
       type: Sequelize.STRING,
       field: "TITULO",

@@ -48,6 +48,9 @@ app.use("/comentario", comentarioRoute);
 const conteudoRoute = require("./routes/conteudoRoute");
 app.use("/conteudo", conteudoRoute);
 
+const conteudoFicheiroRoute = require("./routes/conteudoFicheiroRoute");
+app.use("/conteudo-ficheiro", conteudoFicheiroRoute);
+
 const cursoRoute = require("./routes/cursoRoute");
 app.use("/curso", cursoRoute);
 
@@ -59,6 +62,9 @@ app.use("/documento-aula", documentoAulaRoute);
 
 const forumRoute = require("./routes/forumRoute");
 app.use("/forum", forumRoute);
+
+const forumFicheiroRoute = require("./routes/forumFicheiroRoute");
+app.use("/forum-ficheiro", forumFicheiroRoute);
 
 const inscricaoRoute = require("./routes/inscricaoRoute");
 app.use("/inscricao", inscricaoRoute);
@@ -74,6 +80,9 @@ app.use("/sugestao-topico", sugestaoTopicoRoute);
 
 const tarefaRoute = require("./routes/tarefaRoute");
 app.use("/tarefa", tarefaRoute);
+
+const tarefaFicheiroRoute = require("./routes/tarefaFicheiroRoute");
+app.use("/tarefa-ficheiro", tarefaFicheiroRoute);
 
 const topicocRoute = require("./routes/topicocRoute");
 app.use("/topico-curso", topicocRoute);

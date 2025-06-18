@@ -1,6 +1,7 @@
 const Denuncia = require("../model/Denuncia");
 const Comentario = require("../model/Comentario");
 const Utilizador = require("../model/Utilizador");
+const { Op, fn, col } = require("sequelize");
 
 const controllers = {};
 
@@ -21,6 +22,46 @@ controllers.denuncia_list = async (req, res) => {
     res.json({ success: true, data: denuncias });
   } catch (error) {
     res.status(500).json({ success: false, message: "Erro ao listar denúncias.", details: error.message, });
+  }
+};
+
+controllers.utilizador_mais_denunciado = async (req, res) => {
+  try {
+    // Conta quantas vezes cada utilizador foi denunciado (pelo comentário)
+    const result = await Denuncia.findAll({
+      attributes: [
+        [fn("COUNT", col("Comentario.ID_UTILIZADOR")), "totalDenuncias"],
+        [col("Comentario.ID_UTILIZADOR"), "utilizadorDenunciadoId"]
+      ],
+      include: [
+        {
+          model: Comentario,
+          as: "Comentario",
+          attributes: [],
+        }
+      ],
+      group: ["Comentario.ID_UTILIZADOR"],
+      order: [[fn("COUNT", col("Comentario.ID_UTILIZADOR")), "DESC"]],
+      raw: true,
+      limit: 1
+    });
+
+    if (result.length === 0) {
+      return res.json({ success: true, data: null });
+    }
+
+    // Buscar info do utilizador mais denunciado
+    const utilizador = await Utilizador.findByPk(result[0].utilizadorDenunciadoId);
+
+    res.json({
+      success: true,
+      data: {
+        utilizador,
+        totalDenuncias: result[0].totalDenuncias
+      }
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Erro ao buscar utilizador mais denunciado.", details: error.message });
   }
 };
 

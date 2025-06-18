@@ -7,6 +7,9 @@ const middleware = require("../middlewares/middleware");
 // GET: Listar todas as denúncias
 router.get("/list", denunciaController.denuncia_list);
 
+// GET: Listar o utilizador mais denunciado
+router.get("/utilizador-mais-denunciado", denunciaController.utilizador_mais_denunciado);
+
 // GET: Detalhar uma denúncia por ID
 router.get("/get/:id", denunciaController.denuncia_detail);
 

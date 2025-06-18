@@ -1,31 +1,33 @@
 var Sequelize = require("sequelize");
 var sequelize = require("./database");
 
-var Tarefa = sequelize.define(
-  "TAREFA",
+var Conteudo = require("./Conteudo");
+
+var ConteudoFicheiro = sequelize.define(
+  "CONTEUDO_FICHEIRO",
   {
     id: {
       type: Sequelize.INTEGER,
-      field: "ID_TAREFA",
-      primaryKey: true,
+      field: "ID_CONTEUDO_FICHEIRO",
       autoIncrement: true,
+      primaryKey: true,
+    },
+
+    nomeOriginal: {
+      type: Sequelize.STRING,
+      field: "NOME_ORIGINAL_FICHEIRO",
       allowNull: false,
     },
 
-    titulo: {
+    url: {
       type: Sequelize.STRING,
-      field: "TITULO",
+      field: "URL_FICHEIRO",
       allowNull: false,
     },
-    descricao: {
+    tipo: {
       type: Sequelize.STRING,
-      field: "DESCRICAO",
-      allowNull: false,
-    },
-    dataLimite: {
-      type: Sequelize.DATE,
-      field: "DATALIMITE",
-      allowNull: false,
+      allowNull: true,
+      field: "TIPO_FICHEIRO",
     },
 
     utilizadorId: {
@@ -39,13 +41,13 @@ var Tarefa = sequelize.define(
       onDelete: "CASCADE",
     },
 
-    cursoId: {
+    conteudoId: {
       type: Sequelize.INTEGER,
-      field: "ID_CURSO",
+      field: "ID_CONTEUDO",
       allowNull: false,
       references: {
-        model: "CURSO",
-        key: "ID_CURSO",
+        model: "CONTEUDO",
+        key: "ID_CONTEUDO",
       },
       onDelete: "CASCADE",
     },
@@ -56,4 +58,4 @@ var Tarefa = sequelize.define(
   }
 );
 
-module.exports = Tarefa;
+module.exports = ConteudoFicheiro;

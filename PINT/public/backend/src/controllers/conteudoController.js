@@ -1,5 +1,6 @@
 const Conteudo = require("../model/Conteudo");
 const Curso = require("../model/Curso");
+const ConteudoFicheiro = require("../model/ConteudoFicheiro");
 
 const controllers = {};
 
@@ -7,12 +8,18 @@ const controllers = {};
 controllers.conteudo_list = async (req, res) => {
   try {
     const conteudos = await Conteudo.findAll({
-      include: Curso,
+      include: [
+        Curso,
+        {
+          model: ConteudoFicheiro,
+          as: "ficheiros"
+        }
+      ],
       order: [["ordem", "ASC"]],
     });
     res.json({ success: true, data: conteudos });
   } catch (error) {
-    res.status(500).json({ success: false, message: "Erro ao listar conteúdos.",details: error.message, });
+    res.status(500).json({ success: false, message: "Erro ao listar conteúdos.", details: error.message });
   }
 };
 
@@ -20,20 +27,28 @@ controllers.conteudo_list = async (req, res) => {
 controllers.conteudo_detail = async (req, res) => {
   try {
     const id = req.params.id;
-    const conteudo = await Conteudo.findByPk(id, { include: Curso });
+    const conteudo = await Conteudo.findByPk(id, {
+      include: [
+        Curso,
+        {
+          model: ConteudoFicheiro,
+          as: "ficheiros"
+        }
+      ]
+    });
     if (!conteudo) {
       return res.status(404).json({ success: false, message: "Conteúdo não encontrado." });
     }
     res.json({ success: true, data: conteudo });
   } catch (error) {
-    res.status(500).json({ success: false, message: "Erro ao buscar conteúdo.", details: error.message,});
+    res.status(500).json({ success: false, message: "Erro ao buscar conteúdo.", details: error.message });
   }
 };
 
 // Criar novo conteúdo
 controllers.conteudo_create = async (req, res) => {
   try {
-    const { titulo, descricao, cursoId } = req.body;
+    const { titulo, descricao, ordem, cursoId } = req.body;
 
     if (!cursoId) {
       return res.status(400).json({ message: "ID do curso é obrigatório." });
@@ -47,6 +62,7 @@ controllers.conteudo_create = async (req, res) => {
     const novoConteudo = await Conteudo.create({
       titulo,
       descricao,
+      ordem,
       cursoId,
     });
 
@@ -61,15 +77,9 @@ controllers.conteudo_update = async (req, res) => {
   try {
     const id = req.params.id;
     const {
-      tipo,
       titulo,
       descricao,
       ordem,
-      url_link,
-      nome_ficheiro,
-      caminho_ficheiro,
-      url_video,
-      conteudo_texto,
       cursoId,
     } = req.body;
 
@@ -86,21 +96,15 @@ controllers.conteudo_update = async (req, res) => {
     }
 
     await conteudo.update({
-      tipo,
-      titulo,
-      descricao,
-      ordem,
-      url_link,
-      nome_ficheiro,
-      caminho_ficheiro,
-      url_video,
-      conteudo_texto,
-      cursoId,
+      titulo: titulo ?? conteudo.titulo,
+      descricao: descricao ?? conteudo.descricao,
+      ordem: ordem ?? conteudo.ordem,
+      cursoId: cursoId ?? conteudo.cursoId,
     });
 
     res.json({ success: true, data: conteudo });
   } catch (error) {
-    res.status(500).json({success: false,message: "Erro ao atualizar conteúdo.",details: error.message,});
+    res.status(500).json({ success: false, message: "Erro ao atualizar conteúdo.", details: error.message });
   }
 };
 
@@ -118,9 +122,8 @@ controllers.conteudo_delete = async (req, res) => {
 
     res.json({ success: true, message: "Conteúdo removido com sucesso." });
   } catch (error) {
-    res.status(500).json({ success: false, message: "Erro ao remover conteúdo.", details: error.message,});
+    res.status(500).json({ success: false, message: "Erro ao remover conteúdo.", details: error.message });
   }
 };
-
 
 module.exports = controllers;

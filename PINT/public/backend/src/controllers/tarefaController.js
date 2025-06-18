@@ -1,27 +1,42 @@
 const Tarefa = require("../model/Tarefa");
 const Curso = require("../model/Curso");
 const Utilizador = require("../model/Utilizador");
+const TarefaFicheiro = require("../model/TarefaFicheiro");
 
 const controllers = {};
 
 // Listar Tarefas
+// Listar Tarefas
 controllers.tarefa_list = async (req, res) => {
   try {
     const tarefas = await Tarefa.findAll({
-      include: [Curso],
+      include: [
+        Curso,
+        {
+          model: TarefaFicheiro,
+          as: "ficheiros"
+        }
+      ],
       order: [["dataLimite", "ASC"]],
     });
     res.json({ success: true, data: tarefas });
   } catch (error) {
-    res.status(500).json({ success: false, message: "Erro ao listar tarefas.", details: error.message,});
+    res.status(500).json({ success: false, message: "Erro ao listar tarefas.", details: error.message });
   }
 };
 
 // Detail Tarefa
+// Detail Tarefa
 controllers.tarefa_detail = async (req, res) => {
   try {
     const tarefa = await Tarefa.findByPk(req.params.id, {
-      include: [Curso],
+      include: [
+        Curso,
+        {
+          model: TarefaFicheiro,
+          as: "ficheiros"
+        }
+      ],
     });
 
     if (!tarefa) {
@@ -30,14 +45,14 @@ controllers.tarefa_detail = async (req, res) => {
 
     res.json({ success: true, data: tarefa });
   } catch (error) {
-    res.status(500).json({ success: false, message: "Erro ao buscar tarefa.", details: error.message,});
+    res.status(500).json({ success: false, message: "Erro ao buscar tarefa.", details: error.message });
   }
 };
 
 // Criar Tarefa
 controllers.tarefa_create = async (req, res) => {
   try {
-    const { titulo, descricao, dataLimite, ficheiroEnunciado, utilizadorId, cursoId } = req.body;
+    const { titulo, descricao, dataLimite, utilizadorId, cursoId } = req.body;
 
     if (!titulo || !descricao || !dataLimite || !utilizadorId || !cursoId) {
       return res.status(400).json({ success: false, message: "Campos obrigatórios em falta." });
@@ -59,7 +74,6 @@ controllers.tarefa_create = async (req, res) => {
       titulo,
       descricao,
       dataLimite,
-      ficheiroEnunciado,
       utilizadorId,
       cursoId,
     });
@@ -73,7 +87,7 @@ controllers.tarefa_create = async (req, res) => {
 // Atualizar Tarefa
 controllers.tarefa_update = async (req, res) => {
   try {
-    const { titulo, descricao, dataLimite, ficheiroEnunciado, cursoId } = req.body;
+    const { titulo, descricao, dataLimite, cursoId } = req.body;
     const tarefa = await Tarefa.findByPk(req.params.id);
 
     if (!tarefa) {
@@ -91,7 +105,6 @@ controllers.tarefa_update = async (req, res) => {
       titulo: titulo ?? tarefa.titulo,
       descricao: descricao ?? tarefa.descricao,
       dataLimite: dataLimite ?? tarefa.dataLimite,
-      ficheiroEnunciado: ficheiroEnunciado ?? tarefa.ficheiroEnunciado,
       cursoId: cursoId ?? tarefa.cursoId,
     });
 
