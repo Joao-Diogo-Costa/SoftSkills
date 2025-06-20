@@ -116,6 +116,11 @@ body {
     color: #39639D;
     overflow: hidden;
 }
+
+.content.no-sidebar {
+    margin-left: 0 !important;
+}
+
 .header {
     display: flex;
     justify-content: space-between;

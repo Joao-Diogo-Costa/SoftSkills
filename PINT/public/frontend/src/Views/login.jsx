@@ -22,14 +22,16 @@ const Login = () => {
   }, []);
 
     // Função para redirecionar com base na role
-  const redirectToDashboard = (userRole) => {
-    if (userRole === "gestor") { 
-      navigate("/admin"); 
-    } else {
-      navigate("/paginaInicial"); 
-    }
-    window.location.reload();
-  };
+    const redirectToDashboard = (userRole) => {
+      if (userRole === "gestor") {
+        navigate("/admin");
+      } else if (userRole === "formador") {
+        navigate("/curso-formador");
+      } else {
+        navigate("/paginaInicial");
+      }
+      window.location.reload();
+    };
 
   const handleLogin = async (e) => {
     e.preventDefault();

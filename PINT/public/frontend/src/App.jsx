@@ -16,6 +16,13 @@ import AuthService from "./Views/auth.service";
 import './App.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
+//Formando
+import NavbarFormador from './Views/formador/NavBarFormador';
+import CursoFormador from "./Views/formador/CursoFormador";
+import GerirConteudoCurso from './Views/formador/GerirConteudoCurso';
+import GerirSubmissaoTarefa from './Views/formador/GerirSubmissaoTarefa';
+import GerirCursoAssincrono from './Views/formador/GerirCursoAssincrono';
+
 // Admin
 import AdminRoute from "./Views/admin/AdminRoute";
 import HomePageAdmin from './Views/admin/HomePageAdmin';
@@ -33,6 +40,16 @@ import GerirSugestao from './Views/admin/GerirSugestao';
   function App() {
 
     const NavbarLayout = ({ children }) => {
+      const user = JSON.parse(localStorage.getItem("user"));
+      if (user?.role === "formador") {
+        return (
+          <>
+            <NavbarFormador />
+            {children}
+            <Footer />
+          </>
+        );
+      }
       return (
         <>
           <Navbar />
@@ -41,6 +58,7 @@ import GerirSugestao from './Views/admin/GerirSugestao';
         </>
       );
     };
+
 
 
 
@@ -57,6 +75,12 @@ import GerirSugestao from './Views/admin/GerirSugestao';
           <Route path="/curso/:id" element={<NavbarLayout><Curso /></NavbarLayout>} />
           <Route path="/verAula/:aulaId" element={<NavbarLayout><VerAula /></NavbarLayout>} />
           <Route path="/cursoSincrono/:id" element={<NavbarLayout><CursoSincrono /></NavbarLayout>} />
+
+          {/* {Formador} */}
+          <Route path="/curso-formador" element={<NavbarLayout><CursoFormador /></NavbarLayout>} />
+          <Route path="/curso-formador/gerir/:id" element={<NavbarLayout><GerirConteudoCurso /></NavbarLayout>} />
+          <Route path="/curso-formador/gerir/:id/gerir-submissao/:tarefaId" element={<NavbarLayout><GerirSubmissaoTarefa /></NavbarLayout>} />
+          <Route path="/curso-formador/gerir-assincrono/:id" element={<NavbarLayout><GerirCursoAssincrono /></NavbarLayout>} />
 
           {/* {Admin} */}
           <Route path="/admin" element={<AdminRoute><HomePageAdmin /></AdminRoute>} />

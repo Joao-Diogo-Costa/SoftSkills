@@ -7,7 +7,7 @@ import "../../assets/admin/css/style.css";
 import AdminSidebar from './Sidebar';
 import authHeader from "../auth.header";
 
-import iconSucesso from "../../assets/admin/svg/success_vector.svg"; // Ajusta o caminho conforme o teu projeto
+import iconSucesso from "../../assets/admin/svg/success_vector.svg"; 
 
 function CriarForum() {
     const [categorias, setCategorias] = useState([]);
