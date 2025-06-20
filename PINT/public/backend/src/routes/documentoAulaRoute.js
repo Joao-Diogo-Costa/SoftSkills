@@ -3,20 +3,15 @@ const router = express.Router();
 
 const documentoAulaController = require("../controllers/documentoAulaController");
 const middleware = require("../middlewares/middleware");
+const upload = require("../config/multerConfig");
 
-// GET: Listar todos os documentos de aula
-router.get("/list", documentoAulaController.documentoAula_list);
+// Listar ficheiros de uma aula assíncrona
+router.get("/:aulaAssincronaId/ficheiros", middleware.checkToken, documentoAulaController.listarFicheirosAula);
 
-// GET: Detalhar um documento de aula por ID
-router.get("/get/:id", documentoAulaController.documentoAula_detail);
+// Upload de ficheiros para uma aula assíncrona
+router.post("/:aulaAssincronaId/ficheiros", middleware.checkToken, upload.array("ficheiros"), documentoAulaController.uploadFicheiroAula);
 
-// POST: Criar um novo documento de aula
-router.post("/create", middleware.checkToken, documentoAulaController.documentoAula_create);
-
-// PUT: Atualizar um documento de aula existente
-router.put("/update/:id", middleware.checkToken, documentoAulaController.documentoAula_update);
-
-// DELETE: Apagar um documento de aula
-router.delete("/delete/:id", middleware.checkToken, documentoAulaController.documentoAula_delete);
+// Eliminar ficheiro de aula
+router.delete("/ficheiro/:fileId", middleware.checkToken, documentoAulaController.deleteFicheiroAula);
 
 module.exports = router;

@@ -23,7 +23,6 @@ const Tarefa = require("./Tarefa");
 const TopicoC = require("./TopicoC");
 const Utilizador = require("./Utilizador");
 
-
 const bcrypt = require("bcrypt");
 
 async function initializeData() {
@@ -61,7 +60,8 @@ async function initializeData() {
         tokenConfirmacaoEmail: null,
         password: "admin123",
         mustChangePassword: false,
-        imagemPerfil: "https://pint-2025.s3.eu-north-1.amazonaws.com/imagem-perfil/user-admin.png",
+        imagemPerfil:
+          "https://pint-2025.s3.eu-north-1.amazonaws.com/imagem-perfil/user-admin.png",
         pontos: 0,
         role: "gestor",
         dataRegisto: new Date(),
@@ -102,7 +102,7 @@ async function initializeData() {
         email: "tiago.alves@formador.softinsa",
         emailConfirmado: false,
         tokenConfirmacaoEmail: null,
-        password: "formador123", 
+        password: "formador123",
         mustChangePassword: true,
         imagemPerfil: null,
         pontos: 0,
@@ -490,7 +490,7 @@ async function initializeData() {
       },
       {
         nomeTopico: "Análise Financeira",
-        areaId:9,     
+        areaId: 9,
       },
       {
         nomeTopico: "Impostos e Legislação Tributária",
@@ -619,7 +619,8 @@ async function initializeData() {
         areaId: 16,
       },
       {
-        nomeTopico: "Conceitos de Ciências Naturais (Corpo Humano, Animais, Plantas)",
+        nomeTopico:
+          "Conceitos de Ciências Naturais (Corpo Humano, Animais, Plantas)",
         areaId: 16,
       },
       {
@@ -795,10 +796,9 @@ async function initializeData() {
     dataInicioCurso.setMonth(dataInicioCurso.getMonth() + 1);
 
     const dataFimCurso = new Date(hoje);
-    dataFimCurso.setMonth(dataFimCurso.getMonth() + 2); 
+    dataFimCurso.setMonth(dataFimCurso.getMonth() + 2);
 
     await checkAndInsert(Curso, [
-
       {
         nome: "HTML Semântico - Básico",
         dataUpload: new Date(),
@@ -891,7 +891,8 @@ async function initializeData() {
         vaga: null,
         capacidadeMaxima: null,
         estado: 0,
-        descricaoCurso: "Curso avançado de CSS com animações e pré-processadores.",
+        descricaoCurso:
+          "Curso avançado de CSS com animações e pré-processadores.",
         duracao: "02:00:00",
         nivel: "Avançado",
         pontuacao: 130,
@@ -1060,81 +1061,91 @@ async function initializeData() {
         topicoId: 5,
         formadorId: 4,
       },
-      
     ]);
 
     await checkAndInsert(AulaSincrona, [
-
       {
         tituloSincrona: "Revisão de HTML Semântico Básico",
-        descricaoSincrona: "Revisão rápida dos conceitos básicos para alinhar conhecimento.",
+        descricaoSincrona:
+          "Revisão rápida dos conceitos básicos para alinhar conhecimento.",
         dataLancSincrona: new Date(),
         cursoId: 2,
       },
       {
         tituloSincrona: "Estrutura Avançada com HTML5",
-        descricaoSincrona: "Exploração de elementos avançados e melhores práticas semânticas.",
+        descricaoSincrona:
+          "Exploração de elementos avançados e melhores práticas semânticas.",
         dataLancSincrona: new Date(),
         cursoId: 2,
       },
 
       {
         tituloSincrona: "Projetos Práticos e Validação",
-        descricaoSincrona: "Desenvolvimento de projetos e uso de ferramentas para validação semântica.",
+        descricaoSincrona:
+          "Desenvolvimento de projetos e uso de ferramentas para validação semântica.",
         dataLancSincrona: new Date(),
         cursoId: 2,
       },
-        {
+      {
         tituloSincrona: "Fundamentos de Layout Responsivo",
-        descricaoSincrona: "Introdução aos conceitos de design responsivo usando CSS.",
+        descricaoSincrona:
+          "Introdução aos conceitos de design responsivo usando CSS.",
         dataLancSincrona: new Date(),
         cursoId: 5,
       },
       {
         tituloSincrona: "Flexbox e Grid Avançado",
-        descricaoSincrona: "Exploração aprofundada das técnicas Flexbox e CSS Grid para layouts complexos.",
+        descricaoSincrona:
+          "Exploração aprofundada das técnicas Flexbox e CSS Grid para layouts complexos.",
         dataLancSincrona: new Date(),
         cursoId: 5,
       },
       {
         tituloSincrona: "Media Queries e Otimização Mobile",
-        descricaoSincrona: "Uso avançado de media queries para otimização em dispositivos móveis.",
+        descricaoSincrona:
+          "Uso avançado de media queries para otimização em dispositivos móveis.",
         dataLancSincrona: new Date(),
         cursoId: 5,
       },
       {
         tituloSincrona: "Manipulação do DOM",
-        descricaoSincrona: "Aprenda como acessar e modificar elementos HTML com JavaScript.",
+        descricaoSincrona:
+          "Aprenda como acessar e modificar elementos HTML com JavaScript.",
         dataLancSincrona: new Date(),
         cursoId: 8,
       },
       {
         tituloSincrona: "Eventos em JavaScript",
-        descricaoSincrona: "Entenda o sistema de eventos, listeners e bubbling.",
+        descricaoSincrona:
+          "Entenda o sistema de eventos, listeners e bubbling.",
         dataLancSincrona: new Date(),
         cursoId: 8,
       },
       {
         tituloSincrona: "Práticas com Manipulação e Eventos",
-        descricaoSincrona: "Desenvolvimento de pequenos projetos para aplicar DOM e eventos.",
+        descricaoSincrona:
+          "Desenvolvimento de pequenos projetos para aplicar DOM e eventos.",
         dataLancSincrona: new Date(),
         cursoId: 8,
       },
       {
         tituloSincrona: "Introdução ao React",
-        descricaoSincrona: "Fundamentos do React, JSX e componentes funcionais.",
+        descricaoSincrona:
+          "Fundamentos do React, JSX e componentes funcionais.",
         dataLancSincrona: new Date(),
         cursoId: 11,
       },
       {
         tituloSincrona: "Gerenciamento de Estado",
-        descricaoSincrona: "Uso do useState, Context API e Redux para gerenciamento de estado.",
+        descricaoSincrona:
+          "Uso do useState, Context API e Redux para gerenciamento de estado.",
         dataLancSincrona: new Date(),
         cursoId: 11,
       },
       {
         tituloSincrona: "Componentes Avançados e Hooks",
-        descricaoSincrona: "Hooks personalizados e otimização de componentes React.",
+        descricaoSincrona:
+          "Hooks personalizados e otimização de componentes React.",
         dataLancSincrona: new Date(),
         cursoId: 11,
       },
@@ -1142,243 +1153,274 @@ async function initializeData() {
       // Aulas para Node.js e Express - Intermediário (cursoId: 14)
       {
         tituloSincrona: "Introdução ao Express.js",
-        descricaoSincrona: "Configuração de servidor, rotas e middleware no Express.",
+        descricaoSincrona:
+          "Configuração de servidor, rotas e middleware no Express.",
         dataLancSincrona: new Date(),
         cursoId: 14,
       },
       {
         tituloSincrona: "CRUD com MongoDB e Express",
-        descricaoSincrona: "Criação de APIs RESTful conectando Express com banco MongoDB.",
+        descricaoSincrona:
+          "Criação de APIs RESTful conectando Express com banco MongoDB.",
         dataLancSincrona: new Date(),
         cursoId: 14,
       },
       {
         tituloSincrona: "Autenticação e Segurança",
-        descricaoSincrona: "Implementação de autenticação JWT e práticas de segurança.",
+        descricaoSincrona:
+          "Implementação de autenticação JWT e práticas de segurança.",
         dataLancSincrona: new Date(),
         cursoId: 14,
       },
-
-
-
     ]);
 
     await checkAndInsert(AulaAssincrona, [
-
       {
         tituloAssincrona: "O que é HTML Semântico?",
-        descricaoAssincrona: "Explicação sobre o conceito de semântica no HTML e sua importância.",
+        descricaoAssincrona:
+          "Explicação sobre o conceito de semântica no HTML e sua importância.",
         dataLancAssincrona: new Date(),
         cursoId: 1,
       },
       {
         tituloAssincrona: "Tags Semânticas Essenciais",
-        descricaoAssincrona: "Descrição das principais tags semânticas como <header>, <main>, <article>, <section>.",
+        descricaoAssincrona:
+          "Descrição das principais tags semânticas como <header>, <main>, <article>, <section>.",
         dataLancAssincrona: new Date(),
         cursoId: 1,
       },
       {
         tituloAssincrona: "Construindo uma Página com Semântica",
-        descricaoAssincrona: "Criação prática de uma página HTML com uso correto de semântica.",
+        descricaoAssincrona:
+          "Criação prática de uma página HTML com uso correto de semântica.",
         dataLancAssincrona: new Date(),
         cursoId: 1,
       },
       {
         tituloAssincrona: "Acessibilidade e HTML Semântico",
-        descricaoAssincrona: "Integração de HTML semântico com práticas de acessibilidade para web.",
+        descricaoAssincrona:
+          "Integração de HTML semântico com práticas de acessibilidade para web.",
         dataLancAssincrona: new Date(),
         cursoId: 3,
       },
       {
         tituloAssincrona: "SEO e Estrutura Semântica",
-        descricaoAssincrona: "Como a estrutura semântica melhora o SEO e o rastreamento de páginas.",
+        descricaoAssincrona:
+          "Como a estrutura semântica melhora o SEO e o rastreamento de páginas.",
         dataLancAssincrona: new Date(),
         cursoId: 3,
       },
       {
         tituloAssincrona: "Padrões W3C e Validação Profunda",
-        descricaoAssincrona: "Aplicação de normas W3C em projetos e validação avançada de código.",
+        descricaoAssincrona:
+          "Aplicação de normas W3C em projetos e validação avançada de código.",
         dataLancAssincrona: new Date(),
         cursoId: 3,
       },
 
       {
         tituloAssincrona: "Introdução ao CSS",
-        descricaoAssincrona: "Explicação dos conceitos básicos de CSS e como aplicá-lo em páginas HTML.",
+        descricaoAssincrona:
+          "Explicação dos conceitos básicos de CSS e como aplicá-lo em páginas HTML.",
         dataLancAssincrona: new Date(),
         cursoId: 4,
       },
       {
         tituloAssincrona: "Seletores e Propriedades",
-        descricaoAssincrona: "Uso de seletores CSS e propriedades comuns como cor, margem e padding.",
+        descricaoAssincrona:
+          "Uso de seletores CSS e propriedades comuns como cor, margem e padding.",
         dataLancAssincrona: new Date(),
         cursoId: 4,
       },
       {
         tituloAssincrona: "Classes, IDs e Cascata",
-        descricaoAssincrona: "Diferença entre classes e IDs, e como o CSS lida com hierarquia e cascata.",
+        descricaoAssincrona:
+          "Diferença entre classes e IDs, e como o CSS lida com hierarquia e cascata.",
         dataLancAssincrona: new Date(),
         cursoId: 4,
       },
 
       {
         tituloAssincrona: "Animações e Transições com CSS",
-        descricaoAssincrona: "Aprende a criar efeitos visuais suaves usando animações e transições em CSS.",
+        descricaoAssincrona:
+          "Aprende a criar efeitos visuais suaves usando animações e transições em CSS.",
         dataLancAssincrona: new Date(),
         cursoId: 6,
       },
       {
         tituloAssincrona: "Flexbox e Grid Layout",
-        descricaoAssincrona: "Exploração profunda dos sistemas de layout modernos no CSS.",
+        descricaoAssincrona:
+          "Exploração profunda dos sistemas de layout modernos no CSS.",
         dataLancAssincrona: new Date(),
         cursoId: 6,
       },
       {
         tituloAssincrona: "Pré-processadores: SASS e LESS",
-        descricaoAssincrona: "Introdução ao uso de pré-processadores CSS para código mais limpo e escalável.",
+        descricaoAssincrona:
+          "Introdução ao uso de pré-processadores CSS para código mais limpo e escalável.",
         dataLancAssincrona: new Date(),
         cursoId: 6,
       },
 
       {
         tituloAssincrona: "Introdução ao JavaScript",
-        descricaoAssincrona: "Apresentação da linguagem JavaScript, sua história e aplicações.",
+        descricaoAssincrona:
+          "Apresentação da linguagem JavaScript, sua história e aplicações.",
         dataLancAssincrona: new Date(),
         cursoId: 7,
       },
       {
         tituloAssincrona: "Variáveis, Tipos e Operadores",
-        descricaoAssincrona: "Aprende a declarar variáveis, identificar tipos de dados e usar operadores.",
+        descricaoAssincrona:
+          "Aprende a declarar variáveis, identificar tipos de dados e usar operadores.",
         dataLancAssincrona: new Date(),
         cursoId: 7,
       },
       {
         tituloAssincrona: "Funções e Controle de Fluxo",
-        descricaoAssincrona: "Conceitos iniciais de funções, condicionais e estruturas de repetição.",
+        descricaoAssincrona:
+          "Conceitos iniciais de funções, condicionais e estruturas de repetição.",
         dataLancAssincrona: new Date(),
         cursoId: 7,
       },
       {
         tituloAssincrona: "Conceitos Avançados de ES6+",
-        descricaoAssincrona: "Exploração de funcionalidades modernas como arrow functions, let/const, e template literals.",
+        descricaoAssincrona:
+          "Exploração de funcionalidades modernas como arrow functions, let/const, e template literals.",
         dataLancAssincrona: new Date(),
         cursoId: 9,
       },
       {
         tituloAssincrona: "Promises e Async/Await",
-        descricaoAssincrona: "Entende o funcionamento assíncrono do JavaScript com Promises e async/await.",
+        descricaoAssincrona:
+          "Entende o funcionamento assíncrono do JavaScript com Promises e async/await.",
         dataLancAssincrona: new Date(),
         cursoId: 9,
       },
       {
         tituloAssincrona: "Módulos e Webpack",
-        descricaoAssincrona: "Organiza código com módulos ES6 e configura o Webpack para projetos modernos.",
+        descricaoAssincrona:
+          "Organiza código com módulos ES6 e configura o Webpack para projetos modernos.",
         dataLancAssincrona: new Date(),
         cursoId: 9,
       },
 
       {
         tituloAssincrona: "Introdução ao React",
-        descricaoAssincrona: "Conceitos básicos, JSX e criação de componentes em React.",
+        descricaoAssincrona:
+          "Conceitos básicos, JSX e criação de componentes em React.",
         dataLancAssincrona: new Date(),
         cursoId: 10,
       },
       {
         tituloAssincrona: "Fundamentos do Angular",
-        descricaoAssincrona: "Criação de componentes, diretivas e estrutura básica de um projeto Angular.",
+        descricaoAssincrona:
+          "Criação de componentes, diretivas e estrutura básica de um projeto Angular.",
         dataLancAssincrona: new Date(),
         cursoId: 10,
       },
       {
         tituloAssincrona: "Vue.js para Iniciantes",
-        descricaoAssincrona: "Primeiros passos com Vue, vinculação de dados e métodos.",
+        descricaoAssincrona:
+          "Primeiros passos com Vue, vinculação de dados e métodos.",
         dataLancAssincrona: new Date(),
         cursoId: 10,
       },
       {
         tituloAssincrona: "Gerenciamento de Estado com Redux e Context API",
-        descricaoAssincrona: "Aprende a lidar com estados globais em React de forma eficiente.",
+        descricaoAssincrona:
+          "Aprende a lidar com estados globais em React de forma eficiente.",
         dataLancAssincrona: new Date(),
         cursoId: 12,
       },
       {
-        tituloAssincrona: "Roteamento Avançado com React Router e Angular Router",
-        descricaoAssincrona: "Implementação de rotas protegidas, parâmetros dinâmicos e lazy loading.",
+        tituloAssincrona:
+          "Roteamento Avançado com React Router e Angular Router",
+        descricaoAssincrona:
+          "Implementação de rotas protegidas, parâmetros dinâmicos e lazy loading.",
         dataLancAssincrona: new Date(),
         cursoId: 12,
       },
       {
         tituloAssincrona: "Testes Automatizados com Jest e Cypress",
-        descricaoAssincrona: "Escrevendo testes de unidade e testes end-to-end em aplicações front-end.",
+        descricaoAssincrona:
+          "Escrevendo testes de unidade e testes end-to-end em aplicações front-end.",
         dataLancAssincrona: new Date(),
         cursoId: 12,
       },
 
       {
         tituloAssincrona: "Introdução ao Node.js",
-        descricaoAssincrona: "Conhece o ambiente Node.js, V8 e o runtime fora do navegador.",
+        descricaoAssincrona:
+          "Conhece o ambiente Node.js, V8 e o runtime fora do navegador.",
         dataLancAssincrona: new Date(),
         cursoId: 13,
       },
       {
         tituloAssincrona: "Criando um Servidor com HTTP",
-        descricaoAssincrona: "Criação manual de um servidor usando o módulo http do Node.js.",
+        descricaoAssincrona:
+          "Criação manual de um servidor usando o módulo http do Node.js.",
         dataLancAssincrona: new Date(),
         cursoId: 13,
       },
       {
         tituloAssincrona: "Primeiros Passos com Express",
-        descricaoAssincrona: "Instalação e uso básico do framework Express para rotas simples.",
+        descricaoAssincrona:
+          "Instalação e uso básico do framework Express para rotas simples.",
         dataLancAssincrona: new Date(),
         cursoId: 13,
       },
       {
         tituloAssincrona: "Middlewares Personalizados",
-        descricaoAssincrona: "Aprende a criar e aplicar middlewares em rotas com Express.",
+        descricaoAssincrona:
+          "Aprende a criar e aplicar middlewares em rotas com Express.",
         dataLancAssincrona: new Date(),
         cursoId: 15,
       },
       {
         tituloAssincrona: "Autenticação com JWT",
-        descricaoAssincrona: "Implementa autenticação segura com JSON Web Tokens.",
+        descricaoAssincrona:
+          "Implementa autenticação segura com JSON Web Tokens.",
         dataLancAssincrona: new Date(),
         cursoId: 15,
       },
       {
         tituloAssincrona: "Protegendo Rotas e Autorização",
-        descricaoAssincrona: "Como proteger endpoints e controlar permissões com Express.",
+        descricaoAssincrona:
+          "Como proteger endpoints e controlar permissões com Express.",
         dataLancAssincrona: new Date(),
         cursoId: 15,
       },
-
     ]);
 
     await checkAndInsert(Tarefa, [
-        {
-          titulo: "Exercício de Revisão HTML Básico",
-          descricao: "Complete os exercícios de revisão sobre HTML Semântico Básico.",
-          dataLimite: new Date(new Date().setDate(new Date().getDate() + 7)), // 7 dias a partir de hoje
-          ficheiroEnunciado: "exercicio_html_basico.pdf",
-          utilizadorId: 2,
-          cursoId: 1,
-        },
-        {
-          titulo: "Projeto Estrutura Avançada",
-          descricao: "Desenvolva um projeto aplicando elementos avançados do HTML5.",
-          dataLimite: new Date(new Date().setDate(new Date().getDate() + 10)), // 10 dias a partir de hoje
-          ficheiroEnunciado: "projeto_html_avancado.pdf",
-          utilizadorId: 2,
-          cursoId: 1,
-        },
-        {
-          titulo: "Validação e Melhores Práticas",
-          descricao: "Utilize ferramentas para validar seu código e aplicar boas práticas.",
-          dataLimite: new Date(new Date().setDate(new Date().getDate() + 5)), // 5 dias a partir de hoje
-          ficheiroEnunciado: null,
-          utilizadorId: 2,
-          cursoId: 1,
-        },
-
+      {
+        titulo: "Exercício de Revisão HTML Básico",
+        descricao:
+          "Complete os exercícios de revisão sobre HTML Semântico Básico.",
+        dataLimite: new Date(new Date().setDate(new Date().getDate() + 7)), // 7 dias a partir de hoje
+        ficheiroEnunciado: "exercicio_html_basico.pdf",
+        utilizadorId: 2,
+        cursoId: 1,
+      },
+      {
+        titulo: "Projeto Estrutura Avançada",
+        descricao:
+          "Desenvolva um projeto aplicando elementos avançados do HTML5.",
+        dataLimite: new Date(new Date().setDate(new Date().getDate() + 10)), // 10 dias a partir de hoje
+        ficheiroEnunciado: "projeto_html_avancado.pdf",
+        utilizadorId: 2,
+        cursoId: 1,
+      },
+      {
+        titulo: "Validação e Melhores Práticas",
+        descricao:
+          "Utilize ferramentas para validar seu código e aplicar boas práticas.",
+        dataLimite: new Date(new Date().setDate(new Date().getDate() + 5)), // 5 dias a partir de hoje
+        ficheiroEnunciado: null,
+        utilizadorId: 2,
+        cursoId: 1,
+      },
     ]);
 
     // await checkAndInsert(SubmissaoTarefa, []);
@@ -1396,7 +1438,6 @@ async function initializeData() {
         imagemForum: null,
         topicoId: 2,
       },
-
     ]);
 
     await checkAndInsert(Comentario, [
@@ -1405,8 +1446,8 @@ async function initializeData() {
         ficheiroNome: null,
         ficheiroCaminho: null,
         dataComentario: new Date(),
-        forumId: 1, 
-        utilizadorId: 11, 
+        forumId: 1,
+        utilizadorId: 11,
       },
       {
         texto: "Não preciso que o formador explique melhor",
@@ -1417,7 +1458,8 @@ async function initializeData() {
         utilizadorId: 10,
       },
       {
-        texto: "O formador Ricardo é muito bom! Quando estiverem na aula pergunta-lhe isso.",
+        texto:
+          "O formador Ricardo é muito bom! Quando estiverem na aula pergunta-lhe isso.",
         ficheiroNome: null,
         ficheiroCaminho: null,
         dataComentario: new Date(),
@@ -1438,20 +1480,20 @@ async function initializeData() {
       {
         descricao: "Comentário ofensivo.",
         dataDenuncia: new Date(),
-        utilizadorId: 4, 
-        comentarioId: 1, 
+        utilizadorId: 4,
+        comentarioId: 1,
       },
       {
         descricao: "Comentário ofensivo.",
         dataDenuncia: new Date(),
-        utilizadorId: 10, 
-        comentarioId: 1, 
+        utilizadorId: 10,
+        comentarioId: 1,
       },
       {
         descricao: "Comentário ofensivo.",
         dataDenuncia: new Date(),
-        utilizadorId: 9, 
-        comentarioId: 1, 
+        utilizadorId: 9,
+        comentarioId: 1,
       },
     ]);
 
@@ -1466,7 +1508,8 @@ async function initializeData() {
       },
       {
         titulo: "Estrutura de uma Página Web",
-        descricao: "Como organizar o conteúdo de uma página web de forma semântica.",
+        descricao:
+          "Como organizar o conteúdo de uma página web de forma semântica.",
         ordem: 2,
         cursoId: 2,
       },
@@ -1499,25 +1542,24 @@ async function initializeData() {
         titulo: "Fórum sobre boas práticas em React",
         dataSugestao: new Date(),
         estado: null,
-        utilizadorId: 7, 
-        topicoId: 3,     
+        utilizadorId: 7,
+        topicoId: 3,
       },
       {
         titulo: "Discussão sobre carreira em programação",
         dataSugestao: new Date(),
         estado: null,
         utilizadorId: 8,
-        topicoId: 1,     
+        topicoId: 1,
       },
       {
         titulo: "Partilha de recursos para CSS avançado",
         dataSugestao: new Date(),
         estado: null,
         utilizadorId: 9,
-        topicoId: 2,     
-      }
+        topicoId: 2,
+      },
     ]);
-
 
     console.log("Data initialization complete.");
   } catch (error) {

@@ -80,7 +80,7 @@ Comentario.hasMany(Denuncia, { foreignKey: "comentarioId"});
 
 // DocumentoAula
 DocumentoAula.belongsTo(AulaAssincrona, { foreignKey: 'aulaAssincronaId'});
-AulaAssincrona.hasMany(DocumentoAula, { foreignKey: 'aulaAssincronaId'});
+AulaAssincrona.hasMany(DocumentoAula, { foreignKey: 'aulaAssincronaId', as: "ficheiros"});
 
 // Forum
 Forum.belongsTo(TopicoC, { foreignKey: "topicoId"});

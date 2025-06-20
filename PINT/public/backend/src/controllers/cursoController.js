@@ -4,16 +4,18 @@ const AreaC = require("../model/AreaC");
 const TopicoC = require("../model/TopicoC");
 const Inscricao = require("../model/Inscricao");
 const Conteudo = require("../model/Conteudo");
+const ConteudoFicheiro = require("../model/ConteudoFicheiro");
 const AvisoCurso = require("../model/AvisoCurso");
 const Tarefa = require("../model/Tarefa");
+const TarefaFicheiro = require("../model/TarefaFicheiro");
 const AulaAssincrona = require("../model/AulaAssincrona");
 const AulaSincrona = require("../model/AulaSincrona");
+const Utilizador = require("../model/Utilizador"); 
 const sequelize = require("../model/database");
 const bcrypt = require("bcryptjs");
 const crypto = require("crypto");
 require("dotenv").config();
 const multer = require("multer");
-const Utilizador = require("../model/Utilizador"); 
 
 const {
   s3,
@@ -102,6 +104,127 @@ controllers.listarCursosPorArea = async (req, res) => {
     });
   }
 };
+
+controllers.listarCursosPorFormador = async (req, res) => {
+  try {
+    const formadorId = req.utilizador.id;
+
+    const cursos = await Curso.findAll({
+      where: { formadorId },
+      include: [
+        {
+          model: TopicoC,
+          include: [
+            {
+              model: AreaC,
+              include: [
+                {
+                  model: CategoriaC,
+                },
+              ],
+            },
+          ],
+        },
+      ],
+      order: [["dataUpload", "DESC"]],
+    });
+
+    res.json({ success: true, data: cursos });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Erro ao listar cursos do formador.",
+      details: error.message,
+    });
+  }
+};
+
+controllers.listarConteudosPorCurso = async (req, res) => {
+  try {
+    const { cursoId } = req.params;
+
+    const conteudos = await Conteudo.findAll({
+      where: { cursoId },
+      include: [
+        {
+          model: ConteudoFicheiro,
+          as: "ficheiros"
+        }
+      ],
+      order: [["ordem", "ASC"]],
+    });
+
+    if (!conteudos || conteudos.length === 0) {
+      return res.json({
+        success: false,
+        message: "O curso não tem conteúdos.",
+        data: []
+      });
+    }
+
+    res.json({ success: true, data: conteudos });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Erro ao listar conteúdos do curso.",
+      details: error.message,
+    });
+  }
+};
+
+
+controllers.listarTarefasPorCurso = async (req, res) => {
+  try {
+    const { cursoId } = req.params;
+
+    const tarefas = await Tarefa.findAll({
+      where: { cursoId },
+      include: [
+        {
+          model: TarefaFicheiro,
+          as: "ficheiros"
+        }
+      ],
+      order: [["dataLimite", "ASC"]],
+    });
+
+    if (!tarefas || tarefas.length === 0) {
+      return res.json({
+        success: false,
+        message: "O curso não tem tarefas.",
+        data: []
+      });
+    }
+
+    res.json({ success: true, data: tarefas });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Erro ao listar tarefas do curso.",
+      details: error.message,
+    });
+  }
+};
+
+controllers.listarAvisosPorCurso = async (req, res) => {
+  try {
+    const { cursoId } = req.params;
+
+    const avisos = await AvisoCurso.findAll({
+      where: { cursoId },
+      order: [["dataPublicacao", "DESC"]],
+    });
+
+    res.json({ success: true, data: avisos });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Erro ao listar avisos do curso.",
+      details: error.message,
+    });
+  }
+};
+
 
 // Detail curso
 controllers.curso_detail = async (req, res) => {

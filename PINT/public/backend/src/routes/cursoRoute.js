@@ -8,6 +8,18 @@ const upload = require("../config/multerConfig");
 // GET: Listar todos os cursos
 router.get("/list", cursoController.curso_list);
 
+// GET: Listar cursos do formador 
+router.get("/list-formador", middleware.checkToken, cursoController.listarCursosPorFormador);
+
+// GET: Listar conteudo do curso
+router.get("/:cursoId/conteudo", middleware.checkToken, cursoController.listarConteudosPorCurso);
+
+// GET: Listar tarefas do curso
+router.get("/:cursoId/tarefa", middleware.checkToken, cursoController.listarTarefasPorCurso);
+
+// GET: Listar avisos do curso 
+router.get("/:cursoId/aviso", middleware.checkToken, cursoController.listarAvisosPorCurso);
+
 // GET: Detail curso por ID
 router.get("/get/:id", cursoController.curso_detail);
 

@@ -13,16 +13,32 @@ var DocumentoAula = sequelize.define(
       autoIncrement: true,
     },
 
-    tipoDoc: {
-      type: Sequelize.STRING,
-      field: "TIPODOC",
-      allowNull: false,
+    nomeOriginal: {
+        type: Sequelize.STRING,
+        field: "NOME_ORIGINAL_FICHEIRO",
+        allowNull: false,
     },
 
-    docAula: {
-      type: Sequelize.STRING,
-      field: "DOC_AULA",
+    url: {
+        type: Sequelize.STRING,
+        field: "URL_FICHEIRO",
+        allowNull: false,
+    },
+    tipo: { 
+        type: Sequelize.STRING,
+        allowNull: true, 
+        field: "TIPO_FICHEIRO",
+    },
+
+    utilizadorId: {
+      type: Sequelize.INTEGER,
+      field: "ID_UTILIZADOR",
       allowNull: false,
+      references: {
+        model: "UTILIZADOR",
+        key: "ID_UTILIZADOR",
+      },
+      onDelete: "CASCADE",
     },
 
     aulaAssincronaId: {

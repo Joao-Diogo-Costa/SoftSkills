@@ -6,7 +6,6 @@ const TarefaFicheiro = require("../model/TarefaFicheiro");
 const controllers = {};
 
 // Listar Tarefas
-// Listar Tarefas
 controllers.tarefa_list = async (req, res) => {
   try {
     const tarefas = await Tarefa.findAll({
@@ -25,7 +24,7 @@ controllers.tarefa_list = async (req, res) => {
   }
 };
 
-// Detail Tarefa
+
 // Detail Tarefa
 controllers.tarefa_detail = async (req, res) => {
   try {

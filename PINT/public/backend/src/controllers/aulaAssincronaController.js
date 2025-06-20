@@ -1,5 +1,6 @@
 const AulaAssincrona = require("../model/AulaAssincrona");
 const Curso = require("../model/Curso");
+const DocumentoAula = require("../model/DocumentoAula");
 
 const controllers = {};
 
@@ -7,7 +8,13 @@ const controllers = {};
 controllers.aulaAssincrona_list = async (req, res) => {
   try {
     const aulas = await AulaAssincrona.findAll({
-      include: [Curso],
+      include: [
+        Curso,
+        {
+          model: DocumentoAula,
+          as: "ficheiros",
+        }
+      ],
       order: [["id", "ASC"]],
     });
 
