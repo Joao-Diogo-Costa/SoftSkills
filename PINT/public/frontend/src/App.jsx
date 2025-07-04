@@ -13,6 +13,7 @@ import Footer from "./Views/footer";
 import Curso from "./Views/curso";
 import VerAula from "./Views/verAula";
 import CursoSincrono from "./Views/cursoSincrono";
+import RedirectIfAuth from './Views/RedirectIfAuth';
 import AuthService from "./Views/auth.service";
 import './App.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
@@ -68,7 +69,7 @@ import PerfilUtilizador from './Views/admin/PerfilUtilizador';
     return (
       <>
         <Routes>
-          <Route path="/" element={<NavbarLayout><MainView /></NavbarLayout>} />
+          <Route path="/" element={<RedirectIfAuth><NavbarLayout><MainView /></NavbarLayout></RedirectIfAuth>} />
           <Route path="/paginaInicial" element={<NavbarLayout><PaginaInicial /></NavbarLayout>} />
           <Route path="/login" element={<Login />} />
           <Route path="/signUp" element={<SignUp />} />

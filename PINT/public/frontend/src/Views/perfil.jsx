@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import authHeader from "./auth.header";
 import axios from "axios";
+import iconAviso from "../assets/admin/svg/warning_vector.svg";
 
 function CursoCard({ id, imagem, nome, formador, dataRegisto, dataTermino, nota, concluido, percentagem, onTransferirCertificado, inscricaoId }) {
     return (
@@ -81,6 +82,9 @@ function Perfil() {
     const [cursos, setCursos] = useState([]);
     const [imagemPerfil, setImagemPerfil] = useState(null);
     const [progressoCursos, setProgressoCursos] = useState({});
+
+    const [showModal, setShowModal] = useState(false);
+    const [modalMsg, setModalMsg] = useState("");
 
     const handleEditProfile = async (e) => {
         e.preventDefault();
@@ -225,6 +229,32 @@ function Perfil() {
         return data.toLocaleDateString("pt-PT"); // Formato: dd/mm/aaaa
     }
 
+    const handleCursoClick = async (cursoId) => {
+        try {
+            const res = await axios.get(`http://localhost:3000/curso/get/${cursoId}`, { headers: authHeader() });
+            if (res.data.success) {
+                const curso = res.data.data;
+                if (
+                    curso.tipo === "Online" &&
+                    (curso.estado === "terminado" || curso.estado === "oculto")
+                ) {
+                    setModalMsg("Não pode aceder a este curso online porque está terminado ou oculto.");
+                    setShowModal(true);
+                } else if (
+                    curso.tipo === "Presencial" &&
+                    (curso.estado === "terminado" || curso.estado === "arquivado")
+                ) {
+                    navigate(`/curso/${cursoId}/info`);
+                } else {
+                    navigate(`/curso/${cursoId}`);
+                }
+            }
+        } catch (e) {
+            setModalMsg("Erro ao verificar o estado do curso.");
+            setShowModal(true);
+        }
+    };
+
     async function handleTransferirCertificado(inscricaoId) {
         try {
             const response = await axios.get(
@@ -248,192 +278,246 @@ function Perfil() {
         }
     }
 
+    useEffect(() => {
+        document.title = "Perfil / SoftSkills";
+    }, []);
+
     if (!user) return <div>Por favor, faça login.</div>;
 
     return (
-        <div className="min-vh-100">
-            <div className="scrollbar" style={{ height: 'min-content' }} />
-            <div className="container2 mt-4">
-                <div className="row bg-translucent rounded d-flex justify-content-center">
-                    <div className="col-12 row" style={{ minHeight: 250 }}>
-                        <div className="row col-12 col-md-6 align-items-center ms-0 ms-md-2" style={{ height: '100%' }}>
-                            <img
-                                src={user.imagemPerfil || "/img/profile-picture-BIG.png"}
-                                className="col-4 col-md-4 ms-0 ms-md-2 img-fluid mt-3 mt-md-0 mb-2 mb-md-0 rounded-circle"
-                                style={{
-                                    width: 200,
-                                    height: 180,
-                                    objectFit: "cover",
-                                    aspectRatio: "1/1",
-                                    minWidth: 200,
-                                    minHeight: 180,
-                                    maxWidth: 200,
-                                    maxHeight: 180
-                                }}
-                                alt="Foto de perfil"
-                            />
-                            <div className="col-8 col-md-6 mt-2 mt-md-0">
-                                <div>
-                                    <h3 className="mb-0 fw-bold" style={{ color: '#39639d' }}>
-                                        {user.nomeUtilizador}
-                                    </h3>
-                                    <p className="blue-text mb-0 fw-bold">{user.role}</p>
-                                    <p className="grey-text">{user.email}</p>
-                                </div>
-                                <p className="mb-0 fw-bold" style={{ marginTop: '10%', color: '#39639d' }}>
-                                    {formatarData(user.dataRegisto)}
-                                </p>
-                            </div>
-                        </div>
-                        <div className="col-12 col-md-6 d-flex flex-column flex-md-row justify-content-end align-items-end align-items-md-center h-100 mt-3 mt-md-0">
-                            <p className="text-end grey-text w-100 w-md-auto">Viseu, Portugal</p>
-                            <div className="d-flex justify-content-end align-items-center mt-2 mt-md-0">
-                                <button className="btn w-100 w-md-25" style={{ backgroundColor: '#39639d', color: 'white', cursor: 'pointer' }} onClick={() => setEditProfileModalOpen(true)}>
-                                    Editar Perfil
-                                </button>
-                                {isEditProfileModalOpen && (
-                                    <div className="modal fade show " style={{ display: "block", background: "rgba(57, 99, 157, 0.5)" }}>
-                                        <div className="modal-dialog modal-dialog-centered">
-                                            <div className="modal-content">
-                                                <div
-                                                    className="modal-header text-white py-5 position-relative d-flex justify-content-center"
-                                                    style={{ background: "linear-gradient(90deg, #39639D, #1C4072)" }}
-                                                >
-                                                    <h5 className="fw-bold">Editar Perfil</h5>
-                                                </div>
-                                                <div className="modal-body" style={{ color: "#f5f9ff" }}>
-                                                    <form onSubmit={handleEditProfile}>
-                                                        <h5 className="fw-bold fs-3 ms-4 text-start" style={{ color: '#39639D' }}>Perfil</h5>
-                                                        <div className="mb-3 ms-4 text-start">
-                                                            <label className="form-label fw-semibold fs-6 text-start" style={{ color: '#39639D' }}>
-                                                                Nova imagem de perfil
-                                                            </label>
-                                                            <input
-                                                                type="file"
-                                                                className="form-control text-dark"
-                                                                name="imagem-perfil"
-                                                                accept="image/png, image/jpeg, image/jpg"
-                                                                onChange={e => setImagemPerfil(e.target.files[0])}
-                                                            />
-                                                        </div>
-                                                        <div className="mb-3 ms-4 text-start">
-                                                            <label className="form-label fw-semibold fs-6 text-start" style={{ color: '#39639D' }}>Password atual</label>
-                                                            <input
-                                                                type="password"
-                                                                className="form-control text-dark"
-                                                                name="current_password"
-                                                                value={currentPassword}
-                                                                onChange={e => setCurrentPassword(e.target.value)}
-                                                                minLength={6}
-                                                            />
-                                                        </div>
-                                                        <div className="mb-3 ms-4 text-start">
-                                                            <label className="form-label fw-semibold fs-6 text-start" style={{ color: '#39639D' }}>Nova palavra-passe</label>
-                                                            <input
-                                                                type="password"
-                                                                className="form-control text-dark"
-                                                                name="new_password"
-                                                                value={novaPassword}
-                                                                onChange={e => setNovaPassword(e.target.value)}
-                                                                minLength={6}
-                                                            />
-                                                        </div>
-                                                        <div className="mb-3 ms-4 text-start">
-                                                            <label className="form-label fw-semibold fs-6 text-start" style={{ color: '#39639D' }}>Confirmação de palavra-passe</label>
-                                                            <input
-                                                                type="password"
-                                                                className="form-control text-dark"
-                                                                name="confirm_password"
-                                                                value={confirmPassword}
-                                                                onChange={e => setConfirmPassword(e.target.value)}
-                                                                minLength={6}
-                                                            />
-                                                            <div className="modal-footer d-flex justify-content-center">
-                                                                <button
-                                                                    type="button"
-                                                                    className="btn btn-light me-4"
-                                                                    onClick={() => setEditProfileModalOpen(false)}
-                                                                >
-                                                                    Cancelar
-                                                                </button>
-                                                                <button
-                                                                    type="submit"
-                                                                    className="btn btn-primary botao"
-                                                                >
-                                                                    Guardar
-                                                                </button>
-                                                            </div>
-                                                        </div>
-                                                        {erro && (
-                                                            <div className="alert alert-danger text-center" role="alert">
-                                                                {erro}
-                                                            </div>
-                                                        )}
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                )}
-                                {isEditProfileSuccessModalOpen && (
-                                    <div className="modal fade show" style={{ display: "block", background: "rgba(57, 99, 157, 0.5)" }}>
-                                        <div className="modal-dialog modal-dialog-centered" style={{ maxWidth: "550px" }}>
-                                            <div className="modal-content">
-                                                <div className="modal-body py-4">
-                                                    <div className="d-flex flex-column align-items-center mb-3">
-                                                        <img src="/img/success_vector.svg" alt="Ícone de sucesso" />
-                                                        <h1 className="text-center fs-2 fw-bold mt-3">Sucesso</h1>
-                                                    </div>
-                                                    <p className="text-center fs-5">O seu perfil foi editado com sucesso</p>
-                                                </div>
-                                                <div className="modal-footer justify-content-center py-3">
-                                                    <button
-                                                        type="button"
-                                                        className="btn btn-primary botao rounded"
-                                                        onClick={closeEditProfileSuccessModal}
-                                                    >
-                                                        Continuar
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                    </div>
-                    <div className="row mt-5 bg-translucent p-0">
-                        <div className="col-md-12 barra p-0" />
-                        <h5 className="fw-bold mt-4 blue-text">Percurso Formativo</h5>
-                        <p className="grey-text">
-                            Todas as informações disponíveis estão listadas abaixo
-                        </p>
-                        {cursos.length === 0 ? (
-                            <div className="d-flex align-items-center justify-content-center text-center text-muted py-5 fw-bold" style={{ minHeight: 500 }}>
-                                Ainda não está inscrito em nenhum curso.
-                            </div>
-                        ) : (
-                            cursos.map((curso, idx) => (
-                                <CursoCard
-                                    key={curso.id || idx}
-                                    id={curso.id}
-                                    imagem={curso.imagemBanner || "/img/curso-kotlin.png"}
-                                    nome={curso.nome}
-                                    formador={curso.formador || "Desconhecido"}
-                                    dataRegisto={formatarData(curso.dataRegisto)}
-                                    dataTermino={formatarData(curso.dataTermino)}
-                                    nota={curso.nota || "???"}
-                                    concluido={progressoCursos[curso.id] === 100}
-                                    percentagem={progressoCursos[curso.id] || 0}
-                                    onTransferirCertificado={() => handleTransferirCertificado(curso.inscricaoId)}
-                                    inscricaoId={curso.inscricaoId}
+        <>
+            
+            <div className="min-vh-100">
+                <div className="scrollbar" style={{ height: 'min-content' }} />
+                <div className="container2 mt-4">
+                    <div className="row bg-translucent rounded d-flex justify-content-center">
+                        <div className="col-12 row" style={{ minHeight: 250 }}>
+                            <div className="row col-12 col-md-6 align-items-center ms-0 ms-md-2" style={{ height: '100%' }}>
+                                <img
+                                    src={user.imagemPerfil || "/img/profile-picture-BIG.png"}
+                                    className="col-4 col-md-4 ms-0 ms-md-2 img-fluid mt-3 mt-md-0 mb-2 mb-md-0 rounded-circle"
+                                    style={{
+                                        width: 200,
+                                        height: 180,
+                                        objectFit: "cover",
+                                        aspectRatio: "1/1",
+                                        minWidth: 200,
+                                        minHeight: 180,
+                                        maxWidth: 200,
+                                        maxHeight: 180
+                                    }}
+                                    alt="Foto de perfil"
                                 />
-                            ))
-                        )}
+                                <div className="col-8 col-md-6 mt-2 mt-md-0">
+                                    <div>
+                                        <h3 className="mb-0 fw-bold" style={{ color: '#39639d' }}>
+                                            {user.nomeUtilizador}
+                                        </h3>
+                                        <p className="blue-text mb-0 fw-bold">{user.role.charAt(0).toUpperCase() + user.role.slice(1)}</p>
+                                        <p className="grey-text">{user.email}</p>
+                                    </div>
+                                    <p className="mb-0 fw-bold" style={{ marginTop: '10%', color: '#39639d' }}>
+                                        {formatarData(user.dataRegisto)}
+                                    </p>
+                                </div>
+                            </div>
+                            <div className="col-12 col-md-6 d-flex flex-column flex-md-row justify-content-end align-items-end align-items-md-center h-100 mt-3 mt-md-0">
+                                <p className="text-end grey-text w-100 w-md-auto">Viseu, Portugal</p>
+                                <div className="d-flex justify-content-end align-items-center mt-2 mt-md-0">
+                                    <button className="btn w-100 w-md-25" style={{ backgroundColor: '#39639d', color: 'white', cursor: 'pointer' }} onClick={() => setEditProfileModalOpen(true)}>
+                                        Editar Perfil
+                                    </button>
+                                    {isEditProfileModalOpen && (
+                                        <div className="modal fade show " style={{ display: "block", background: "rgba(57, 99, 157, 0.5)" }}>
+                                            <div className="modal-dialog modal-dialog-centered">
+                                                <div className="modal-content">
+                                                    <div
+                                                        className="modal-header text-white py-5 position-relative d-flex justify-content-center"
+                                                        style={{ background: "linear-gradient(90deg, #39639D, #1C4072)" }}
+                                                    >
+                                                        <h5 className="fw-bold">Editar Perfil</h5>
+                                                    </div>
+                                                    <div className="modal-body" style={{ color: "#f5f9ff" }}>
+                                                        <form onSubmit={handleEditProfile}>
+                                                            <h5 className="fw-bold fs-3 ms-4 text-start" style={{ color: '#39639D' }}>Perfil</h5>
+                                                            <div className="mb-3 ms-4 text-start">
+                                                                <label className="form-label fw-semibold fs-6 text-start" style={{ color: '#39639D' }}>
+                                                                    Nova imagem de perfil
+                                                                </label>
+                                                                <input
+                                                                    type="file"
+                                                                    className="form-control text-dark"
+                                                                    name="imagem-perfil"
+                                                                    accept="image/png, image/jpeg, image/jpg"
+                                                                    onChange={e => setImagemPerfil(e.target.files[0])}
+                                                                />
+                                                            </div>
+                                                            <div className="mb-3 ms-4 text-start">
+                                                                <label className="form-label fw-semibold fs-6 text-start" style={{ color: '#39639D' }}>Password atual</label>
+                                                                <input
+                                                                    type="password"
+                                                                    className="form-control text-dark"
+                                                                    name="current_password"
+                                                                    value={currentPassword}
+                                                                    onChange={e => setCurrentPassword(e.target.value)}
+                                                                    minLength={6}
+                                                                />
+                                                            </div>
+                                                            <div className="mb-3 ms-4 text-start">
+                                                                <label className="form-label fw-semibold fs-6 text-start" style={{ color: '#39639D' }}>Nova palavra-passe</label>
+                                                                <input
+                                                                    type="password"
+                                                                    className="form-control text-dark"
+                                                                    name="new_password"
+                                                                    value={novaPassword}
+                                                                    onChange={e => setNovaPassword(e.target.value)}
+                                                                    minLength={6}
+                                                                />
+                                                            </div>
+                                                            <div className="mb-3 ms-4 text-start">
+                                                                <label className="form-label fw-semibold fs-6 text-start" style={{ color: '#39639D' }}>Confirmação de palavra-passe</label>
+                                                                <input
+                                                                    type="password"
+                                                                    className="form-control text-dark"
+                                                                    name="confirm_password"
+                                                                    value={confirmPassword}
+                                                                    onChange={e => setConfirmPassword(e.target.value)}
+                                                                    minLength={6}
+                                                                />
+                                                                <div className="modal-footer d-flex justify-content-center">
+                                                                    <button
+                                                                        type="button"
+                                                                        className="btn btn-light me-4"
+                                                                        onClick={() => setEditProfileModalOpen(false)}
+                                                                    >
+                                                                        Cancelar
+                                                                    </button>
+                                                                    <button
+                                                                        type="submit"
+                                                                        className="btn btn-primary botao"
+                                                                    >
+                                                                        Guardar
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                            {erro && (
+                                                                <div className="alert alert-danger text-center" role="alert">
+                                                                    {erro}
+                                                                </div>
+                                                            )}
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
+                                    {isEditProfileSuccessModalOpen && (
+                                        <div className="modal fade show" style={{ display: "block", background: "rgba(57, 99, 157, 0.5)" }}>
+                                            <div className="modal-dialog modal-dialog-centered" style={{ maxWidth: "550px" }}>
+                                                <div className="modal-content">
+                                                    <div className="modal-body py-4">
+                                                        <div className="d-flex flex-column align-items-center mb-3">
+                                                            <img src="/img/success_vector.svg" alt="Ícone de sucesso" />
+                                                            <h1 className="text-center fs-2 fw-bold mt-3">Sucesso</h1>
+                                                        </div>
+                                                        <p className="text-center fs-5">O seu perfil foi editado com sucesso</p>
+                                                    </div>
+                                                    <div className="modal-footer justify-content-center py-3">
+                                                        <button
+                                                            type="button"
+                                                            className="btn btn-primary botao rounded"
+                                                            onClick={closeEditProfileSuccessModal}
+                                                        >
+                                                            Continuar
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                        <div className="row mt-5 bg-translucent p-0">
+                            <div className="col-md-12 barra p-0" />
+                            <h5 className="fw-bold mt-4 blue-text">Percurso Formativo</h5>
+                            <p className="grey-text">
+                                Todas as informações disponíveis estão listadas abaixo
+                            </p>
+                            {cursos.length === 0 ? (
+                                <div className="d-flex align-items-center justify-content-center text-center text-muted py-5 fw-bold" style={{ minHeight: 500 }}>
+                                    Ainda não está inscrito em nenhum curso.
+                                </div>
+                            ) : (
+                                cursos.map((curso, idx) => (
+                                    <div
+                                        key={curso.id || idx}
+                                        onClick={() => handleCursoClick(curso.id)}
+                                        style={{ cursor: "pointer" }}
+                                    >
+                                        <CursoCard
+                                            id={curso.id}
+                                            imagem={curso.imagemBanner || "/img/curso-kotlin.png"}
+                                            nome={curso.nome}
+                                            formador={curso.formador || "Desconhecido"}
+                                            dataRegisto={formatarData(curso.dataRegisto)}
+                                            dataTermino={formatarData(curso.dataTermino)}
+                                            nota={curso.nota || "???"}
+                                            concluido={progressoCursos[curso.id] === 100}
+                                            percentagem={progressoCursos[curso.id] || 0}
+                                            onTransferirCertificado={() => handleTransferirCertificado(curso.inscricaoId)}
+                                            inscricaoId={curso.inscricaoId}
+                                        />
+                                    </div>
+                                ))
+                            )}
+                        </div>
                     </div>
-                </div>
+                </div >
+                {showModal && (
+                    <div
+                        className="modal fade show"
+                        tabIndex={-1}
+                        aria-modal="true"
+                        role="dialog"
+                        style={{
+                            display: "block",
+                            background: "rgba(57, 99, 157, 0.5)"
+                        }}
+                    >
+                        <div className="modal-dialog modal-dialog-centered custom-fade-in" style={{ maxWidth: 550 }}>
+                            <div className="modal-content">
+                                <div className="modal-body py-4">
+                                    <div className="d-flex flex-column align-items-center mb-3">
+                                        <img
+                                            src={iconAviso}
+                                            alt="Ícone de Aviso"
+                                            style={{ width: 64, height: 64 }}
+                                        />
+                                        <h1 className="text-center fs-2 fw-bold mt-3">
+                                            Curso indisponível!
+                                        </h1>
+                                    </div>
+                                    <p className="text-center fs-5">
+                                        Não pode aceder a este curso online porque está terminado ou oculto.
+                                    </p>
+                                </div>
+                                <div className="modal-footer justify-content-center py-3">
+                                    <button
+                                        type="button"
+                                        className="btn btn-continuar rounded px-4"
+                                        onClick={() => setShowModal(false)}
+                                    >
+                                        Fechar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
             </div >
-        </div >
+        </>
     );
 }
 

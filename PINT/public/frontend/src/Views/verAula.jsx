@@ -20,6 +20,9 @@ const VerAula = () => {
         ? playlist.filter(item => item.id !== aula.id)
         : [];
 
+    const playlistOrdenada = [...playlist].sort((a, b) => a.ordemNoCurso - b.ordemNoCurso);
+    const numeroAulaNoCurso = playlistOrdenada.findIndex(item => item.id === aula.id) + 1;
+
     useEffect(() => {
         setLoading(true);
         axios.get(`http://localhost:3000/aula-assincrona/get/${aulaId}`)
@@ -27,16 +30,16 @@ const VerAula = () => {
                 if (res.data.success) {
                     setAula(res.data.data);
 
-                // Verificar se a aula já está marcada como concluída
-                const user = JSON.parse(localStorage.getItem("user"));
-                if (user) {
-                    axios.get(
-                        `http://localhost:3000/progresso-aula/concluida/${user.id}/${res.data.data.id}`,
-                        { headers: authHeader() }
-                    ).then(resp => {
-                        setMarcada(resp.data.concluida === true);
-                    }).catch(() => setMarcada(false));
-                }
+                    // Verificar se a aula já está marcada como concluída
+                    const user = JSON.parse(localStorage.getItem("user"));
+                    if (user) {
+                        axios.get(
+                            `http://localhost:3000/progresso-aula/concluida/${user.id}/${res.data.data.id}`,
+                            { headers: authHeader() }
+                        ).then(resp => {
+                            setMarcada(resp.data.concluida === true);
+                        }).catch(() => setMarcada(false));
+                    }
 
 
                     // Buscar percentagem de progresso do curso
@@ -140,127 +143,138 @@ const VerAula = () => {
         return url; // fallback
     }
 
-    return (
-        <div className="container-fluid m-0 p-0">
-            <div className="container2 mt-4 mb-5">
-                <div className="row g-4 justify-content-center">
-                    {/* Vídeo e Playlist */}
-                    <div className="col-12 col-lg-8 d-flex flex-column align-items-center">
-                        <div className="rounded-4 shadow-lg bg-white p-3 mb-4 w-100">
-                            <iframe
-                                width="100%"
-                                height="400"
-                                src={getEmbedUrl(aula.videoLink)}
-                                title="Vídeo da Aula"
-                                frameBorder="0"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                allowFullScreen
-                                className="rounded-4 shadow-sm"
-                                style={{ maxHeight: 400, objectFit: "cover" }}
-                            />
+    useEffect(() => {
+        document.title = "Aula / SoftSkills";
+    }, []);
 
-                            <div className="d-flex flex-column flex-md-row align-items-md-center justify-content-between mt-3">
-                                <p className="blue-text fw-bold mb-2 mb-md-0 fs-5 text-center w-100">
-                                    Aula Nº{aula.id} - {aula.tituloAssincrona}
-                                </p>
+    return (
+        <>
+
+            <div className="container-fluid m-0 p-0">
+                <div className="container2 mt-4 mb-5">
+                    <div className="row g-4 justify-content-center">
+                        {/* Vídeo e Playlist */}
+                        <div className="col-12 col-lg-8 d-flex flex-column align-items-center">
+                            <div className="rounded-4 shadow-lg bg-white p-3 mb-4 w-100">
+                                <iframe
+                                    width="100%"
+                                    height="400"
+                                    src={getEmbedUrl(aula.videoLink)}
+                                    title="Vídeo da Aula"
+                                    frameBorder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    allowFullScreen
+                                    className="rounded-4 shadow-sm"
+                                    style={{ maxHeight: 400, objectFit: "cover" }}
+                                />
+
+                                <div className="d-flex flex-column flex-md-row align-items-md-center justify-content-between mt-3">
+                                    <p className="blue-text fw-bold mb-2 mb-md-0 fs-5 text-center w-100">
+                                        Aula Nº{numeroAulaNoCurso} - {aula.tituloAssincrona}
+                                    </p>
+                                </div>
+                                <p className="d-flex justify-content-center blue-text">{aula.descricaoAssincrona}</p>
+                                <div className="d-flex justify-content-center w-100 mb-3 mt-3">
+                                    <button
+                                        className="btn btn-success rounded-pill"
+                                        onClick={handleMarcarComoVista}
+                                        disabled={marcada}
+                                    >
+                                        {marcada ? "Aula já marcada" : "Marcar como vista"}
+                                    </button>
+                                </div>
+                                <div className="d-flex justify-content-center w-100 mb-3 mt-3">
+                                    <button className="btn btn-primary rounded-pill" onClick={handleVerDocumentos}>
+                                        Ver Documentos
+                                    </button>
+                                </div>
                             </div>
-                            <p className="d-flex justify-content-center blue-text">{aula.descricaoAssincrona}</p>
-                            <div className="d-flex justify-content-center w-100 mb-3 mt-3">
-                                <button
-                                    className="btn btn-success rounded-pill"
-                                    onClick={handleMarcarComoVista}
-                                    disabled={marcada}
-                                >
-                                    {marcada ? "Aula já marcada" : "Marcar como vista"}
-                                </button>
-                            </div>
-                            <div className="d-flex justify-content-center w-100 mb-3 mt-3">
-                                <button className="btn btn-primary rounded-pill" onClick={handleVerDocumentos}>
-                                    Ver Documentos
-                                </button>
-                            </div>
-                        </div>
-                        <div className="row rounded-4 shadow-lg bg-white p-3 w-100 m-0">
-                            <div className="d-flex justify-content-between align-items-center mb-2">
-                                <h4 className="blue-text fw-bold mb-0">Playlist Disponível</h4>
-                                <span className="blue-text">{outrasAulas.length} vídeos</span>
-                            </div>
-                            <div className="col-12 row justify-content-center m-0 p-0">
-                                <div className="col-1"></div>
-                                <div className="col-5 overflow-y-auto" style={{ maxHeight: 220 }}>
-                                    {outrasAulas.length === 0 ? (
-                                        <p className="text-center text-muted">Nenhuma outra aula disponível.</p>
-                                    ) : (
-                                        outrasAulas.map((item) => (
-                                            <div key={item.id} className="d-flex align-items-center mb-3">
-                                                <img className="me-3" src="/img/icon-video.png" alt="Ícone vídeo" style={{ width: 32, height: 32 }} />
-                                                <Link
-                                                    className="blue-text mb-0"
-                                                    to={`/verAula/${item.id}`}
-                                                    style={{
-                                                        whiteSpace: "nowrap",
-                                                        overflow: "hidden",
-                                                        textOverflow: "ellipsis",
-                                                        display: "block",
-                                                        maxWidth: "325px"
-                                                    }}
-                                                >
-                                                    Aula Nº{item.id} - {item.tituloAssincrona}
-                                                </Link>
-                                            </div>
-                                        ))
-                                    )}
+                            <div className="row rounded-4 shadow-lg bg-white p-3 w-100 m-0">
+                                <div className="d-flex justify-content-between align-items-center mb-2">
+                                    <h4 className="blue-text fw-bold mb-0">Playlist Disponível</h4>
+                                    <span className="blue-text">{outrasAulas.length} vídeos</span>
+                                </div>
+                                <div className="col-12 row justify-content-center m-0 p-0">
+                                    <div className="col-1"></div>
+                                    <div className="col-5 overflow-y-auto" style={{ maxHeight: 220 }}>
+                                        {outrasAulas.length === 0 ? (
+                                            <p className="text-center text-muted">Nenhuma outra aula disponível.</p>
+                                        ) : (
+                                            outrasAulas.map((item) => {
+                                                // Calcula o número da aula na playlist
+                                                const numeroAula = playlist.findIndex(a => a.id === item.id) + 1;
+                                                return (
+                                                    <div key={item.id} className="d-flex align-items-center mb-3">
+                                                        <img className="me-3" src="/img/icon-video.png" alt="Ícone vídeo" style={{ width: 32, height: 32 }} />
+                                                        <Link
+                                                            className="blue-text mb-0"
+                                                            to={`/verAula/${item.id}`}
+                                                            style={{
+                                                                whiteSpace: "nowrap",
+                                                                overflow: "hidden",
+                                                                textOverflow: "ellipsis",
+                                                                display: "block",
+                                                                maxWidth: "325px"
+                                                            }}
+                                                        >
+                                                            Aula Nº{numeroAula} - {item.tituloAssincrona}
+                                                        </Link>
+                                                    </div>
+                                                );
+                                            })
+                                        )}
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            {/* Modal de Documentos */}
-            {showModal && (
-                <div className="modal fade show" style={{ display: "block", background: "rgba(0,0,0,0.5)" }}>
-                    <div className="modal-dialog modal-dialog-centered">
-                        <div className="modal-content">
-                            <div className="modal-header">
-                                <h5 className="modal-title">Documentos da Aula</h5>
-                                <button type="button" className="btn-close" onClick={() => setShowModal(false)}></button>
-                            </div>
-                            <div className="modal-body">
-                                {documentos.length === 0 ? (
-                                    <p className="text-muted">Nenhum documento disponível para esta aula.</p>
-                                ) : (
-                                    <ul className="list-group">
-                                        {documentos.map(doc => (
-                                            <li key={doc.id} className="list-group-item d-flex justify-content-between align-items-center">
-                                                <span>
-                                                    <i className="bi bi-file-earmark me-2"></i>
-                                                    {doc.nomeOriginal}
-                                                    <span className="badge bg-light text-dark ms-2">{doc.tipo}</span>
-                                                </span>
-                                                <a href={doc.url} target="_blank" rel="noopener noreferrer" className="btn btn-sm btn-outline-primary ms-2">
-                                                    Ver ficheiro
-                                                </a>
-                                                {userCanDelete(doc) && (
-                                                    <button className="btn btn-sm btn-danger ms-2" onClick={() => handleDeleteDocumento(doc.id)}>
-                                                        <i className="bi bi-trash"></i>
-                                                    </button>
-                                                )}
-                                            </li>
-                                        ))}
-                                    </ul>
-                                )}
-                            </div>
-                            <div className="modal-footer">
-                                <button className="btn btn-secondary" onClick={() => setShowModal(false)}>
-                                    Fechar
-                                </button>
+                {/* Modal de Documentos */}
+                {showModal && (
+                    <div className="modal fade show" style={{ display: "block", background: "rgba(0,0,0,0.5)" }}>
+                        <div className="modal-dialog modal-dialog-centered">
+                            <div className="modal-content">
+                                <div className="modal-header">
+                                    <h5 className="modal-title">Documentos da Aula</h5>
+                                    <button type="button" className="btn-close" onClick={() => setShowModal(false)}></button>
+                                </div>
+                                <div className="modal-body">
+                                    {documentos.length === 0 ? (
+                                        <p className="text-muted">Nenhum documento disponível para esta aula.</p>
+                                    ) : (
+                                        <ul className="list-group">
+                                            {documentos.map(doc => (
+                                                <li key={doc.id} className="list-group-item d-flex justify-content-between align-items-center">
+                                                    <span>
+                                                        <i className="bi bi-file-earmark me-2"></i>
+                                                        {doc.nomeOriginal}
+                                                        <span className="badge bg-light text-dark ms-2">{doc.tipo}</span>
+                                                    </span>
+                                                    <a href={doc.url} target="_blank" rel="noopener noreferrer" className="btn btn-sm btn-outline-primary ms-2">
+                                                        Ver ficheiro
+                                                    </a>
+                                                    {userCanDelete(doc) && (
+                                                        <button className="btn btn-sm btn-danger ms-2" onClick={() => handleDeleteDocumento(doc.id)}>
+                                                            <i className="bi bi-trash"></i>
+                                                        </button>
+                                                    )}
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    )}
+                                </div>
+                                <div className="modal-footer">
+                                    <button className="btn btn-secondary" onClick={() => setShowModal(false)}>
+                                        Fechar
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            )}
-        </div>
+                )}
+            </div>
+        </>
     );
 };
 

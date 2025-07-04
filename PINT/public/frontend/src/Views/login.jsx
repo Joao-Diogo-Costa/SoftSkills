@@ -120,123 +120,130 @@ const Login = () => {
     }
   };
 
+  useEffect(() => {
+          document.title = "Login / SoftSkills";
+  }, []);
+
   return (
-    <div className="container d-flex justify-content-center align-items-center vh-100">
-      <div className="form-box p-4 bg-white rounded shadow text-center">
-        {!mustChangePassword ? (
-          <form onSubmit={handleLogin}>
-            <h1 className="fs-3">Login</h1>
-            <p className="small text-center text-muted">
-              Preencha os seguintes campos para aceder á plataforma
-            </p>
-            {erro && <div className="alert alert-danger">{erro}</div>}
-            <div className="input-group mb-3">
-              <span className="input-group-text">
-                <i className="bi bi-envelope"></i>
-              </span>
-              <input
-                type="text"
-                className="form-control form-control-sm"
-                placeholder="E-mail"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
-            <div className="input-group mb-3">
-              <span className="input-group-text">
-                <i className="bi bi-lock"></i>
-              </span>
-              <input
-                type="password"
-                className="form-control form-control-sm"
-                placeholder="Palavra-passe"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </div>
-            <div className="forgot mb-3">
-              <a href="#" className="small text-sm-left" onClick={e => { e.preventDefault(); setShowForgotModal(true); }}>
-                Esqueceu a palavra-passe?
-              </a>
-            </div>
-            <button type="submit" className="btn btn-primary btn-block w-100">
-              Login
-            </button>
-          </form>
-        ) : (
-          <form onSubmit={handleForceUpdatePassword}>
-            <h1 className="fs-3">Nova palavra-passe</h1>
-            <p className="small text-center text-muted">
-              Por favor, defina uma nova palavra-passe para continuar.
-            </p>
-            {erro && <div className="alert alert-danger">{erro}</div>}
-            <div className="input-group mb-3">
-              <span className="input-group-text">
-                <i className="bi bi-lock"></i>
-              </span>
-              <input
-                type="password"
-                className="form-control form-control-sm"
-                placeholder="Nova palavra-passe"
-                required
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-              />
-            </div>
-            <div className="input-group mb-3">
-              <span className="input-group-text">
-                <i className="bi bi-lock"></i>
-              </span>
-              <input
-                type="password"
-                className="form-control form-control-sm"
-                placeholder="Confirmar nova palavra-passe"
-                required
-                value={confirmNewPassword}
-                onChange={(e) => setConfirmNewPassword(e.target.value)}
-              />
-            </div>
-            <button type="submit" className="btn btn-primary btn-block w-100">
-              Atualizar palavra-passe
-            </button>
-          </form>
-        )}
-        <Modal show={showForgotModal} onHide={() => setShowForgotModal(false)} centered>
-          <Modal.Header closeButton>
-            <Modal.Title>Recuperar palavra-passe</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <form onSubmit={handleForgotPassword}>
-              <div className="mb-3">
-                <label htmlFor="forgotEmail" className="form-label">
-                  Introduza o seu email:
-                </label>
+    <>
+      
+      <div className="container d-flex justify-content-center align-items-center vh-100">
+        <div className="form-box p-4 bg-white rounded shadow text-center">
+          {!mustChangePassword ? (
+            <form onSubmit={handleLogin}>
+              <h1 className="fs-3">Login</h1>
+              <p className="small text-center text-muted">
+                Preencha os seguintes campos para aceder á plataforma
+              </p>
+              {erro && <div className="alert alert-danger">{erro}</div>}
+              <div className="input-group mb-3">
+                <span className="input-group-text">
+                  <i className="bi bi-envelope"></i>
+                </span>
                 <input
-                  type="email"
-                  className="form-control"
-                  id="forgotEmail"
+                  type="text"
+                  className="form-control form-control-sm"
+                  placeholder="E-mail"
                   required
-                  value={forgotEmail}
-                  onChange={e => setForgotEmail(e.target.value)}
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
-              {forgotMsg && (
-                <div className="alert alert-info py-2">{forgotMsg}</div>
-              )}
-              <button
-                type="submit"
-                className="btn btn-primary w-100"
-                disabled={forgotLoading}
-              >
-                {forgotLoading ? "A enviar..." : "Recuperar"}
+              <div className="input-group mb-3">
+                <span className="input-group-text">
+                  <i className="bi bi-lock"></i>
+                </span>
+                <input
+                  type="password"
+                  className="form-control form-control-sm"
+                  placeholder="Palavra-passe"
+                  required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </div>
+              <div className="forgot mb-3">
+                <a href="#" className="small text-sm-left" onClick={e => { e.preventDefault(); setShowForgotModal(true); }}>
+                  Esqueceu a palavra-passe?
+                </a>
+              </div>
+              <button type="submit" className="btn btn-primary btn-block w-100">
+                Login
               </button>
             </form>
-          </Modal.Body>
-        </Modal>
+          ) : (
+            <form onSubmit={handleForceUpdatePassword}>
+              <h1 className="fs-3">Nova palavra-passe</h1>
+              <p className="small text-center text-muted">
+                Por favor, defina uma nova palavra-passe para continuar.
+              </p>
+              {erro && <div className="alert alert-danger">{erro}</div>}
+              <div className="input-group mb-3">
+                <span className="input-group-text">
+                  <i className="bi bi-lock"></i>
+                </span>
+                <input
+                  type="password"
+                  className="form-control form-control-sm"
+                  placeholder="Nova palavra-passe"
+                  required
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                />
+              </div>
+              <div className="input-group mb-3">
+                <span className="input-group-text">
+                  <i className="bi bi-lock"></i>
+                </span>
+                <input
+                  type="password"
+                  className="form-control form-control-sm"
+                  placeholder="Confirmar nova palavra-passe"
+                  required
+                  value={confirmNewPassword}
+                  onChange={(e) => setConfirmNewPassword(e.target.value)}
+                />
+              </div>
+              <button type="submit" className="btn btn-primary btn-block w-100">
+                Atualizar palavra-passe
+              </button>
+            </form>
+          )}
+          <Modal show={showForgotModal} onHide={() => setShowForgotModal(false)} centered>
+            <Modal.Header closeButton>
+              <Modal.Title>Recuperar palavra-passe</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <form onSubmit={handleForgotPassword}>
+                <div className="mb-3">
+                  <label htmlFor="forgotEmail" className="form-label">
+                    Introduza o seu email:
+                  </label>
+                  <input
+                    type="email"
+                    className="form-control"
+                    id="forgotEmail"
+                    required
+                    value={forgotEmail}
+                    onChange={e => setForgotEmail(e.target.value)}
+                  />
+                </div>
+                {forgotMsg && (
+                  <div className="alert alert-info py-2">{forgotMsg}</div>
+                )}
+                <button
+                  type="submit"
+                  className="btn btn-primary w-100"
+                  disabled={forgotLoading}
+                >
+                  {forgotLoading ? "A enviar..." : "Recuperar"}
+                </button>
+              </form>
+            </Modal.Body>
+          </Modal>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
