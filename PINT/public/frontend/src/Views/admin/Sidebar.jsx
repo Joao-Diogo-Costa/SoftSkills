@@ -6,11 +6,11 @@ import logoSoftSkills from '../../assets/admin/img/logo_softskills.png';
 
 const menuLinks = [
   { to: "/admin", icon: "fas fa-home", label: "Dashboard", exact: true },
-  { to: "/admin/gerir-curso", icon: "fas fa-book", label: "Gerir cursos" },
-  { to: "/admin/gerir-utilizador", icon: "fas fa-users", label: "Gerir utilizadores" },
+  { to: "/admin/gerir-curso", icon: "fas fa-book", label: "Cursos" },
+  { to: "/admin/gerir-utilizador", icon: "fas fa-users", label: "Utilizadores" },
   { to: "/admin/gerir-forum", icon: "fas fa-comments", label: "Gerir fóruns" },
-  { to: "/admin/gerir-denuncia", icon: "fas fa-exclamation-circle", label: "Gerir denúncias" },
-  { to: "/admin/gerir-sugestao", icon: "fas fa-lightbulb", label: "Gerir sugestões fóruns" },
+  { to: "/admin/gerir-denuncia", icon: "fas fa-exclamation-circle", label: "Denúncias" },
+  { to: "/admin/gerir-sugestao", icon: "fas fa-lightbulb", label: "Sugestões fóruns" },
 ];
 
 function AdminSidebar() {
