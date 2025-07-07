@@ -2,7 +2,7 @@ import axios from "axios";
 class AuthService {
   login(email, password) {
     return axios
-      .post("http://localhost:3000/user/login", { email, password })
+      .post("https://pint-web-htw2.onrender.com/user/login", { email, password })
       .then(
         (res) => {
           if (res.data.token) {

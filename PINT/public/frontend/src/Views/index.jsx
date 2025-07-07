@@ -40,7 +40,9 @@ function MainView() {
             </Helmet>
 
             <div className="default-container p-0 m-0">
-                <div className="row col-md-12 align-items-center bg-blue-grad m-0">
+                <div className="row col-md-12 align-items-center bg-blue-grad m-0"
+                style={{ minHeight: "100vh" }}
+                >
                     <div className="row col-md-6 col-sm-6 d-flex flex-grow-1 justify-content-center align-items-center mt-1">
                         <h3 className="col-md-10 col-sm-10 texto ms-5 me-5">
                             Aprende de forma simples, rápida e onde quiseres!

@@ -7,11 +7,11 @@ export function useCategoriasData() {
     const [todasTopicos, setTodasTopicos] = useState([]);
 
     useEffect(() => {
-        axios.get("http://localhost:3000/categoria/list")
+        axios.get("https://pint-web-htw2.onrender.com/categoria/list")
             .then(res => { if (res.data.success) setTodasCategorias(res.data.data); });
-        axios.get("http://localhost:3000/area/list")
+        axios.get("https://pint-web-htw2.onrender.com/area/list")
             .then(res => { if (res.data.success) setTodasAreas(res.data.data); });
-        axios.get("http://localhost:3000/topico-curso/list")
+        axios.get("https://pint-web-htw2.onrender.com/topico-curso/list")
             .then(res => { if (res.data.success) setTodasTopicos(res.data.data); });
     }, []);
 
