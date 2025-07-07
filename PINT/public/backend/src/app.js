@@ -97,7 +97,7 @@ const utilizadorRoute = require("./routes/utilizadorRoute");
 app.use("/utilizador", utilizadorRoute);
 
 app.use("/", (req, res) => {
-  res.send("Hello World");
+  res.send("API");
 });
 
 

@@ -310,7 +310,7 @@ controllers.curso_detail = async (req, res) => {
     const curso = await Curso.findByPk(id, {
       include: [
         TopicoC,
-        { model: Utilizador, as: "formador", attributes: ["nomeUtilizador"] },
+        { model: Utilizador, as: "formador", attributes: ["nomeUtilizador", "imagemPerfil"] },
       ],
     });
     if (!curso) {

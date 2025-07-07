@@ -1,6 +1,7 @@
 const Curso = require("../model/Curso");
 const AvaliacaoCursoUtilizador = require("../model/AvaliacaoCursoUtilizador");
 const Inscricao = require("../model/Inscricao");
+const Utilizador = require("../model/Utilizador");
 
 const controllers = {};
 
@@ -14,7 +15,7 @@ controllers.avaliacao_list = async (req, res) => {
 
     res.json({ success: true, data: avaliacoes });
   } catch (error) {
-    res.status(500).json({success: false, message: "Erro ao listar avaliações.", details: error.message, });
+    res.status(500).json({ success: false, message: "Erro ao listar avaliações.", details: error.message, });
   }
 };
 // Detail avaliação
@@ -31,14 +32,16 @@ controllers.avaliacao_detail = async (req, res) => {
 
     res.json({ success: true, data: avaliacao });
   } catch (error) {
-    res.status(500).json({success: false, message: "Erro ao buscar avaliação.", details: error.message,});
+    res.status(500).json({ success: false, message: "Erro ao buscar avaliação.", details: error.message, });
   }
 };
-
 // Criar avaliação
 controllers.avaliacao_create = async (req, res) => {
   try {
     const { nota, utilizadorId, cursoId, dataAvaliacao } = req.body;
+
+    console.log("=== DEBUG AVALIAÇÃO ===");
+    console.log("Dados recebidos:", { nota, utilizadorId, cursoId });
 
     if (!nota || !utilizadorId || !cursoId) {
       return res.status(400).json({ success: false, message: "Campos obrigatórios ausentes." });
@@ -51,6 +54,9 @@ controllers.avaliacao_create = async (req, res) => {
     const curso = await Curso.findByPk(cursoId);
     const utilizador = await Utilizador.findByPk(utilizadorId);
 
+    console.log("Curso encontrado:", curso?.dataValues);
+    console.log("Utilizador encontrado:", utilizador?.nomeUtilizador);
+
     if (!curso) {
       return res.status(404).json({ success: false, message: "ID de curso inválido." });
     }
@@ -59,7 +65,7 @@ controllers.avaliacao_create = async (req, res) => {
       return res.status(404).json({ success: false, message: "ID de utilizador inválido." });
     }
 
-     // VERIFICAR SE O CURSO FOI CONCLUIDO PELO UTILIZADOR
+    // VERIFICAR SE O UTILIZADOR ESTÁ INSCRITO NO CURSO
     const inscricao = await Inscricao.findOne({
       where: {
         utilizadorId: utilizadorId,
@@ -67,15 +73,54 @@ controllers.avaliacao_create = async (req, res) => {
       },
     });
 
+    console.log("Inscrição encontrada:", inscricao?.dataValues);
+
     if (!inscricao) {
       return res.status(404).json({ success: false, message: "Inscrição do utilizador neste curso não encontrada." });
     }
 
-    if (!inscricao.concluido) {
-      return res.status(403).json({ success: false, message: "O curso ainda não foi concluído por este utilizador. A avaliação só pode ser feita após a conclusão." });
+    console.log("Tipo de curso:", curso.tipoCurso);
+    console.log("Nota final da inscrição:", inscricao.notaFinal);
+    console.log("Concluído:", inscricao.concluido);
+
+    // VERIFICAÇÃO MAIS INTELIGENTE: Permitir avaliação baseada no tipo de curso
+    if (curso.tipoCurso === 'Presencial') {
+      // Para cursos presenciais, verificar se tem nota final
+      console.log("Verificando curso presencial...");
+      if (!inscricao.notaFinal) {
+        console.log("ERRO: Curso presencial sem nota final");
+        return res.status(403).json({
+          success: false,
+          message: "Para cursos presenciais, a avaliação só pode ser feita após a atribuição da nota final."
+        });
+      }
+    } else {
+      // Para cursos online, verificar se está concluído
+      console.log("Verificando curso online...");
+      if (!inscricao.concluido) {
+        console.log("ERRO: Curso online não concluído");
+        return res.status(403).json({
+          success: false,
+          message: "Para cursos online, a avaliação só pode ser feita após a conclusão."
+        });
+      }
     }
 
+    // Verificar se já existe uma avaliação para este utilizador e curso
+    const avaliacaoExistente = await AvaliacaoCursoUtilizador.findOne({
+      where: {
+        utilizadorId: utilizadorId,
+        cursoId: cursoId,
+      },
+    });
 
+    console.log("Avaliação existente:", avaliacaoExistente?.dataValues);
+
+    if (avaliacaoExistente) {
+      return res.status(400).json({ success: false, message: "Já existe uma avaliação para este curso. Use o endpoint de atualização." });
+    }
+
+    console.log("Criando nova avaliação...");
     const novaAvaliacao = await AvaliacaoCursoUtilizador.create({
       nota,
       cursoId,
@@ -83,8 +128,10 @@ controllers.avaliacao_create = async (req, res) => {
       dataAvaliacao: dataAvaliacao || new Date(),
     });
 
+    console.log("Avaliação criada com sucesso:", novaAvaliacao.dataValues);
     res.status(201).json({ success: true, data: novaAvaliacao });
   } catch (error) {
+    console.error("Erro completo:", error);
     res.status(500).json({
       success: false,
       message: "Erro ao criar avaliação.",
@@ -131,7 +178,7 @@ controllers.avaliacao_update = async (req, res) => {
 
     res.json({ success: true, data: avaliacao });
   } catch (error) {
-    res.status(500).json({success: false,message: "Erro ao atualizar avaliação.", details: error.message,});
+    res.status(500).json({ success: false, message: "Erro ao atualizar avaliação.", details: error.message, });
   }
 };
 
@@ -149,7 +196,7 @@ controllers.avaliacao_delete = async (req, res) => {
 
     res.json({ success: true, message: "Avaliação apagada com sucesso." });
   } catch (error) {
-    res.status(500).json({success: false,message: "Erro ao apagar avaliação.",details: error.message, });
+    res.status(500).json({ success: false, message: "Erro ao apagar avaliação.", details: error.message, });
   }
 };
 

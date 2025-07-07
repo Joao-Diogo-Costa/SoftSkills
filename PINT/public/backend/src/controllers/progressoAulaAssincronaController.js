@@ -3,47 +3,99 @@ const AulaAssincrona = require("../model/AulaAssincrona");
 const Curso = require("../model/Curso");
 const Utilizador = require("../model/Utilizador");
 
-const { Op } = require("sequelize"); 
+const { Op } = require("sequelize");
 
 const controllers = {};
 
-controllers.marcarAulaConcluida = async (req, res) => {
-    try {
-        const aulaId = req.params.aulaAssincronaId;
-        const utilizadorId = req.utilizador.id;
+const atualizarStatusConclusaoCurso = async (utilizadorId, cursoId) => {
+  try {
+    const Inscricao = require("../model/Inscricao");
 
-        if (!aulaId) {
-            return res.status(400).json({ success: false, message: "ID da aula é obrigatório." });
+    // Usar a função existente para calcular o progresso
+    const mockReq = { params: { utilizadorId, cursoId } };
+    const mockRes = {
+      json: (data) => data,
+      status: () => mockRes
+    };
+
+    // Chamar a função existente
+    const progressoData = await new Promise((resolve, reject) => {
+      const originalJson = mockRes.json;
+      mockRes.json = (data) => {
+        resolve(data);
+      };
+      
+      controllers.getProgressoCurso(mockReq, mockRes).catch(reject);
+    });
+
+    if (progressoData.success && progressoData.percentagem === 100) {
+      await Inscricao.update(
+        { 
+          concluido: true, 
+          dataConclusao: new Date() 
+        },
+        {
+          where: {
+            utilizadorId: utilizadorId,
+            cursoId: cursoId
+          }
         }
-
-        // Verificar se a aula existe
-        const aula = await AulaAssincrona.findByPk(aulaId);
-        if (!aula) {
-            return res.status(404).json({ success: false, message: "Aula não encontrada." });
-        }
-
-        // Verificar se já existe progresso
-        const progressoExistente = await ProgressoAulaAssincrona.findOne({
-            where: { utilizadorId, aulaAssincronaId: aulaId },
-        });
-
-        if (progressoExistente) {
-            return res.status(200).json({ success: true, message: "Aula já estava marcada como concluída." });
-        }
-
-        // Criar progresso
-        const novoProgresso = await ProgressoAulaAssincrona.create({
-            utilizadorId,
-            aulaAssincronaId: aulaId,
-            cursoId: aula.cursoId,
-            dataConclusao: new Date(),
-        });
-
-        res.status(201).json({success: true, message: "Aula marcada como concluída com sucesso.", data: novoProgresso,});
-
-    } catch (error) {
-        res.status(500).json({success: false, message: "Erro interno do servidor ao marcar aula como concluída.", details: error.message,});
+      );
+      console.log(`Curso ${cursoId} marcado como concluído para usuário ${utilizadorId}`);
     }
+  } catch (error) {
+    console.error("Erro ao atualizar status de conclusão:", error);
+  }
+};
+
+controllers.marcarAulaConcluida = async (req, res) => {
+  try {
+    const aulaId = req.params.aulaAssincronaId;
+    const utilizadorId = req.utilizador.id;
+
+    if (!aulaId) {
+      return res.status(400).json({ success: false, message: "ID da aula é obrigatório." });
+    }
+
+    // Verificar se a aula existe
+    const aula = await AulaAssincrona.findByPk(aulaId);
+    if (!aula) {
+      return res.status(404).json({ success: false, message: "Aula não encontrada." });
+    }
+
+    // Verificar se já existe progresso
+    const progressoExistente = await ProgressoAulaAssincrona.findOne({
+      where: { utilizadorId, aulaAssincronaId: aulaId },
+    });
+
+    if (progressoExistente) {
+      return res.status(200).json({ success: true, message: "Aula já estava marcada como concluída." });
+    }
+
+    // Criar progresso
+    const novoProgresso = await ProgressoAulaAssincrona.create({
+      utilizadorId,
+      aulaAssincronaId: aulaId,
+      cursoId: aula.cursoId,
+      dataConclusao: new Date(),
+    });
+
+    // CORRIGIR: usar aula.cursoId em vez de aulaAssincrona.cursoId
+    await atualizarStatusConclusaoCurso(utilizadorId, aula.cursoId);
+
+    res.status(201).json({ 
+      success: true, 
+      message: "Aula marcada como concluída com sucesso.", 
+      data: novoProgresso 
+    });
+
+  } catch (error) {
+    res.status(500).json({ 
+      success: false, 
+      message: "Erro interno do servidor ao marcar aula como concluída.", 
+      details: error.message 
+    });
+  }
 };
 
 // Obter progresso do utilizador num curso
@@ -93,4 +145,5 @@ controllers.aulaEstaConcluida = async (req, res) => {
     res.status(500).json({ success: false, message: "Erro ao verificar progresso.", error: error.message });
   }
 };
+
 module.exports = controllers;

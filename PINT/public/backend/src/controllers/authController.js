@@ -175,7 +175,8 @@ controllers.forgotPassword = async( req, res) => {
     });
 
     // *** Envio de e-mail ***
-    const resetLink = `${req.protocol}://${req.get('host')}/reset-password/${encodeURIComponent(token)}`;
+    // isto para localhost
+    const resetLink = `http://localhost:5173/reset-password/${encodeURIComponent(token)}`;
 
     const transporter = nodemailer.createTransport({
       host: process.env.EMAIL_HOST,
