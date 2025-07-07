@@ -198,7 +198,7 @@ function PaginaInicial() {
 
     // Buscar todos os cursos
     useEffect(() => {
-        axios.get("http://localhost:3000/curso/list")
+        axios.get("https://pint-web-htw2.onrender.com/curso/list")
             .then(res => {
                 if (res.data.success) setCursos(res.data.data);
             })
@@ -210,7 +210,7 @@ function PaginaInicial() {
     // Buscar cursos em que o utilizador está inscrito
     useEffect(() => {
         if (user && user.id) {
-            axios.get(`http://localhost:3000/inscricao/utilizador/${user.id}`)
+            axios.get(`https://pint-web-htw2.onrender.com/inscricao/utilizador/${user.id}`)
                 .then(response => {
                     const data = response.data;
                     if (data.success) {
@@ -232,7 +232,7 @@ function PaginaInicial() {
     if (!user) return <div>Por favor, faça login.</div>;
 
     useEffect(() => {
-        axios.get("http://localhost:3000/curso/mais-popular-mes")
+        axios.get("https://pint-web-htw2.onrender.com/curso/mais-popular-mes")
             .then(res => {
                 if (res.data.success && res.data.data) {
                     setCursoDoMes(res.data.data);

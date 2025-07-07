@@ -76,12 +76,12 @@ function PerfilUtilizador() {
     const [filtroData, setFiltroData] = useState("");
 
     useEffect(() => {
-        axios.get(`http://localhost:3000/utilizador/get/${id}`, { headers: authHeader() })
+        axios.get(`https://pint-web-htw2.onrender.com/utilizador/get/${id}`, { headers: authHeader() })
             .then(res => setUser(res.data.data));
     }, [id]);
 
     useEffect(() => {
-        axios.get(`http://localhost:3000/inscricao/utilizador/${id}`, { headers: authHeader() })
+        axios.get(`https://pint-web-htw2.onrender.com/inscricao/utilizador/${id}`, { headers: authHeader() })
             .then(async response => {
                 const data = response.data;
                 if (data.success) {
@@ -100,7 +100,7 @@ function PerfilUtilizador() {
                             let nomeFormador = "Desconhecido";
                             if (curso.formadorId) {
                                 try {
-                                    const res = await axios.get(`http://localhost:3000/utilizador/get/${curso.formadorId}`, { headers: authHeader() });
+                                    const res = await axios.get(`https://pint-web-htw2.onrender.com/utilizador/get/${curso.formadorId}`, { headers: authHeader() });
                                     if (res.data.success && res.data.data && res.data.data.nomeUtilizador) {
                                         nomeFormador = res.data.data.nomeUtilizador;
                                     }
@@ -114,7 +114,7 @@ function PerfilUtilizador() {
 
                     Promise.all(
                         cursosComFormador.map(curso =>
-                            axios.get(`http://localhost:3000/progresso-aula/progresso/${id}/${curso.id}`, { headers: authHeader() })
+                            axios.get(`https://pint-web-htw2.onrender.com/progresso-aula/progresso/${id}/${curso.id}`, { headers: authHeader() })
                                 .then(res => ({
                                     cursoId: curso.id,
                                     percentagem: res.data.success ? res.data.percentagem : 0
@@ -135,7 +135,7 @@ function PerfilUtilizador() {
 
     useEffect(() => {
         if (user && user.role === "formador") {
-            axios.get(`http://localhost:3000/curso/formador/${user.id}`, { headers: authHeader() })
+            axios.get(`https://pint-web-htw2.onrender.com/curso/formador/${user.id}`, { headers: authHeader() })
                 .then(res => setCursosGeridos(res.data.data || []));
         } else {
             setCursosGeridos([]);
@@ -149,7 +149,7 @@ function PerfilUtilizador() {
     }
 
     function handleTransferirCertificado(inscricaoId) {
-        window.open(`http://localhost:3000/certificado/download/${inscricaoId}`, "_blank");
+        window.open(`https://pint-web-htw2.onrender.com/certificado/download/${inscricaoId}`, "_blank");
     }
 
     const cursosFiltrados = cursos.filter(curso => {

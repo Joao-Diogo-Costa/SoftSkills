@@ -39,19 +39,19 @@ const Navbar = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        axios.get("http://localhost:3000/categoria/list")
+        axios.get("https://pint-web-htw2.onrender.com/categoria/list")
             .then(res => {
                 if (res.data.success && Array.isArray(res.data.data)) {
                     setCategorias(res.data.data);
                 }
             });
-        axios.get("http://localhost:3000/area/list")
+        axios.get("https://pint-web-htw2.onrender.com/area/list")
             .then(res => {
                 if (res.data.success && Array.isArray(res.data.data)) {
                     setAreas(res.data.data);
                 }
             });
-        axios.get("http://localhost:3000/topico-curso/list")
+        axios.get("https://pint-web-htw2.onrender.com/topico-curso/list")
             .then(res => {
                 if (res.data.success && Array.isArray(res.data.data)) {
                     setTopicos(res.data.data);
@@ -60,19 +60,19 @@ const Navbar = () => {
     }, []);
 
     useEffect(() => {
-        axios.get("http://localhost:3000/categoria/list")
+        axios.get("https://pint-web-htw2.onrender.com/categoria/list")
             .then(res => {
                 if (res.data.success && Array.isArray(res.data.data)) {
                     setCategoriasForum(res.data.data);
                 }
             });
-        axios.get("http://localhost:3000/area/list")
+        axios.get("https://pint-web-htw2.onrender.com/area/list")
             .then(res => {
                 if (res.data.success && Array.isArray(res.data.data)) {
                     setAreasForum(res.data.data);
                 }
             });
-        axios.get("http://localhost:3000/topico-curso/list")
+        axios.get("https://pint-web-htw2.onrender.com/topico-curso/list")
             .then(res => {
                 if (res.data.success && Array.isArray(res.data.data)) {
                     setTopicosForum(res.data.data);
@@ -87,7 +87,7 @@ const Navbar = () => {
             setUnseenIds([]);
             return;
         }
-        axios.get("http://localhost:3000/notificacao/minhas", { headers: authHeader() })
+        axios.get("https://pint-web-htw2.onrender.com/notificacao/minhas", { headers: authHeader() })
             .then(res => {
                 if (res.data.success && Array.isArray(res.data.data)) {
                     setNotifications(res.data.data);
@@ -139,8 +139,8 @@ const Navbar = () => {
         searchTimeout.current = setTimeout(async () => {
             // Busca todos os cursos e foruns e filtra no frontend
             const [cursosRes, forunsRes] = await Promise.all([
-                axios.get("http://localhost:3000/curso/list"),
-                axios.get("http://localhost:3000/forum/list")
+                axios.get("https://pint-web-htw2.onrender.com/curso/list"),
+                axios.get("https://pint-web-htw2.onrender.com/forum/list")
             ]);
             const cursos = (cursosRes.data.data || []).filter(c =>
                 c.nome.toLowerCase().includes(value.toLowerCase())

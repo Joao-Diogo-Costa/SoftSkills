@@ -33,8 +33,8 @@ function CriarCurso() {
 
     // Carregar categorias e formadores
     useEffect(() => {
-        axios.get("http://localhost:3000/categoria/list").then(res => setCategorias(res.data.data || []));
-        axios.get("http://localhost:3000/utilizador/list").then(res => {
+        axios.get("https://pint-web-htw2.onrender.com/categoria/list").then(res => setCategorias(res.data.data || []));
+        axios.get("https://pint-web-htw2.onrender.com/utilizador/list").then(res => {
             // Apenas formadores
             setFormadores((res.data.data || []).filter(u => u.role === "formador"));
         });
@@ -43,7 +43,7 @@ function CriarCurso() {
     // Carregar áreas ao escolher categoria
     useEffect(() => {
         if (form.categoriaId) {
-            axios.get("http://localhost:3000/area/list").then(res => {
+            axios.get("https://pint-web-htw2.onrender.com/area/list").then(res => {
                 setAreas((res.data.data || []).filter(a => a.CATEGORIAC?.id == form.categoriaId));
             });
         } else {
@@ -56,7 +56,7 @@ function CriarCurso() {
     // Carregar tópicos ao escolher área
     useEffect(() => {
         if (form.areaId) {
-            axios.get("http://localhost:3000/topico-curso/list").then(res => {
+            axios.get("https://pint-web-htw2.onrender.com/topico-curso/list").then(res => {
                 setTopicos((res.data.data || []).filter(t => t.areaId == form.areaId));
             });
         } else {
@@ -103,7 +103,7 @@ function CriarCurso() {
                 topicoId: form.topicoId,
                 formadorId: form.formadorId,
             };
-            const res = await axios.post("http://localhost:3000/curso/create", body, {
+            const res = await axios.post("https://pint-web-htw2.onrender.com/curso/create", body, {
                 headers: authHeader(),
             });
             if (res.data.success) {

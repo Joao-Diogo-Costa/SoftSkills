@@ -11,7 +11,7 @@ function MainView() {
 
 
     useEffect(() => {
-        axios.get("http://localhost:3000/curso/list")
+        axios.get("https://pint-web-htw2.onrender.com/curso/list")
             .then(res => {
                 if (res.data.success) setCursos(res.data.data);
             })
@@ -21,7 +21,7 @@ function MainView() {
     }, []);
 
     useEffect(() => {
-        axios.get("http://localhost:3000/curso/mais-popular-mes")
+        axios.get("https://pint-web-htw2.onrender.com/curso/mais-popular-mes")
             .then(res => {
                 if (res.data.success && res.data.data) {
                     setCursoDoMes(res.data.data);
@@ -102,10 +102,23 @@ function MainView() {
                 </div>
 
                 <div className="row mt-5 d-flex justify-content-center w-100 m-0 p-0 text-decoration-none" >
-                    {cursos.slice(0, 3).map((curso) => (
+                    {[...cursos]
+                        .sort((a, b) => (b.numParticipante || 0) - (a.numParticipante || 0))
+                        .slice(0, 3)
+                        .map((curso) => (
                         <div key={curso.id} className="col-md-4 d-flex justify-content-center mb-3">
                             <Link className="row d-flex justify-content-center text-decoration-none" to={`/curso/${curso.id}`}>
-                                <img src={curso.imagemBanner || "/img/curs-javascriptAvan;ado.png"} className="rounded-5 " alt={curso.nome} />
+                                <img
+                                    src={curso.imagemBanner || "/img/curs-javascriptAvan;ado.png"}
+                                    className="rounded-5"
+                                    alt={curso.nome}
+                                    style={{
+                                        width: "100%",
+                                        height: "300px",     
+                                        objectFit: "cover",   
+                                        objectPosition: "center"
+                                    }}
+                                />
                                 <p className="fw-bold mb-0 mt-2 text-center" style={{ color: '#39639D' }}>{curso.nome}</p>
                                 <p className="blue-text text-center ms-3">{curso.descricaoCurso}</p>
                                 <div
@@ -116,22 +129,22 @@ function MainView() {
                                         <img src="/img/icon-alunos.svg" alt="Ícone Alunos" />
                                         <div>
                                             <p className="fw-bold mb-0" style={{ color: '#39639D' }}>Inscritos</p>
-                                            <p className="text-center" style={{ color: '#39639D' }}>{curso.participantes || 0}</p>
+                                            <p className="text-center" style={{ color: '#39639D' }}>{curso.numParticipante || 0}</p>
                                         </div>
                                     </div>
 
                                     <div className="col-md-4 col-4 d-flex justify-content-center">
-                                        <img src="/img/icon-tempo.svg" alt="Ícone Tempo" />
+                                        <img src="/img/icon-nivel.svg" alt="Ícone Nivel" />
                                         <div>
-                                            <p className="fw-bold mb-0" style={{ color: '#39639D' }}>Tempo</p>
-                                            <p className="text-center" style={{ color: '#39639D' }}>{curso.duracao || "25 horas"}</p>
+                                            <p className="fw-bold mb-0 text-center" style={{ color: '#39639D' }}>Nivel</p>
+                                            <p className="text-center" style={{ color: '#39639D' }}>{curso.nivel || "---"}</p>
                                         </div>
                                     </div>
                                     <div className="col-md-4 col-4 d-flex justify-content-center">
                                         <img src="/img/icon-certificado.svg" alt="Ícone Certificado" />
                                         <div>
                                             <p className="fw-bold mb-0 text-center" style={{ color: '#39639D' }}>Certificado</p>
-                                            <p className="text-center" style={{ color: '#39639D' }}>{curso.certificado ? "Sim" : "Não"}</p>
+                                            <p className="text-center" style={{ color: '#39639D' }}>Sim</p>
                                         </div>
                                     </div>
                                 </div>

@@ -15,6 +15,23 @@ const Forum = () => {
     const [newMessage, setNewMessage] = useState("");
     const [file, setFile] = useState(null);
     const chatEndRef = useRef(null);
+    const [hoverEliminar, setHoverEliminar] = useState(false);
+
+    // Estados para modal de sucesso/erro de upload de ficheiro
+    const [showUploadModal, setShowUploadModal] = useState(false);
+    const [uploadMsg, setUploadMsg] = useState("");
+    const [uploadSuccess, setUploadSuccess] = useState(false);
+    const [fadeOutUploadModal, setFadeOutUploadModal] = useState(false);
+
+    // Estados para modal de sucesso/erro de eliminação de ficheiro
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [deleteMsg, setDeleteMsg] = useState("");
+    const [deleteSuccess, setDeleteSuccess] = useState(false);
+    const [fadeOutDeleteModal, setFadeOutDeleteModal] = useState(false);
+
+    // Estado para modal de confirmação de eliminação
+    const [showConfirmDeleteModal, setShowConfirmDeleteModal] = useState(false);
+    const [fileIdToDelete, setFileIdToDelete] = useState(null);
 
     const user = JSON.parse(localStorage.getItem("user"));
 
@@ -36,7 +53,7 @@ const Forum = () => {
     // Buscar dados do fórum
     useEffect(() => {
         setLoading(true);
-        axios.get(`http://localhost:3000/forum/get/${id}`, { headers: authHeader() })
+        axios.get(`https://pint-web-htw2.onrender.com/forum/get/${id}`, { headers: authHeader() })
             .then(res => {
                 if (res.data.success) setForum(res.data.data);
                 else navigate("/foruns");
@@ -51,7 +68,7 @@ const Forum = () => {
 
         // Função para buscar comentários
         const fetchComentarios = () => {
-            axios.get("http://localhost:3000/comentario/list", { headers: authHeader() })
+            axios.get("https://pint-web-htw2.onrender.com/comentario/list", { headers: authHeader() })
                 .then(res => {
                     if (res.data.success) {
                         setComentarios(res.data.data.filter(c => c.forumId === Number(id)));
@@ -69,7 +86,7 @@ const Forum = () => {
 
     // Buscar ficheiros do fórum
     useEffect(() => {
-        axios.get(`http://localhost:3000/forum-ficheiro/listar/${id}`, { headers: authHeader() })
+        axios.get(`https://pint-web-htw2.onrender.com/forum-ficheiro/listar/${id}`, { headers: authHeader() })
             .then(res => {
                 if (res.data.success) {
                     setFicheiros(res.data.ficheiros || []);
@@ -84,31 +101,58 @@ const Forum = () => {
         }
     }, [comentarios, ficheiros]);
 
+    // Função para fechar modal de upload com fade-out
+    const handleCloseUploadModal = () => {
+        setFadeOutUploadModal(true);
+        setTimeout(() => {
+            setShowUploadModal(false);
+            setFadeOutUploadModal(false);
+        }, 250);
+    };
+
+    // Função para fechar modal de eliminação com fade-out
+    const handleCloseDeleteModal = () => {
+        setFadeOutDeleteModal(true);
+        setTimeout(() => {
+            setShowDeleteModal(false);
+            setFadeOutDeleteModal(false);
+        }, 250);
+    };
+
+    // Função para fechar modal de confirmação de eliminação
+    const handleCloseConfirmDeleteModal = () => {
+        setShowConfirmDeleteModal(false);
+        setFileIdToDelete(null);
+    };
+
     // Enviar mensagem de texto
     const handleSendMessage = async (e) => {
         e.preventDefault();
         if (!newMessage.trim()) return;
         if (!user) {
-            alert("Tens de iniciar sessão para enviar mensagens.");
+            setUploadMsg("Tens de iniciar sessão para enviar mensagens.");
+            setUploadSuccess(false);
+            setShowUploadModal(true);
             return;
         }
         try {
-            await axios.post("http://localhost:3000/comentario/create", {
+            await axios.post("https://pint-web-htw2.onrender.com/comentario/create", {
                 texto: newMessage,
                 forumId: id,
                 utilizadorId: user.id
             }, { headers: authHeader() });
             setNewMessage("");
             // Atualiza comentários
-            axios.get("http://localhost:3000/comentario/list", { headers: authHeader() })
+            axios.get("https://pint-web-htw2.onrender.com/comentario/list", { headers: authHeader() })
                 .then(res => {
                     if (res.data.success) {
                         setComentarios(res.data.data.filter(c => c.forumId === Number(id)));
                     }
                 });
         } catch (err) {
-            console.log(err.response?.data || err.message);
-            alert("Erro ao enviar mensagem.");
+            setUploadMsg("Erro ao enviar mensagem.");
+            setUploadSuccess(false);
+            setShowUploadModal(true);
         }
     };
 
@@ -117,14 +161,16 @@ const Forum = () => {
         e.preventDefault();
         if (!file) return;
         if (!user) {
-            alert("Tens de iniciar sessão para enviar ficheiros.");
+            setUploadMsg("Tens de iniciar sessão para enviar ficheiros.");
+            setUploadSuccess(false);
+            setShowUploadModal(true);
             return;
         }
         const formData = new FormData();
         formData.append("ficheiros", file);
         try {
             await axios.post(
-                `http://localhost:3000/forum-ficheiro/upload/${id}`,
+                `https://pint-web-htw2.onrender.com/forum-ficheiro/upload/${id}`,
                 formData,
                 {
                     headers: {
@@ -135,10 +181,12 @@ const Forum = () => {
             );
             setFile(null);
             e.target.reset && e.target.reset();
-            alert("Ficheiro enviado com sucesso!");
+            setUploadMsg("Ficheiro enviado com sucesso!");
+            setUploadSuccess(true);
+            setShowUploadModal(true);
 
             setTimeout(() => {
-                axios.get(`http://localhost:3000/forum-ficheiro/listar/${id}`, { headers: authHeader() })
+                axios.get(`https://pint-web-htw2.onrender.com/forum-ficheiro/listar/${id}`, { headers: authHeader() })
                     .then(res => {
                         if (res.data.success) {
                             setFicheiros(res.data.ficheiros || []);
@@ -146,27 +194,46 @@ const Forum = () => {
                     });
             }, 500);
         } catch (err) {
-            console.log(err.response?.data || err.message);
-            alert("Erro ao enviar ficheiro.");
+            setUploadMsg("Erro ao enviar ficheiro.");
+            setUploadSuccess(false);
+            setShowUploadModal(true);
         }
     };
 
-    const handleDeleteFile = async (fileId) => {
-        if (!window.confirm("Tens a certeza que queres eliminar este ficheiro?")) return;
+    // Abrir modal de confirmação de eliminação
+    const handleAskDeleteFile = (fileId) => {
+        setFileIdToDelete(fileId);
+        setShowConfirmDeleteModal(true);
+    };
+
+    // Eliminar ficheiro com modal customizado
+    const handleDeleteFile = async () => {
+        if (!fileIdToDelete) return;
         try {
             await axios.delete(
-                `http://localhost:3000/forum-ficheiro/delete/${fileId}`,
+                `https://pint-web-htw2.onrender.com/forum-ficheiro/delete/${fileIdToDelete}`,
                 { headers: authHeader() }
             );
+            setDeleteMsg("Ficheiro eliminado com sucesso!");
+            setDeleteSuccess(true);
+            setShowDeleteModal(true);
+            setShowConfirmDeleteModal(false);
+            setFileIdToDelete(null);
             // Atualiza lista de ficheiros
-            axios.get(`http://localhost:3000/forum-ficheiro/listar/${id}`, { headers: authHeader() })
-                .then(res => {
-                    if (res.data.success) {
-                        setFicheiros(res.data.ficheiros || []);
-                    }
-                });
+            setTimeout(() => {
+                axios.get(`https://pint-web-htw2.onrender.com/forum-ficheiro/listar/${id}`, { headers: authHeader() })
+                    .then(res => {
+                        if (res.data.success) {
+                            setFicheiros(res.data.ficheiros || []);
+                        }
+                    });
+            }, 500);
         } catch (err) {
-            alert("Erro ao eliminar ficheiro.");
+            setDeleteMsg("Erro ao eliminar ficheiro.");
+            setDeleteSuccess(false);
+            setShowDeleteModal(true);
+            setShowConfirmDeleteModal(false);
+            setFileIdToDelete(null);
         }
     };
 
@@ -218,7 +285,6 @@ const Forum = () => {
 
     return (
         <>
-
             <div className="container-fluid min-vh-100 m-0 p-0" style={{ background: "#f4f7fb" }}>
                 {/* Banner do fórum */}
                 <div
@@ -293,10 +359,10 @@ const Forum = () => {
                                     style={{
                                         background: "#f8fafc",
                                         border: "1px solid #e3e9f7",
-                                        height: "45px",           // aumenta a altura do input
-                                        fontSize: "1.1rem",       // texto maior
-                                        paddingLeft: "24px",      // mais espaço à esquerda
-                                        paddingRight: "24px"      // mais espaço à direita
+                                        height: "45px",
+                                        fontSize: "1.1rem",
+                                        paddingLeft: "24px",
+                                        paddingRight: "24px"
                                     }} />
                                 <button
                                     type="submit"
@@ -348,7 +414,7 @@ const Forum = () => {
                                                         <button
                                                             className="btn btn-sm btn-danger ms-2"
                                                             title="Eliminar ficheiro"
-                                                            onClick={() => handleDeleteFile(f.id)}
+                                                            onClick={() => handleAskDeleteFile(f.id)}
                                                         >
                                                             <i className="bi bi-trash"></i>
                                                         </button>
@@ -374,6 +440,194 @@ const Forum = () => {
                     </div>
                 </div>
             </div>
+
+            {/* MODAL DE SUCESSO/ERRO UPLOAD DE FICHEIRO */}
+            {showUploadModal && (
+                <div
+                    className="modal fade show"
+                    tabIndex={-1}
+                    aria-modal="true"
+                    role="dialog"
+                    style={{
+                        display: "block",
+                        background: "rgba(57, 99, 157, 0.5)"
+                    }}
+                    onClick={handleCloseUploadModal}
+                >
+                    <div
+                        className={`modal-dialog modal-dialog-centered ${fadeOutUploadModal ? "custom-fade-out" : "custom-fade-in"}`}
+                        style={{ maxWidth: 550 }}
+                        onClick={e => e.stopPropagation()}
+                    >
+                        <div className="modal-content">
+                            <div className="modal-body py-4">
+                                <div className="d-flex flex-column align-items-center mb-3">
+                                    {uploadSuccess ? (
+                                        <img
+                                            src="/img/success_vector.svg"
+                                            alt="Ícone de Sucesso"
+                                            style={{ width: 64, height: 64 }}
+                                        />
+                                    ) : (
+                                        <img
+                                            src="/img/warning_vector.svg"
+                                            alt="Ícone de Aviso"
+                                            style={{ width: 64, height: 64 }}
+                                        />
+                                    )}
+                                    <h1 className="text-center fs-2 fw-bold mt-3">
+                                        {uploadSuccess ? "Sucesso" : "Erro"}
+                                    </h1>
+                                </div>
+                                <p className="text-center fs-5">
+                                    {uploadMsg}
+                                </p>
+                            </div>
+                            <div className="modal-footer justify-content-center py-3">
+                                <button
+                                    type="button"
+                                    className="btn btn-voltar px-4"
+                                    onClick={e => {
+                                        e.stopPropagation();
+                                        handleCloseUploadModal();
+                                    }}
+                                >
+                                    Fechar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* MODAL DE CONFIRMAÇÃO DE ELIMINAÇÃO DE FICHEIRO */}
+            {showConfirmDeleteModal && (
+                <div
+                    className="modal fade show"
+                    tabIndex={-1}
+                    aria-modal="true"
+                    role="dialog"
+                    style={{
+                        display: "block",
+                        background: "rgba(57, 99, 157, 0.5)"
+                    }}
+                    onClick={handleCloseConfirmDeleteModal}
+                >
+                    <div
+                        className="modal-dialog modal-dialog-centered custom-fade-in"
+                        style={{ maxWidth: 500 }}
+                        onClick={e => e.stopPropagation()}
+                    >
+                        <div className="modal-content">
+                            <div className="modal-body py-4">
+                                <div className="d-flex flex-column align-items-center mb-3">
+                                    <img
+                                        src="/img/warning_vector.svg"
+                                        alt="Ícone de Aviso"
+                                        style={{ width: 64, height: 64 }}
+                                    />
+                                    <h1 className="text-center fs-2 fw-bold mt-3">
+                                        Eliminar ficheiro?
+                                    </h1>
+                                </div>
+                                <p className="text-center fs-5">
+                                    Tens a certeza que queres eliminar este ficheiro?
+                                </p>
+                            </div>
+                            <div className="modal-footer justify-content-center py-3">
+                                <button
+                                    type="button"
+                                    className="btn btn-light px-4 me-3"
+                                    onClick={e => {
+                                        e.stopPropagation();
+                                        handleCloseConfirmDeleteModal();
+                                    }}
+                                >
+                                    Cancelar
+                                </button>
+                                <button
+                                    type="button"
+                                    className="btn px-4"
+                                    style={{
+                                        color: hoverEliminar ? "#39639D" : "#fff",
+                                        backgroundColor: hoverEliminar ? "#fff" : "#39639D",
+                                        border: "1px solid #39639D",
+                                        borderRadius: 12,
+                                        transition: "background 0.2s, color 0.2s"
+                                    }}
+                                    onMouseEnter={() => setHoverEliminar(true)}
+                                    onMouseLeave={() => setHoverEliminar(false)}
+                                    onClick={e => {
+                                        e.stopPropagation();
+                                        handleDeleteFile();
+                                    }}
+                                >
+                                    Eliminar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* MODAL DE SUCESSO/ERRO ELIMINAÇÃO DE FICHEIRO */}
+            {showDeleteModal && (
+                <div
+                    className="modal fade show"
+                    tabIndex={-1}
+                    aria-modal="true"
+                    role="dialog"
+                    style={{
+                        display: "block",
+                        background: "rgba(57, 99, 157, 0.5)"
+                    }}
+                    onClick={handleCloseDeleteModal}
+                >
+                    <div
+                        className={`modal-dialog modal-dialog-centered ${fadeOutDeleteModal ? "custom-fade-out" : "custom-fade-in"}`}
+                        style={{ maxWidth: 550 }}
+                        onClick={e => e.stopPropagation()}
+                    >
+                        <div className="modal-content">
+                            <div className="modal-body py-4">
+                                <div className="d-flex flex-column align-items-center mb-3">
+                                    {deleteSuccess ? (
+                                        <img
+                                            src="/img/success_vector.svg"
+                                            alt="Ícone de Sucesso"
+                                            style={{ width: 64, height: 64 }}
+                                        />
+                                    ) : (
+                                        <img
+                                            src="/img/warning_vector.svg"
+                                            alt="Ícone de Aviso"
+                                            style={{ width: 64, height: 64 }}
+                                        />
+                                    )}
+                                    <h1 className="text-center fs-2 fw-bold mt-3">
+                                        {deleteSuccess ? "Sucesso" : "Erro"}
+                                    </h1>
+                                </div>
+                                <p className="text-center fs-5">
+                                    {deleteMsg}
+                                </p>
+                            </div>
+                            <div className="modal-footer justify-content-center py-3">
+                                <button
+                                    type="button"
+                                    className="btn btn-voltar px-4"
+                                    onClick={e => {
+                                        e.stopPropagation();
+                                        handleCloseDeleteModal();
+                                    }}
+                                >
+                                    Fechar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </>
     );
 };

@@ -41,13 +41,13 @@ function CriarForum() {
 
     // Carregar categorias ao montar
     useEffect(() => {
-        axios.get("http://localhost:3000/categoria/list")
+        axios.get("https://pint-web-htw2.onrender.com/categoria/list")
             .then(res => setCategorias(res.data.data || []));
     }, []);
 
     // Carregar áreas ao escolher categoria OU se vier areaId do estado
     useEffect(() => {
-        axios.get("http://localhost:3000/area/list").then(res => {
+        axios.get("https://pint-web-htw2.onrender.com/area/list").then(res => {
             const lista = res.data.data || [];
             setAreas(lista);
 
@@ -68,7 +68,7 @@ function CriarForum() {
 
     // Carregar tópicos ao escolher área
     useEffect(() => {
-        axios.get("http://localhost:3000/topico-curso/list").then(res => {
+        axios.get("https://pint-web-htw2.onrender.com/topico-curso/list").then(res => {
             let lista = res.data.data || [];
             // Se vier topicoId do estado, mostra todos os tópicos para garantir que o select tem essa opção
             if (form.areaId) {
@@ -81,7 +81,7 @@ function CriarForum() {
                 location.state?.topicoId &&
                 !lista.some(t => t.id === location.state.topicoId)
             ) {
-                axios.get(`http://localhost:3000/topico-curso/${location.state.topicoId}`)
+                axios.get(`https://pint-web-htw2.onrender.com/topico-curso/${location.state.topicoId}`)
                     .then(resp => {
                         if (resp.data && resp.data.id) {
                             setTopicos(prev => [...prev, resp.data]);
@@ -133,7 +133,7 @@ function CriarForum() {
                 categoriaId: form.categoriaId,
                 areaId: form.areaId
             };
-            const res = await axios.post("http://localhost:3000/forum/create", body, {
+            const res = await axios.post("https://pint-web-htw2.onrender.com/forum/create", body, {
                 headers: authHeader()
             });
 
@@ -143,7 +143,7 @@ function CriarForum() {
                 if (imagemForum) {
                     const formData = new FormData();
                     formData.append("imagem-forum", imagemForum);
-                    await axios.post(`http://localhost:3000/forum/upload-imagem-forum/${forumId}`, formData, {
+                    await axios.post(`https://pint-web-htw2.onrender.com/forum/upload-imagem-forum/${forumId}`, formData, {
                         headers: {
                             ...authHeader(),
                             "Content-Type": "multipart/form-data"

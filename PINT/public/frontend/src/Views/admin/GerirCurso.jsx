@@ -58,7 +58,7 @@ function GerirCurso() {
 
     //Buscar cursos
     useEffect(() => {
-        axios.get("http://localhost:3000/curso/list")
+        axios.get("https://pint-web-htw2.onrender.com/curso/list")
             .then(res => {
                 if (res.data.success) {
                     setCursos(res.data.data);
@@ -71,16 +71,16 @@ function GerirCurso() {
 
     // Buscar categorias, áreas, tópicos e cursos ao iniciar
     useEffect(() => {
-        axios.get("http://localhost:3000/categoria/list")
+        axios.get("https://pint-web-htw2.onrender.com/categoria/list")
             .then(res => setCategorias(res.data.data || []))
             .catch(() => setCategorias([]));
-        axios.get("http://localhost:3000/area/list")
+        axios.get("https://pint-web-htw2.onrender.com/area/list")
             .then(res => setAreas(res.data.data || []))
             .catch(() => setAreas([]));
-        axios.get("http://localhost:3000/topico-curso/list")
+        axios.get("https://pint-web-htw2.onrender.com/topico-curso/list")
             .then(res => setTopicos(res.data.data || []))
             .catch(() => setTopicos([]));
-        axios.get("http://localhost:3000/curso/list")
+        axios.get("https://pint-web-htw2.onrender.com/curso/list")
             .then(res => {
                 if (res.data.success) setCursos(res.data.data);
             })

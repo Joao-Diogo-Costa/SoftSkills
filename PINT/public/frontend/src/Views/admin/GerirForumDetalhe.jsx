@@ -67,21 +67,21 @@ function GerirForumDetalhe() {
     };
 
     useEffect(() => {
-        axios.get(`http://localhost:3000/forum/get/${id}`)
+        axios.get(`https://pint-web-htw2.onrender.com/forum/get/${id}`)
             .then(res => setForum(res.data.data))
             .catch(err => console.error("Erro ao buscar fórum:", err));
         // Buscar categorias
-        axios.get("http://localhost:3000/categoria/list")
+        axios.get("https://pint-web-htw2.onrender.com/categoria/list")
             .then(res => setCategorias(res.data.data || []))
             .catch(() => setCategorias([]));
 
         // Buscar áreas
-        axios.get("http://localhost:3000/area/list")
+        axios.get("https://pint-web-htw2.onrender.com/area/list")
             .then(res => setAreas(res.data.data || []))
             .catch(() => setAreas([]));
 
         // Buscar tópicos
-        axios.get("http://localhost:3000/topico-curso/list")
+        axios.get("https://pint-web-htw2.onrender.com/topico-curso/list")
             .then(res => setTopicos(res.data.data || []))
             .catch(() => setTopicos([]));
     }, [id]);
@@ -105,7 +105,7 @@ const handleUpdateForum = async (e) => {
     e.preventDefault();
     try {
         // Atualiza os dados do fórum
-        await axios.put(`http://localhost:3000/forum/update/${forum.id}`, {
+        await axios.put(`https://pint-web-htw2.onrender.com/forum/update/${forum.id}`, {
             nome,
             descricao,
             topicoId
@@ -118,7 +118,7 @@ const handleUpdateForum = async (e) => {
             const formData = new FormData();
             formData.append("imagem-forum", novaImagem);
             await axios.post(
-                `http://localhost:3000/forum/upload-imagem-forum/${forum.id}`,
+                `https://pint-web-htw2.onrender.com/forum/upload-imagem-forum/${forum.id}`,
                 formData,
                 { headers: { ...authHeader(), "Content-Type": "multipart/form-data" } }
             );
@@ -129,7 +129,7 @@ const handleUpdateForum = async (e) => {
         setPreviewImagem(null);
 
         // Atualiza a imagem no estado do fórum
-        const res = await axios.get(`http://localhost:3000/forum/get/${forum.id}`);
+        const res = await axios.get(`https://pint-web-htw2.onrender.com/forum/get/${forum.id}`);
         setForum(res.data.data);
 
     } catch (err) {
@@ -153,7 +153,7 @@ const handleUpdateForum = async (e) => {
     const handleDeleteForum = async () => {
         if (!forumParaRemover) return;
         try {
-            await axios.delete(`http://localhost:3000/forum/delete/${id}`, {
+            await axios.delete(`https://pint-web-htw2.onrender.com/forum/delete/${id}`, {
                 headers: authHeader()
             });
             setShowDeleteModal(false);

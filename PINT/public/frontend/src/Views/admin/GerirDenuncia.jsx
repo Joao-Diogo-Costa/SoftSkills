@@ -42,7 +42,7 @@ function GerirDenuncia() {
     }, [showFiltro]);
 
     useEffect(() => {
-        axios.get("http://localhost:3000/denuncia/list")
+        axios.get("https://pint-web-htw2.onrender.com/denuncia/list")
             .then(res => {
                 if (res.data.success) {
                     setDenuncias(res.data.data);
@@ -63,7 +63,7 @@ function GerirDenuncia() {
     const handleDeleteDenuncia = async () => {
         if (!denunciaParaRemover) return;
         try {
-            await axios.delete(`http://localhost:3000/denuncia/delete/${denunciaParaRemover}`,
+            await axios.delete(`https://pint-web-htw2.onrender.com/denuncia/delete/${denunciaParaRemover}`,
                 { headers: authHeader() }
             );
             setDenuncias(denuncias.filter(d => d.id !== denunciaParaRemover));
@@ -82,7 +82,7 @@ function GerirDenuncia() {
         const comentarioId = denuncia?.Comentario?.id;
         if (!comentarioId) return;
         try {
-            await axios.delete(`http://localhost:3000/comentario/delete/${comentarioId}`,
+            await axios.delete(`https://pint-web-htw2.onrender.com/comentario/delete/${comentarioId}`,
                 { headers: authHeader() }
             );
             setDenuncias(denuncias.filter(d => d.Comentario?.id !== comentarioId));

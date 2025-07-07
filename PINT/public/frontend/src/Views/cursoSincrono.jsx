@@ -15,6 +15,8 @@ const CursoSincrono = () => {
     const [inscrito, setInscrito] = useState(false);
     const [isSignUpModalOpen, setSignUpModalOpen] = useState(false);
     const [isSignUpSucessModalOpen, setSignUpSucessModalOpen] = useState(false);
+    const [showErrorModal, setShowErrorModal] = useState(false);
+    const [errorMsg, setErrorMsg] = useState("");
 
     // Estados para entrega de tarefa
     const [showEntregaModal, setShowEntregaModal] = useState(false);
@@ -28,29 +30,29 @@ const CursoSincrono = () => {
 
     useEffect(() => {
         // Carregar dados do curso
-        axios.get(`http://localhost:3000/curso/get/${id}`,
+        axios.get(`https://pint-web-htw2.onrender.com/curso/get/${id}`,
             { headers: authHeader() })
             .then(res => setCurso(res.data.data));
 
         // Carregar conteudo
-        axios.get(`http://localhost:3000/curso/${id}/conteudo`,
+        axios.get(`https://pint-web-htw2.onrender.com/curso/${id}/conteudo`,
             { headers: authHeader() })
             .then(res => setConteudo(res.data.data || []));
 
         // Carregar tarefas
-        axios.get(`http://localhost:3000/curso/${id}/tarefa`,
+        axios.get(`https://pint-web-htw2.onrender.com/curso/${id}/tarefa`,
             { headers: authHeader() })
             .then(res => setTarefas(res.data.data || []));
 
         // Carregar avisos
-        axios.get(`http://localhost:3000/curso/${id}/aviso`,
+        axios.get(`https://pint-web-htw2.onrender.com/curso/${id}/aviso`,
             { headers: authHeader() })
             .then(res => setAvisos(res.data.data || []));
     }, [id]);
 
     useEffect(() => {
         if (!user) return;
-        axios.get("http://localhost:3000/inscricao/list", { headers: authHeader() })
+        axios.get("https://pint-web-htw2.onrender.com/inscricao/list", { headers: authHeader() })
             .then(res => {
                 if (res.data.success) {
                     const jaInscrito = res.data.data.some(
@@ -62,7 +64,7 @@ const CursoSincrono = () => {
                 }
             });
 
-        axios.get("http://localhost:3000/submissao-tarefa/list", { headers: authHeader() })
+        axios.get("https://pint-web-htw2.onrender.com/submissao-tarefa/list", { headers: authHeader() })
             .then(res => {
                 if (res.data.success) {
                     const minhas = res.data.data.filter(
@@ -75,11 +77,15 @@ const CursoSincrono = () => {
 
     function handleInscrever() {
         if (!user) {
-            alert("É necessário estar autenticado para se inscrever.");
-            navigate("/login");
+            setErrorMsg("É necessário estar autenticado para se inscrever.");
+            setShowErrorModal(true);
+            setTimeout(() => {
+                setShowErrorModal(false);
+                navigate("/login");
+            }, 1800);
             return;
         }
-        axios.post("http://localhost:3000/inscricao/create", {
+        axios.post("https://pint-web-htw2.onrender.com/inscricao/create", {
             utilizadorId: user.id,
             cursoId: Number(id)
         }, {
@@ -91,11 +97,13 @@ const CursoSincrono = () => {
                     setSignUpSucessModalOpen(true);
                     setInscrito(true);
                 } else {
-                    alert(res.data.message || "Erro ao inscrever.");
+                    setErrorMsg(res.data.message || "Erro ao inscrever.");
+                    setShowErrorModal(true);
                 }
             })
             .catch(() => {
-                alert("Erro ao inscrever.");
+                setErrorMsg("Erro ao inscrever.");
+                setShowErrorModal(true);
             });
     }
 
@@ -121,7 +129,7 @@ const CursoSincrono = () => {
         const formData = new FormData();
         formData.append("ficheiro", ficheiro);
         axios.post(
-            `http://localhost:3000/submissao-tarefa/upload/${tarefaSelecionada.id}`,
+            `https://pint-web-htw2.onrender.com/submissao-tarefa/upload/${tarefaSelecionada.id}`,
             formData,
             { headers: { ...authHeader(), "Content-Type": "multipart/form-data" } }
         )
@@ -143,7 +151,7 @@ const CursoSincrono = () => {
         if (!window.confirm("Tem a certeza que deseja eliminar esta submissão?")) return;
         setEntregaLoading(true);
         axios.delete(
-            `http://localhost:3000/submissao-tarefa/delete/${submissaoId}`,
+            `https://pint-web-htw2.onrender.com/submissao-tarefa/delete/${submissaoId}`,
             { headers: authHeader() }
         )
             .then(res => {
@@ -170,8 +178,6 @@ const CursoSincrono = () => {
 
     return (
         <>
-        
-
             <div className="container-fluid min-vh-100 m-0 p-0">
                 <div className="container-fluid row m-0 p-0 d-flex justify-content-center align-items-center position-relative"
                     style={{
@@ -303,7 +309,11 @@ const CursoSincrono = () => {
                             <h5 className="text-white fw-bold m-0 ms-2">Avisos Gerais</h5>
                         </div>
                         <div className="container-fluid" style={{ maxHeight: 335, overflowY: 'auto', overflowWrap: "break-word" }}>
-                            {avisos.length === 0 ? (
+                            {!inscrito ? (
+                                <div className="text-center text-muted py-4">
+                                    Só os utilizadores inscritos podem aceder aos avisos deste curso.
+                                </div>
+                            ) : avisos.length === 0 ? (
                                 <div className="text-center text-muted py-4">Sem avisos para este curso.</div>
                             ) : (
                                 avisos.map((aviso, idx) => (
@@ -444,7 +454,11 @@ const CursoSincrono = () => {
                             <h5 className="text-white fw-bold m-0 ms-2">Conteúdo</h5>
                         </div>
                         <div className="bg-white rounded p-3">
-                            {conteudo.length === 0 ? (
+                            {!inscrito ? (
+                                <div className="text-center text-muted py-4">
+                                    Só os utilizadores inscritos podem aceder ao conteúdo deste curso.
+                                </div>
+                            ) : conteudo.length === 0 ? (
                                 <div className="text-muted">Nenhum conteúdo criado.</div>
                             ) : (
                                 [...conteudo]
@@ -523,6 +537,53 @@ const CursoSincrono = () => {
                     </div>
                     <div className="col-3 ms-3"></div>
                 </div>
+
+                {/* MODAL DE ERRO */}
+                {showErrorModal && (
+                    <div
+                        className="modal fade show"
+                        tabIndex={-1}
+                        aria-modal="true"
+                        role="dialog"
+                        style={{
+                            display: "block",
+                            background: "rgba(57, 99, 157, 0.5)"
+                        }}
+                        onClick={() => setShowErrorModal(false)}
+                    >
+                        <div
+                            className="modal-dialog modal-dialog-centered custom-fade-in"
+                            style={{ maxWidth: 550 }}
+                            onClick={e => e.stopPropagation()}
+                        >
+                            <div className="modal-content">
+                                <div className="modal-body py-4">
+                                    <div className="d-flex flex-column align-items-center mb-3">
+                                        <img src="/img/warning_vector.svg" alt="Ícone de Erro" style={{ width: 64, height: 64 }} />
+                                        <h1 className="text-center fs-2 fw-bold mt-3">
+                                            Erro
+                                        </h1>
+                                    </div>
+                                    <p className="text-center fs-5">
+                                        {errorMsg}
+                                    </p>
+                                </div>
+                                <div className="modal-footer justify-content-center py-3">
+                                    <button
+                                        type="button"
+                                        className="btn btn-voltar px-4"
+                                        onClick={e => {
+                                            e.stopPropagation();
+                                            setShowErrorModal(false);
+                                        }}
+                                    >
+                                        Fechar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
             </div>
         </>
     );

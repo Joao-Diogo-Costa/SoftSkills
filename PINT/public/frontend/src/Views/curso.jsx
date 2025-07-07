@@ -8,17 +8,25 @@ const Curso = () => {
     const navigate = useNavigate();
     const { id } = useParams();
 
-    // SEMPRE declare todos os hooks no topo!
-    const [isSignUpModalOpen, setSignUpModalOpen] = useState(false);
-    const [isSignUpSucessModalOpen, setSignUpSucessModalOpen] = useState(false);
     const [aulas, setAulas] = useState([]);
     const [curso, setCurso] = useState({});
     const [inscrito, setInscrito] = useState(false);
+    const [isSignUpModalOpen, setSignUpModalOpen] = useState(false);
+    const [fadeOutSignUpModal, setFadeOutSignUpModal] = useState(false);
+
+    const [isSignUpSucessModalOpen, setSignUpSucessModalOpen] = useState(false);
+    const [fadeOutSignUpSucessModal, setFadeOutSignUpSucessModal] = useState(false);
+
+    const [showErrorModal, setShowErrorModal] = useState(false);
+    const [errorMsg, setErrorMsg] = useState("");
+
+    const [hoverInscrever, setHoverInscrever] = useState(false);
+    const [isDesinscricaoAction, setIsDesinscricaoAction] = useState(false);
 
     const user = JSON.parse(localStorage.getItem("user"));
 
     useEffect(() => {
-        axios.get("http://localhost:3000/aula-assincrona/list")
+        axios.get("https://pint-web-htw2.onrender.com/aula-assincrona/list")
             .then(res => {
                 if (res.data.success) setAulas(res.data.data);
             })
@@ -28,7 +36,7 @@ const Curso = () => {
     }, []);
 
     useEffect(() => {
-        axios.get(`http://localhost:3000/curso/get/${id}`)
+        axios.get(`https://pint-web-htw2.onrender.com/curso/get/${id}`)
             .then(res => {
                 if (res.data.success) {
                     setCurso(res.data.data);
@@ -46,7 +54,7 @@ const Curso = () => {
 
     useEffect(() => {
         if (!user) return;
-        axios.get("http://localhost:3000/inscricao/list")
+        axios.get("https://pint-web-htw2.onrender.com/inscricao/list")
             .then(res => {
                 if (res.data.success) {
                     const jaInscrito = res.data.data.some(
@@ -69,12 +77,18 @@ const Curso = () => {
 
     function handleInscrever() {
         if (!user) {
-            alert("É necessário estar autenticado para se inscrever.");
-            navigate("/login");
+            setErrorMsg("É necessário estar autenticado para se inscrever.");
+            setShowErrorModal(true);
+            setTimeout(() => {
+                setShowErrorModal(false);
+                navigate("/login");
+            }, 1800);
             return;
         }
 
-        axios.post("http://localhost:3000/inscricao/create", {
+        setIsDesinscricaoAction(false);
+
+        axios.post("https://pint-web-htw2.onrender.com/inscricao/create", {
             utilizadorId: user.id,
             cursoId: Number(id)
         },
@@ -89,11 +103,13 @@ const Curso = () => {
                     setSignUpSucessModalOpen(true);
                     setInscrito(true);
                 } else {
-                    alert(res.data.message || "Erro ao inscrever.");
+                    setErrorMsg(res.data.message || "Erro ao inscrever.");
+                    setShowErrorModal(true);
                 }
             })
             .catch(() => {
-                alert("Erro ao inscrever.");
+                setErrorMsg("Erro ao inscrever.");
+                setShowErrorModal(true);
             });
     }
 
@@ -102,8 +118,65 @@ const Curso = () => {
         setSignUpSucessModalOpen(true);
     }
 
+    function closeSignUpModal() {
+        setFadeOutSignUpModal(true);
+        setTimeout(() => {
+            setSignUpModalOpen(false);
+            setFadeOutSignUpModal(false);
+        }, 250);
+    }
+
     function closeSignUpSucessModal() {
-        setSignUpSucessModalOpen(false);
+        setFadeOutSignUpSucessModal(true);
+        setTimeout(() => {
+            setSignUpSucessModalOpen(false);
+            setFadeOutSignUpSucessModal(false);
+        }, 250);
+    }
+
+    function handleDesinscrever() {
+        if (!user || !inscrito) return;
+
+        setIsDesinscricaoAction(true);
+
+        // Buscar o ID da inscrição
+        axios.get("https://pint-web-htw2.onrender.com/inscricao/list")
+            .then(res => {
+                if (res.data.success) {
+                    const inscricao = res.data.data.find(
+                        insc =>
+                            insc.utilizadorId === user.id &&
+                            insc.cursoId === Number(id)
+                    );
+
+                    if (inscricao) {
+                        // Apagar a inscrição
+                        axios.delete(`https://pint-web-htw2.onrender.com/inscricao/delete/${inscricao.id}`, {
+                            headers: {
+                                Authorization: "Bearer " + user.token
+                            }
+                        })
+                            .then(res => {
+                                if (res.data.success) {
+                                    setInscrito(false);
+                                    setSignUpModalOpen(false);
+                                    setSignUpSucessModalOpen(true);
+                                } else {
+                                    setErrorMsg("Erro ao cancelar inscrição. Tente novamente.");
+                                    setShowErrorModal(true);
+                                }
+                            })
+                            .catch(() => {
+                                setErrorMsg("Erro ao cancelar inscrição. Tente novamente.");
+                                setShowErrorModal(true);
+                            });
+                    }
+                }
+            })
+            .catch(() => {
+                setErrorMsg("Erro ao cancelar inscrição. Tente novamente.");
+                setShowErrorModal(true);
+            });
     }
 
     useEffect(() => {
@@ -134,7 +207,6 @@ const Curso = () => {
                         <div className="col-md-6 row">
                             <h2 className=" mb-0 blue-text fw-bold ">Bem-vindo! 👋</h2>
                             <p className="col-6 mb-5 blue-text ">Realize a sua inscrição para conseguir aceder a todo o conteúdo de forma gratuita!</p>
-                            <p className=" mb-5 blue-text ">Mais de <strong>20 vídeos</strong> com documentos de ajuda e totalmente em Português.</p>
                         </div>
                         <div className="col-md-6 d-flex align-items-start justify-content-end">
                             <div className="col-md-4" />
@@ -148,27 +220,38 @@ const Curso = () => {
                                 <div className="col-md-12 d-flex justify-content-center align-items-center">
                                     <button
                                         type="button"
-                                        className={`btn rounded-pill w-100 ${inscrito ? "btn-secondary" : "btn-primary botao"}`}
-                                        style={{ cursor: inscrito ? "not-allowed" : "pointer" }}
+                                        className={`btn rounded-pill w-100 ${inscrito ? "btn-danger" : "btn-primary botao"}`}
+                                        style={{ cursor: "pointer" }}
                                         onClick={() => {
-                                            if (!inscrito) setSignUpModalOpen(true);
+                                            setSignUpModalOpen(true);
                                         }}
-                                        disabled={inscrito}
                                     >
-                                        {inscrito ? "Inscrito" : "Inscrever"}
+                                        {inscrito ? "Desinscrever" : "Inscrever"}
                                     </button>
                                 </div>
-                                {/* MODAL DE EDIÇÃO */} {isSignUpModalOpen && (
-                                    <div className="modal fade show" style={{
-                                        display: "block", background:
-                                            "rgba(57, 99, 157, 0.5)"
-                                    }}>
-                                        <div className="modal-dialog modal-dialog-centered">
+                                {/* MODAL DE INSCRIÇÃO */}
+                                {isSignUpModalOpen && (
+                                    <div
+                                        className="modal fade show"
+                                        tabIndex={-1}
+                                        aria-modal="true"
+                                        role="dialog"
+                                        style={{
+                                            display: "block",
+                                            background: "rgba(57, 99, 157, 0.5)"
+                                        }}
+                                        onClick={closeSignUpModal}
+                                    >
+                                        <div
+                                            className={`modal-dialog modal-dialog-centered ${fadeOutSignUpModal ? "custom-fade-out" : "custom-fade-in"}`}
+                                            style={{ maxWidth: 550 }}
+                                            onClick={e => e.stopPropagation()}
+                                        >
                                             <div className="modal-content">
                                                 <div className="modal-header text-white py-5 position-relative d-flex justify-content-center"
-                                                    style={{ background: "linear-gradient(90deg, #39639D, #1C4072)", }}>
+                                                    style={{ background: "linear-gradient(90deg, #39639D, #1C4072)" }}>
                                                     <h5 className="fw-bold">
-                                                        Confirmar Inscrição
+                                                        {inscrito ? "Cancelar inscriçao" : "Confirmar Inscrição"}
                                                     </h5>
                                                 </div>
                                                 <div className="modal-body" style={{ color: "#f5f9ff" }}>
@@ -176,53 +259,106 @@ const Curso = () => {
                                                         <h5 className="fw-bold fs-3 ms-4 text-center" style={{
                                                             color: "#39639D"
                                                         }}>
-                                                            Curso - JavaScript
+                                                            Curso - {curso.nome}
                                                         </h5>
                                                         <div className="mb-3 ms-4 text-start">
                                                             <label className="form-label fw-semibold fs-6 text-center " style={{
-                                                                color:
-                                                                    "#39639D"
+                                                                color: "#39639D"
                                                             }}>
-                                                                Para confirmar a tua inscrição no curso <strong>{curso.nome}</strong> clica no botão abaixo
+                                                                {inscrito
+                                                                    ? `Tem a certeza que deseja cancelar a sua inscrição no curso ${curso.nome}?`
+                                                                    : `Para confirmar a tua inscrição no curso ${curso.nome} clica no botão abaixo`
+                                                                }
                                                             </label>
                                                         </div>
-
                                                     </form>
                                                 </div>
                                                 <div className="modal-footer d-flex justify-content-center">
-                                                    <button type="button" className="btn btn-primary botao" onClick={handleInscrever}>
-                                                        Inscrever
+                                                    <button
+                                                        type="button"
+                                                        className="btn btn-light px-4 me-3"
+                                                        onClick={e => {
+                                                            e.stopPropagation();
+                                                            setFadeOutSignUpModal(true);
+                                                            setTimeout(() => {
+                                                                setSignUpModalOpen(false);
+                                                                setFadeOutSignUpModal(false);
+                                                            }, 250);
+                                                        }}
+                                                    >
+                                                        Cancelar
                                                     </button>
-                                                    <button type="button" className="btn btn-light me-4" onClick={() =>
-                                                        setSignUpModalOpen(false)} > Cancelar
+                                                    <button
+                                                        type="button"
+                                                        className="btn px-4"
+                                                        style={{
+                                                            color: hoverInscrever ? (inscrito ? "#dc3545" : "#39639D") : "#fff",
+                                                            backgroundColor: hoverInscrever ? "#fff" : (inscrito ? "#dc3545" : "#39639D"),
+                                                            border: `1px solid ${inscrito ? "#dc3545" : "#39639D"}`,
+                                                            borderRadius: 12,
+                                                            transition: "background 0.2s, color 0.2s"
+                                                        }}
+                                                        onMouseEnter={() => setHoverInscrever(true)}
+                                                        onMouseLeave={() => setHoverInscrever(false)}
+                                                        onClick={e => {
+                                                            e.stopPropagation();
+                                                            if (inscrito) {
+                                                                handleDesinscrever();
+                                                            } else {
+                                                                handleInscrever();
+                                                            }
+                                                        }}
+                                                    >
+                                                        {inscrito ? "Desinscrever" : "Inscrever"}
                                                     </button>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                )} {/* MODAL DE SUCESSO */} {isSignUpSucessModalOpen && (
-                                    <div className="modal fade show" style={{
-                                        display: "block", background:
-                                            "rgba(57, 99, 157, 0.5)"
-                                    }}>
-                                        <div className="modal-dialog modal-dialog-centered" style={{
-                                            maxWidth:
-                                                550
-                                        }}>
+                                )}
+                                {/* MODAL DE SUCESSO */}
+                                {isSignUpSucessModalOpen && (
+                                    <div
+                                        className="modal fade show"
+                                        tabIndex={-1}
+                                        aria-modal="true"
+                                        role="dialog"
+                                        style={{
+                                            display: "block",
+                                            background: "rgba(57, 99, 157, 0.5)"
+                                        }}
+                                        onClick={closeSignUpSucessModal}
+                                    >
+                                        <div
+                                            className={`modal-dialog modal-dialog-centered ${fadeOutSignUpSucessModal ? "custom-fade-out" : "custom-fade-in"}`}
+                                            style={{ maxWidth: 550 }}
+                                            onClick={e => e.stopPropagation()}
+                                        >
                                             <div className="modal-content">
                                                 <div className="modal-body py-4">
                                                     <div className="d-flex flex-column align-items-center mb-3">
-                                                        <img src="/img/success_vector.svg" alt="Ícone de sucesso" />
+                                                        <img src="/img/success_vector.svg" alt="Ícone de sucesso" style={{ width: 64, height: 64 }} />
                                                         <h1 className="text-center fs-2 fw-bold mt-3">
                                                             Sucesso
                                                         </h1>
                                                     </div>
                                                     <p className="text-center fs-5">
-                                                        Inscrição realizada com sucesso!
+                                                        {isDesinscricaoAction ? "Desinscriçao realizada com sucesso!" : "Inscrição realizada com sucesso!"}
                                                     </p>
                                                 </div>
                                                 <div className="modal-footer justify-content-center py-3">
-                                                    <button type="button" className="btn btn-primary botao rounded" onClick={closeSignUpSucessModal}>
+                                                    <button
+                                                        type="button"
+                                                        className="btn btn-primary botao rounded"
+                                                        onClick={e => {
+                                                            e.stopPropagation();
+                                                            setFadeOutSignUpSucessModal(true);
+                                                            setTimeout(() => {
+                                                                setSignUpSucessModalOpen(false);
+                                                                setFadeOutSignUpSucessModal(false);
+                                                            }, 250);
+                                                        }}
+                                                    >
                                                         Continuar
                                                     </button>
                                                 </div>
@@ -249,33 +385,43 @@ const Curso = () => {
                         ) : (
                             aulasCurso.slice(0, 4).map((aula, idx) => (
                                 <div
-                                    className="container-fluid row mt-4 mb-4 p-0 ms-2"
+                                    className="container-fluid row mt-4 mb-4 p-0 ms-2 align-items-stretch"
                                     key={aula.id || idx}
                                     style={{ cursor: "pointer" }}
                                     onClick={() => navigate(`/verAula/${aula.id}`)}
                                 >
-                                    <div className="col-md-3 d-flex align-items-center">
+                                    <div className="col-12 col-md-3 d-flex align-items-center mb-3 mb-md-0">
                                         <img
-                                            className="rounded-4"
+                                            className="rounded-4 w-100"
                                             src={aula.imagem || "/img/video-curso.png"}
                                             alt={aula.tituloAssincrona}
-                                            style={{ cursor: "pointer" }}
+                                            style={{ objectFit: "cover", height: 140, minWidth: 0 }}
                                         />
                                     </div>
-                                    <div className="row col-md-9">
-                                        <div className="col-md-6 position-relative">
-                                            <h4 className="fw-bold" style={{ color: '#39639d' }}>
-                                                {aula.tituloAssincrona}
-                                            </h4>
-                                            <p style={{ color: '#39639d' }}>
-                                                {aula.descricaoAssincrona}
+                                    <div className="col-12 col-md-9 d-flex flex-column justify-content-between" style={{ minWidth: 0 }}>
+                                        <h4 className="fw-bold" style={{
+                                            color: '#39639d',
+                                            overflow: 'hidden',
+                                            textOverflow: 'ellipsis',
+                                            whiteSpace: 'nowrap'
+                                        }}>
+                                            {aula.tituloAssincrona}
+                                        </h4>
+                                        <p style={{
+                                            color: '#39639d',
+                                            overflow: 'hidden',
+                                            textOverflow: 'ellipsis',
+                                            display: '-webkit-box',
+                                            WebkitLineClamp: 3,
+                                            WebkitBoxOrient: 'vertical'
+                                        }}>
+                                            {aula.descricaoAssincrona}
+                                        </p>
+                                        <div className="d-flex align-items-center mt-auto">
+                                            <img className="me-2" src="/img/icon-laptop.png" alt="" />
+                                            <p className="grey-text mb-0">
+                                                {formatarData(aula.dataLancAssincrona) || "Duração não informada"}
                                             </p>
-                                            <div className="d-flex align-items-center position-absolute" style={{ bottom: 0 }}>
-                                                <img className="me-2" src="/img/icon-laptop.png" alt="" />
-                                                <p className="grey-text mb-0">
-                                                    {formatarData(aula.dataLancAssincrona) || "Duração não informada"}
-                                                </p>
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -283,6 +429,53 @@ const Curso = () => {
                         )}
                     </div>
                 </div>
+
+                {/* MODAL DE ERRO */}
+                {showErrorModal && (
+                    <div
+                        className="modal fade show"
+                        tabIndex={-1}
+                        aria-modal="true"
+                        role="dialog"
+                        style={{
+                            display: "block",
+                            background: "rgba(57, 99, 157, 0.5)"
+                        }}
+                        onClick={() => setShowErrorModal(false)}
+                    >
+                        <div
+                            className="modal-dialog modal-dialog-centered custom-fade-in"
+                            style={{ maxWidth: 550 }}
+                            onClick={e => e.stopPropagation()}
+                        >
+                            <div className="modal-content">
+                                <div className="modal-body py-4">
+                                    <div className="d-flex flex-column align-items-center mb-3">
+                                        <img src="/img/warning_vector.svg" alt="Ícone de Erro" style={{ width: 64, height: 64 }} />
+                                        <h1 className="text-center fs-2 fw-bold mt-3">
+                                            Erro
+                                        </h1>
+                                    </div>
+                                    <p className="text-center fs-5">
+                                        {errorMsg}
+                                    </p>
+                                </div>
+                                <div className="modal-footer justify-content-center py-3">
+                                    <button
+                                        type="button"
+                                        className="btn btn-voltar px-4"
+                                        onClick={e => {
+                                            e.stopPropagation();
+                                            setShowErrorModal(false);
+                                        }}
+                                    >
+                                        Fechar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
             </div >
         </>
     );

@@ -57,7 +57,7 @@ function GerirForum() {
 
     // Buscar fóruns
     useEffect(() => {
-        axios.get("http://localhost:3000/forum/list")
+        axios.get("https://pint-web-htw2.onrender.com/forum/list")
             .then(res => {
                 if (res.data.success) {
                     setForuns(res.data.data);
@@ -69,13 +69,13 @@ function GerirForum() {
 
     // Buscar categorias, áreas e tópicos ao iniciar
     useEffect(() => {
-        axios.get("http://localhost:3000/categoria/list")
+        axios.get("https://pint-web-htw2.onrender.com/categoria/list")
             .then(res => setCategorias(res.data.data || []))
             .catch(() => setCategorias([]));
-        axios.get("http://localhost:3000/area/list")
+        axios.get("https://pint-web-htw2.onrender.com/area/list")
             .then(res => setAreas(res.data.data || []))
             .catch(() => setAreas([]));
-        axios.get("http://localhost:3000/topico-curso/list")
+        axios.get("https://pint-web-htw2.onrender.com/topico-curso/list")
             .then(res => setTopicos(res.data.data || []))
             .catch(() => setTopicos([]));
     }, []);

@@ -128,33 +128,33 @@ function GerirCursoDetalhe() {
     };
 
     useEffect(() => {
-        axios.get(`http://localhost:3000/curso/get/${id}`)
+        axios.get(`https://pint-web-htw2.onrender.com/curso/get/${id}`)
             .then(res => setCurso(res.data.data))
             .catch(err => console.error("Erro ao buscar curso:", err));
         // Buscar categorias
-        axios.get("http://localhost:3000/categoria/list")
+        axios.get("https://pint-web-htw2.onrender.com/categoria/list")
             .then(res => setCategorias(res.data.data || []))
             .catch(() => setCategorias([]));
 
         // Buscar áreas
-        axios.get("http://localhost:3000/area/list")
+        axios.get("https://pint-web-htw2.onrender.com/area/list")
             .then(res => setAreas(res.data.data || []))
             .catch(() => setAreas([]));
 
         // Buscar tópicos
-        axios.get("http://localhost:3000/topico-curso/list")
+        axios.get("https://pint-web-htw2.onrender.com/topico-curso/list")
             .then(res => setTopicos(res.data.data || []))
             .catch(() => setTopicos([]));
 
         // Buscar formadores (role = 'formador')
-        axios.get("http://localhost:3000/utilizador/list")
+        axios.get("https://pint-web-htw2.onrender.com/utilizador/list")
             .then(res => {
                 const lista = (res.data.data || []).filter(u => u.role === "formador");
                 setFormadores(lista);
             })
             .catch(() => setFormadores([]));
 
-        axios.get(`http://localhost:3000/inscricao/curso/${id}`)
+        axios.get(`https://pint-web-htw2.onrender.com/inscricao/curso/${id}`)
         .then(res => {
                 const inscritos = (res.data.data || [])
                     .map(insc => insc.UTILIZADOR)
@@ -200,7 +200,7 @@ function GerirCursoDetalhe() {
         try {
             // Atualiza os dados do curso
             await axios.put(
-                `http://localhost:3000/curso/update/${curso.id}`,
+                `https://pint-web-htw2.onrender.com/curso/update/${curso.id}`,
                 {
                     nome,
                     descricaoCurso,
@@ -222,7 +222,7 @@ function GerirCursoDetalhe() {
                 const formData = new FormData();
                 formData.append("imagem-banner", novaImagem);
                 await axios.post(
-                    `http://localhost:3000/curso/upload-imagem-banner/${curso.id}`,
+                    `https://pint-web-htw2.onrender.com/curso/upload-imagem-banner/${curso.id}`,
                     formData,
                     { headers: { ...authHeader(), "Content-Type": "multipart/form-data" } }
                 );
@@ -250,7 +250,7 @@ function GerirCursoDetalhe() {
     const handleDeleteCurso = async () => {
         if (!cursoParaRemover) return;
         try {
-            await axios.delete(`http://localhost:3000/curso/delete/${id}`, {
+            await axios.delete(`https://pint-web-htw2.onrender.com/curso/delete/${id}`, {
                 headers: authHeader()
             });
             setShowDeleteModal(false);
@@ -391,7 +391,7 @@ function GerirCursoDetalhe() {
                                                 </div>
                                                 <div className="col-md-3">
                                                     <label htmlFor="formador" className="form-label">
-                                                        Formador - se aplicável
+                                                        Formador
                                                     </label>
                                                     <Select
                                                         id="formador"

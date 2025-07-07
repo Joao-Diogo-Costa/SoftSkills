@@ -121,27 +121,27 @@ function GerirConteudoCurso() {
 
     useEffect(() => {
         // Carregar dados do curso
-        axios.get(`http://localhost:3000/curso/get/${id}`,
+        axios.get(`https://pint-web-htw2.onrender.com/curso/get/${id}`,
             { headers: authHeader() })
             .then(res => setCurso(res.data.data));
 
         // Carregar conteudo
-        axios.get(`http://localhost:3000/curso/${id}/conteudo`,
+        axios.get(`https://pint-web-htw2.onrender.com/curso/${id}/conteudo`,
             { headers: authHeader() })
             .then(res => setConteudo(res.data.data || []));
 
         // Carregar tarefas
-        axios.get(`http://localhost:3000/curso/${id}/tarefa`,
+        axios.get(`https://pint-web-htw2.onrender.com/curso/${id}/tarefa`,
             { headers: authHeader() })
             .then(res => setTarefas(res.data.data || []));
 
         // Carregar avisos
-        axios.get(`http://localhost:3000/curso/${id}/aviso`,
+        axios.get(`https://pint-web-htw2.onrender.com/curso/${id}/aviso`,
             { headers: authHeader() })
             .then(res => setAvisos(res.data.data || []));
 
         // Carregar membros
-        axios.get(`http://localhost:3000/inscricao/curso/${id}`, { headers: authHeader() })
+        axios.get(`https://pint-web-htw2.onrender.com/inscricao/curso/${id}`, { headers: authHeader() })
             .then(res => {
                 const inscritos = (res.data.data || [])
                     .map(insc => insc.UTILIZADOR)
@@ -158,7 +158,7 @@ function GerirConteudoCurso() {
         try {
             // 1. Criar o conteúdo
             const res = await axios.post(
-                "http://localhost:3000/conteudo/create",
+                "https://pint-web-htw2.onrender.com/conteudo/create",
                 { ...novoConteudo, cursoId: id },
                 { headers: authHeader() }
             );
@@ -171,7 +171,7 @@ function GerirConteudoCurso() {
                     formData.append("ficheiros", file);
                 }
                 await axios.post(
-                    `http://localhost:3000/conteudo-ficheiro/${conteudoId}/ficheiros`,
+                    `https://pint-web-htw2.onrender.com/conteudo-ficheiro/${conteudoId}/ficheiros`,
                     formData,
                     {
                         headers: {
@@ -183,7 +183,7 @@ function GerirConteudoCurso() {
             }
 
             // 3. Atualizar lista de conteúdos
-            axios.get(`http://localhost:3000/curso/${id}/conteudo`, { headers: authHeader() })
+            axios.get(`https://pint-web-htw2.onrender.com/curso/${id}/conteudo`, { headers: authHeader() })
                 .then(res => setConteudo(res.data.data || []));
 
             setShowModal(false);
@@ -227,7 +227,7 @@ function GerirConteudoCurso() {
         try {
             // Atualizar dados do conteúdo
             await axios.put(
-                `http://localhost:3000/conteudo/update/${conteudoEditar.id}`,
+                `https://pint-web-htw2.onrender.com/conteudo/update/${conteudoEditar.id}`,
                 {
                     titulo: conteudoEditar.titulo,
                     descricao: conteudoEditar.descricao,
@@ -243,7 +243,7 @@ function GerirConteudoCurso() {
                     formData.append("ficheiros", file);
                 }
                 await axios.post(
-                    `http://localhost:3000/conteudo-ficheiro/${conteudoEditar.id}/ficheiros`,
+                    `https://pint-web-htw2.onrender.com/conteudo-ficheiro/${conteudoEditar.id}/ficheiros`,
                     formData,
                     {
                         headers: {
@@ -255,7 +255,7 @@ function GerirConteudoCurso() {
             }
 
             // Atualizar lista de conteúdos
-            const res = await axios.get(`http://localhost:3000/curso/${id}/conteudo`, { headers: authHeader() });
+            const res = await axios.get(`https://pint-web-htw2.onrender.com/curso/${id}/conteudo`, { headers: authHeader() });
             setConteudo(res.data.data || []);
 
             setShowEditModal(false);
@@ -289,7 +289,7 @@ function GerirConteudoCurso() {
     // Eliminar conteúdo
     async function handleDeleteConteudo() {
         try {
-            await axios.delete(`http://localhost:3000/conteudo/delete/${conteudoAEliminar}`, { headers: authHeader() });
+            await axios.delete(`https://pint-web-htw2.onrender.com/conteudo/delete/${conteudoAEliminar}`, { headers: authHeader() });
             setConteudo(conteudo => conteudo.filter(c => c.id !== conteudoAEliminar));
             setShowDeleteModal(false);
             setShowSuccessModal(true);
@@ -309,7 +309,7 @@ function GerirConteudoCurso() {
     async function handleDeleteFicheiro() {
         try {
             await axios.delete(
-                `http://localhost:3000/conteudo-ficheiro/ficheiro/${ficheiroAEliminar.ficheiroId}`,
+                `https://pint-web-htw2.onrender.com/conteudo-ficheiro/ficheiro/${ficheiroAEliminar.ficheiroId}`,
                 { headers: authHeader() }
             );
             setConteudo(conteudo =>
@@ -348,7 +348,7 @@ function GerirConteudoCurso() {
             // 1. Criar a tarefa
             const user = JSON.parse(localStorage.getItem("user"));
             const res = await axios.post(
-                "http://localhost:3000/tarefa/create",
+                "https://pint-web-htw2.onrender.com/tarefa/create",
                 {
                     ...novaTarefa,
                     cursoId: id,
@@ -365,7 +365,7 @@ function GerirConteudoCurso() {
                     formData.append("ficheiros", file);
                 }
                 await axios.post(
-                    `http://localhost:3000/tarefa-ficheiro/${tarefaId}/ficheiro`,
+                    `https://pint-web-htw2.onrender.com/tarefa-ficheiro/${tarefaId}/ficheiro`,
                     formData,
                     {
                         headers: {
@@ -377,7 +377,7 @@ function GerirConteudoCurso() {
             }
 
             // 3. Atualizar lista de tarefas
-            axios.get(`http://localhost:3000/curso/${id}/tarefa`, { headers: authHeader() })
+            axios.get(`https://pint-web-htw2.onrender.com/curso/${id}/tarefa`, { headers: authHeader() })
                 .then(res => setTarefas(res.data.data || []));
 
             setShowTarefaModal(false);
@@ -421,7 +421,7 @@ function GerirConteudoCurso() {
         try {
             // Atualizar dados da tarefa
             await axios.put(
-                `http://localhost:3000/tarefa/update/${tarefaEditar.id}`,
+                `https://pint-web-htw2.onrender.com/tarefa/update/${tarefaEditar.id}`,
                 {
                     titulo: tarefaEditar.titulo,
                     descricao: tarefaEditar.descricao,
@@ -437,7 +437,7 @@ function GerirConteudoCurso() {
                     formData.append("ficheiros", file);
                 }
                 await axios.post(
-                    `http://localhost:3000/tarefa-ficheiro/${tarefaEditar.id}/ficheiro`,
+                    `https://pint-web-htw2.onrender.com/tarefa-ficheiro/${tarefaEditar.id}/ficheiro`,
                     formData,
                     {
                         headers: {
@@ -449,7 +449,7 @@ function GerirConteudoCurso() {
             }
 
             // Atualizar lista de tarefas
-            const res = await axios.get(`http://localhost:3000/curso/${id}/tarefa`, { headers: authHeader() });
+            const res = await axios.get(`https://pint-web-htw2.onrender.com/curso/${id}/tarefa`, { headers: authHeader() });
             setTarefas(res.data.data || []);
 
             setShowEditTarefaModal(false);
@@ -482,7 +482,7 @@ function GerirConteudoCurso() {
     // Eliminar tarefa
     async function handleDeleteTarefa() {
         try {
-            await axios.delete(`http://localhost:3000/tarefa/delete/${tarefaAEliminar}`, { headers: authHeader() });
+            await axios.delete(`https://pint-web-htw2.onrender.com/tarefa/delete/${tarefaAEliminar}`, { headers: authHeader() });
             setTarefas(tarefas => tarefas.filter(t => t.id !== tarefaAEliminar));
             setShowDeleteTarefaModal(false);
             setShowSuccessTarefaModal(true);
@@ -502,7 +502,7 @@ function GerirConteudoCurso() {
     async function handleDeleteTarefaFicheiro() {
         try {
             await axios.delete(
-                `http://localhost:3000/tarefa-ficheiro/ficheiro/${tarefaFicheiroAEliminar.ficheiroId}`,
+                `https://pint-web-htw2.onrender.com/tarefa-ficheiro/ficheiro/${tarefaFicheiroAEliminar.ficheiroId}`,
                 { headers: authHeader() }
             );
             setTarefas(tarefas =>
@@ -540,7 +540,7 @@ function GerirConteudoCurso() {
         try {
             const user = JSON.parse(localStorage.getItem("user"));
             await axios.post(
-                "http://localhost:3000/aviso/create",
+                "https://pint-web-htw2.onrender.com/aviso/create",
                 {
                     ...novoAviso,
                     cursoId: id,
@@ -552,7 +552,7 @@ function GerirConteudoCurso() {
 
             // Atualizar lista de avisos (tente, mas não mostre erro se falhar)
             try {
-                const res = await axios.get(`http://localhost:3000/curso/${id}/aviso`, { headers: authHeader() });
+                const res = await axios.get(`https://pint-web-htw2.onrender.com/curso/${id}/aviso`, { headers: authHeader() });
                 setAvisos(res.data.data || []);
             } catch (err) {
                 // Silencie o erro, pois o aviso já foi criado
@@ -582,7 +582,7 @@ function GerirConteudoCurso() {
         setLoadingEditAviso(true);
         try {
             await axios.put(
-                `http://localhost:3000/aviso/update/${avisoEditar.id}`,
+                `https://pint-web-htw2.onrender.com/aviso/update/${avisoEditar.id}`,
                 {
                     titulo: avisoEditar.titulo,
                     descricao: avisoEditar.descricao,
@@ -591,7 +591,7 @@ function GerirConteudoCurso() {
             );
 
             // Atualizar lista de avisos
-            const res = await axios.get(`http://localhost:3000/aviso/list?cursoId=${id}`, { headers: authHeader() });
+            const res = await axios.get(`https://pint-web-htw2.onrender.com/aviso/list?cursoId=${id}`, { headers: authHeader() });
             setAvisos(res.data.data || []);
 
             setShowEditAvisoModal(false);
@@ -623,7 +623,7 @@ function GerirConteudoCurso() {
     // Eliminar aviso
     async function handleDeleteAviso() {
         try {
-            await axios.delete(`http://localhost:3000/aviso/delete/${avisoAEliminar}`, { headers: authHeader() });
+            await axios.delete(`https://pint-web-htw2.onrender.com/aviso/delete/${avisoAEliminar}`, { headers: authHeader() });
             setAvisos(avisos => avisos.filter(a => a.id !== avisoAEliminar));
             setShowDeleteAvisoModal(false);
             setShowSuccessAvisoModal(true);
@@ -639,7 +639,7 @@ function GerirConteudoCurso() {
         setShowNotasModal(true);
         try {
             const res = await axios.get(
-                `http://localhost:3000/curso/${id}/utilizador/${membro.id}/notas-tarefas`,
+                `https://pint-web-htw2.onrender.com/curso/${id}/utilizador/${membro.id}/notas-tarefas`,
                 { headers: authHeader() }
             );
             setNotasMembro(res.data.data);
@@ -669,7 +669,7 @@ function GerirConteudoCurso() {
         try {
             // 1. Buscar a inscrição do membro neste curso
             const res = await axios.get(
-                `http://localhost:3000/inscricao/curso/${id}`,
+                `https://pint-web-htw2.onrender.com/inscricao/curso/${id}`,
                 { headers: authHeader() }
             );
             // Encontrar a inscrição correta
@@ -684,7 +684,7 @@ function GerirConteudoCurso() {
 
             // 2. Atualizar a nota final via PUT
             await axios.put(
-                `http://localhost:3000/inscricao/update/${inscricao.id}`,
+                `https://pint-web-htw2.onrender.com/inscricao/update/${inscricao.id}`,
                 { notaFinal: Number(notaFinal) },
                 { headers: authHeader() }
             );

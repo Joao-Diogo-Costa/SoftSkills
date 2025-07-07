@@ -14,6 +14,7 @@ import Curso from "./Views/curso";
 import VerAula from "./Views/verAula";
 import CursoSincrono from "./Views/cursoSincrono";
 import RedirectIfAuth from './Views/RedirectIfAuth';
+import ResetPassword from './Views/ResetPassword';
 import AuthService from "./Views/auth.service";
 import './App.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
@@ -71,8 +72,9 @@ import PerfilUtilizador from './Views/admin/PerfilUtilizador';
         <Routes>
           <Route path="/" element={<RedirectIfAuth><NavbarLayout><MainView /></NavbarLayout></RedirectIfAuth>} />
           <Route path="/paginaInicial" element={<NavbarLayout><PaginaInicial /></NavbarLayout>} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signUp" element={<SignUp />} />
+          <Route path="/login" element={<RedirectIfAuth><Login /></RedirectIfAuth>} />
+          <Route path="/signUp" element={<RedirectIfAuth><SignUp /></RedirectIfAuth>} />
+          <Route path="/reset-password/:token" element={<ResetPassword />} />
           <Route path="/perfil" element={<NavbarLayout><Perfil /></NavbarLayout>} />
           <Route path="/categorias" element={<NavbarLayout><Categorias /></NavbarLayout>} />
           <Route path="/foruns" element={<NavbarLayout><Foruns /></NavbarLayout>} />

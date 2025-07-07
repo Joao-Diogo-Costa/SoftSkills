@@ -6,7 +6,6 @@ import { Modal } from 'bootstrap';
 import "bootstrap/dist/css/bootstrap.min.css";
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import "../../assets/admin/css/style.css"
-
 import authHeader from '../auth.header';
 
 
@@ -68,7 +67,7 @@ function GerirUtilizador() {
         if (!utilizadorParaRemover) return;
         try {
             await axios.delete(
-                `http://localhost:3000/utilizador/delete/${utilizadorParaRemover}`,
+                `https://pint-web-htw2.onrender.com/utilizador/delete/${utilizadorParaRemover}`,
                 { headers: authHeader() }
             );
             setUtilizadores(utilizadores.filter(u => u.id !== utilizadorParaRemover));
@@ -135,7 +134,7 @@ function GerirUtilizador() {
         }
         try {
             await axios.put(
-                `http://localhost:3000/utilizador/update/${utilizadorParaEditar.id}`,
+                `https://pint-web-htw2.onrender.com/utilizador/update/${utilizadorParaEditar.id}`,
                 {
                     nomeUtilizador: editData.nomeUtilizador,
                     role: editData.role,
@@ -150,14 +149,14 @@ function GerirUtilizador() {
                 formData.append("imagem-perfil", imagemEditFile);
                 formData.append("id", utilizadorParaEditar.id);
                 await axios.post(
-                    "http://localhost:3000/utilizador/upload-imagem-perfil",
+                    "https://pint-web-htw2.onrender.com/utilizador/upload-imagem-perfil",
                     formData,
                     { headers: { ...authHeader(), "Content-Type": "multipart/form-data" } }
                 );
             }
 
             // Atualizar lista de utilizadores
-            const res = await axios.get("http://localhost:3000/utilizador/list");
+            const res = await axios.get("https://pint-web-htw2.onrender.com/utilizador/list");
             if (res.data.success) setUtilizadores(res.data.data);
             handleCloseEditModal();
             setImagemEditFile(null);
@@ -200,7 +199,7 @@ function GerirUtilizador() {
         }
 
         try {
-            const res = await axios.post("http://localhost:3000/utilizador/create", {
+            const res = await axios.post("https://pint-web-htw2.onrender.com/utilizador/create", {
                 nomeUtilizador: novoUtilizador.nomeUtilizador,
                 email: novoUtilizador.email,
                 password: novoUtilizador.password,
@@ -223,7 +222,7 @@ function GerirUtilizador() {
                 });
 
                 // Atualizar lista de utilizadores
-                axios.get("http://localhost:3000/utilizador/list")
+                axios.get("https://pint-web-htw2.onrender.com/utilizador/list")
                     .then(res => {
                         if (res.data.success) setUtilizadores(res.data.data);
                     });
@@ -257,7 +256,7 @@ function GerirUtilizador() {
 
 
     useEffect(() => {
-        axios.get("http://localhost:3000/utilizador/list")
+        axios.get("https://pint-web-htw2.onrender.com/utilizador/list")
             .then(res => {
                 if (res.data.success) setUtilizadores(res.data.data);
             })
@@ -899,6 +898,8 @@ function GerirUtilizador() {
                     </div>
                 </div>
             </div>
+
+            
         </>
 
 

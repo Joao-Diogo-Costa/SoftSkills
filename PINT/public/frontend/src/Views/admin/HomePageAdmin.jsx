@@ -18,7 +18,7 @@ function HomePageAdmin() {
   });
 
   useEffect(() => {
-    axios.get('http://localhost:3000/estatistica/list')
+    axios.get('https://pint-web-htw2.onrender.com/estatistica/list')
       .then(response => {
         setEstatisticas(response.data);
       })

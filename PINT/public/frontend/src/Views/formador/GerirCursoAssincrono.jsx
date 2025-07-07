@@ -42,15 +42,15 @@ function GerirCursoAssincrono() {
 
     useEffect(() => {
         // Carregar dados do curso
-        axios.get(`http://localhost:3000/curso/get/${id}`, { headers: authHeader() })
+        axios.get(`https://pint-web-htw2.onrender.com/curso/get/${id}`, { headers: authHeader() })
             .then(res => setCurso(res.data.data));
 
         // Carregar aulas assincronas
-        axios.get(`http://localhost:3000/aula-assincrona/curso/${id}`, { headers: authHeader() })
+        axios.get(`https://pint-web-htw2.onrender.com/aula-assincrona/curso/${id}`, { headers: authHeader() })
             .then(res => setAulas(res.data.data || []));
 
         // Carregar membros
-        axios.get(`http://localhost:3000/inscricao/curso/${id}`, { headers: authHeader() })
+        axios.get(`https://pint-web-htw2.onrender.com/inscricao/curso/${id}`, { headers: authHeader() })
             .then(res => {
                 console.log("Inscritos recebidos:", res.data.data);
                 const inscritos = (res.data.data || [])
@@ -69,7 +69,7 @@ function GerirCursoAssincrono() {
             // 1. Criar a aula
             const user = JSON.parse(localStorage.getItem("user"));
             const res = await axios.post(
-                "http://localhost:3000/aula-assincrona/create",
+                "https://pint-web-htw2.onrender.com/aula-assincrona/create",
                 {
                     ...novaAula,
                     cursoId: id,
@@ -85,7 +85,7 @@ function GerirCursoAssincrono() {
                     formData.append("ficheiros", file);
                 }
                 await axios.post(
-                    `http://localhost:3000/documento-aula/${aulaId}/ficheiros`,
+                    `https://pint-web-htw2.onrender.com/documento-aula/${aulaId}/ficheiros`,
                     formData,
                     {
                         headers: {
@@ -97,7 +97,7 @@ function GerirCursoAssincrono() {
             }
 
             // 3. Atualizar lista de aulas
-            const aulasRes = await axios.get(`http://localhost:3000/aula-assincrona/curso/${id}`, { headers: authHeader() });
+            const aulasRes = await axios.get(`https://pint-web-htw2.onrender.com/aula-assincrona/curso/${id}`, { headers: authHeader() });
             setAulas(aulasRes.data.data || []);
 
             // 4. Forçar atualização dos ficheiros da nova aula (para DocumentosAula)
@@ -146,7 +146,7 @@ function GerirCursoAssincrono() {
         try {
             // Atualizar dados da aula
             await axios.put(
-                `http://localhost:3000/aula-assincrona/update/${aulaEditar.id}`,
+                `https://pint-web-htw2.onrender.com/aula-assincrona/update/${aulaEditar.id}`,
                 {
                     tituloAssincrona: aulaEditar.tituloAssincrona,
                     descricaoAssincrona: aulaEditar.descricaoAssincrona,
@@ -163,7 +163,7 @@ function GerirCursoAssincrono() {
                     formData.append("ficheiros", file);
                 }
                 await axios.post(
-                    `http://localhost:3000/documento-aula/${aulaEditar.id}/ficheiros`,
+                    `https://pint-web-htw2.onrender.com/documento-aula/${aulaEditar.id}/ficheiros`,
                     formData,
                     {
                         headers: {
@@ -175,7 +175,7 @@ function GerirCursoAssincrono() {
             }
 
             // Atualizar lista de aulas
-            const res = await axios.get(`http://localhost:3000/aula-assincrona/curso/${id}`, { headers: authHeader() });
+            const res = await axios.get(`https://pint-web-htw2.onrender.com/aula-assincrona/curso/${id}`, { headers: authHeader() });
             setAulas(res.data.data || []);
 
             // Forçar atualização dos ficheiros da aula editada (para DocumentosAula)
@@ -212,7 +212,7 @@ function GerirCursoAssincrono() {
     // Eliminar aula
     async function handleDeleteAula() {
         try {
-            await axios.delete(`http://localhost:3000/aula-assincrona/delete/${aulaAEliminar}`, { headers: authHeader() });
+            await axios.delete(`https://pint-web-htw2.onrender.com/aula-assincrona/delete/${aulaAEliminar}`, { headers: authHeader() });
             setAulas(aulas => aulas.filter(a => a.id !== aulaAEliminar));
             setShowDeleteModal(false);
             setShowSuccessModal(true);
@@ -686,7 +686,7 @@ function DocumentosAula({ aulaId, refresh }) {
     const [ficheiroAEliminar, setFicheiroAEliminar] = useState(null);
 
     useEffect(() => {
-        axios.get(`http://localhost:3000/documento-aula/${aulaId}/ficheiros`, { headers: authHeader() })
+        axios.get(`https://pint-web-htw2.onrender.com/documento-aula/${aulaId}/ficheiros`, { headers: authHeader() })
             .then(res => setDocumentos(res.data.ficheiros || []));
     }, [aulaId, refresh]);
 
@@ -700,7 +700,7 @@ function DocumentosAula({ aulaId, refresh }) {
     const handleDeleteFicheiro = async () => {
         setRemovendoId(ficheiroAEliminar);
         try {
-            await axios.delete(`http://localhost:3000/documento-aula/ficheiro/${ficheiroAEliminar}`, { headers: authHeader() });
+            await axios.delete(`https://pint-web-htw2.onrender.com/documento-aula/ficheiro/${ficheiroAEliminar}`, { headers: authHeader() });
             setDocumentos(docs => docs.filter(doc => doc.id !== ficheiroAEliminar));
             setShowDeleteFicheiroModal(false);
             setShowSuccessFicheiroModal(true);

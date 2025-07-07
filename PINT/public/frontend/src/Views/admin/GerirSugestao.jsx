@@ -22,7 +22,7 @@ function GerirSugestao() {
     const [modalFadeOut, setModalFadeOut] = useState(false);
     const navigate = useNavigate();
     useEffect(() => {
-        axios.get("http://localhost:3000/sugestao-topico/list")
+        axios.get("https://pint-web-htw2.onrender.com/sugestao-topico/list")
             .then(res => {
                 if (res.data.success) setSugestoes(res.data.data);
                 else setSugestoes([]);
@@ -53,7 +53,7 @@ function GerirSugestao() {
         if (!sugestaoParaApagar) return;
         try {
             await axios.delete(
-                `http://localhost:3000/sugestao-topico/delete/${sugestaoParaApagar.id}`,
+                `https://pint-web-htw2.onrender.com/sugestao-topico/delete/${sugestaoParaApagar.id}`,
                 { headers: authHeader() }
             );
             setSugestoes(sugestoes.filter(s => s.id !== sugestaoParaApagar.id));

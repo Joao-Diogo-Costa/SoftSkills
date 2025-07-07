@@ -4,7 +4,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "../assets/login.css";
 import authHeader from "./auth.header";
-import Modal from "react-bootstrap/Modal"; // Se usares Bootstrap Modal
+import Modal from "react-bootstrap/Modal";
 
 
 const Login = () => {
@@ -26,7 +26,7 @@ const Login = () => {
     setForgotMsg("");
     setForgotLoading(true);
     try {
-      const response = await fetch("http://localhost:3000/auth/forgot-password", {
+      const response = await fetch("https://pint-web-htw2.onrender.com/auth/forgot-password", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: forgotEmail }),
@@ -67,7 +67,7 @@ const Login = () => {
     e.preventDefault();
     setErro("");
     try {
-      const response = await fetch("http://localhost:3000/auth/login", {
+      const response = await fetch("https://pint-web-htw2.onrender.com/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
@@ -96,7 +96,7 @@ const Login = () => {
       return;
     }
     try {
-      const response = await fetch("http://localhost:3000/auth/forceUpdatePassword", {
+      const response = await fetch("https://pint-web-htw2.onrender.com/auth/forceUpdatePassword", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -124,10 +124,38 @@ const Login = () => {
           document.title = "Login / SoftSkills";
   }, []);
 
+  useEffect(() => {
+    if (window.FinisherHeader) {
+      new window.FinisherHeader({
+        selector: ".finisher-header", 
+        count: 75,
+        size: { min: 2, max: 8, pulse: 0 },
+        speed: { x: { min: 0, max: 0.4 }, y: { min: 0, max: 0.6 } },
+        colors: {
+          background: "transparent",
+          particles: ["#ffffff", "#d7f3fe", "#0072ff"]
+        },
+        blending: "overlay",
+        opacity: { center: 1, edge: 0 },
+        skew: -2,
+        shapes: ["c"]
+      });
+    }
+  }, []);
+
   return (
     <>
-      
-      <div className="container d-flex justify-content-center align-items-center vh-100">
+    <div className="finisher-header" style={{ position: "fixed", inset: 0, width: "100vw", height: "100vh", zIndex: 0 }}>
+      <div className="animated-logo">
+        <img
+          src="/img/Logo.png"
+          alt="Logo"
+          style={{ width: "100%", height: "auto", display: "block" }}
+        />
+      </div>
+    </div>
+
+      <div className="container d-flex justify-content-center align-items-center vh-100" style={{ position: "relative", zIndex: 1 }}>
         <div className="form-box p-4 bg-white rounded shadow text-center">
           {!mustChangePassword ? (
             <form onSubmit={handleLogin}>

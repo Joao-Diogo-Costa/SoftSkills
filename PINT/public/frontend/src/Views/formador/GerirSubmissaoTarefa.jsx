@@ -19,14 +19,14 @@ function GerirSubmissaoTarefa() {
             try {
                 // Buscar dados da tarefa
                 const tarefaRes = await axios.get(
-                    `http://localhost:3000/tarefa/get/${tarefaId}`,
+                    `https://pint-web-htw2.onrender.com/tarefa/get/${tarefaId}`,
                     { headers: authHeader() }
                 );
                 setTarefa(tarefaRes.data.data);
 
                 // Buscar submissões dos alunos
                 const subRes = await axios.get(
-                    `http://localhost:3000/submissao-tarefa/por-tarefa/${tarefaId}`,
+                    `https://pint-web-htw2.onrender.com/submissao-tarefa/por-tarefa/${tarefaId}`,
                     { headers: authHeader() }
                 );
                 setSubmissoes(subRes.data.data || []);
@@ -49,7 +49,7 @@ function GerirSubmissaoTarefa() {
         if (!submissaoSelecionada) return;
         try {
             await axios.put(
-                `http://localhost:3000/submissao-tarefa/${submissaoSelecionada.id}/nota`,
+                `https://pint-web-htw2.onrender.com/submissao-tarefa/${submissaoSelecionada.id}/nota`,
                 { nota: notaAtual },
                 { headers: authHeader() }
             );

@@ -25,7 +25,7 @@ const VerAula = () => {
 
     useEffect(() => {
         setLoading(true);
-        axios.get(`http://localhost:3000/aula-assincrona/get/${aulaId}`)
+        axios.get(`https://pint-web-htw2.onrender.com/aula-assincrona/get/${aulaId}`)
             .then(res => {
                 if (res.data.success) {
                     setAula(res.data.data);
@@ -34,7 +34,7 @@ const VerAula = () => {
                     const user = JSON.parse(localStorage.getItem("user"));
                     if (user) {
                         axios.get(
-                            `http://localhost:3000/progresso-aula/concluida/${user.id}/${res.data.data.id}`,
+                            `https://pint-web-htw2.onrender.com/progresso-aula/concluida/${user.id}/${res.data.data.id}`,
                             { headers: authHeader() }
                         ).then(resp => {
                             setMarcada(resp.data.concluida === true);
@@ -45,7 +45,7 @@ const VerAula = () => {
                     // Buscar percentagem de progresso do curso
                     if (user && res.data.data.cursoId) {
                         axios.get(
-                            `http://localhost:3000/progresso-aula/progresso/${user.id}/${res.data.data.cursoId}`,
+                            `https://pint-web-htw2.onrender.com/progresso-aula/progresso/${user.id}/${res.data.data.cursoId}`,
                             { headers: authHeader() }
                         ).then(resp => {
                             if (resp.data.success) {
@@ -57,7 +57,7 @@ const VerAula = () => {
                     }
 
                     return axios.get(
-                        `http://localhost:3000/aula-assincrona/curso/${res.data.data.cursoId}`,
+                        `https://pint-web-htw2.onrender.com/aula-assincrona/curso/${res.data.data.cursoId}`,
                         { headers: { ...authHeader() } }
                     );
                 } else {
@@ -78,7 +78,7 @@ const VerAula = () => {
         setMarcarMsg("");
         try {
             const res = await axios.post(
-                `http://localhost:3000/progresso-aula/marcar-aula-concluida/${aulaId}`,
+                `https://pint-web-htw2.onrender.com/progresso-aula/marcar-aula-concluida/${aulaId}`,
                 {},
                 { headers: authHeader() }
             );
@@ -97,7 +97,7 @@ const VerAula = () => {
     const handleVerDocumentos = () => {
         setShowModal(true);
         axios.get(
-            `http://localhost:3000/documento-aula/${aulaId}/ficheiros`,
+            `https://pint-web-htw2.onrender.com/documento-aula/${aulaId}/ficheiros`,
             { headers: authHeader() }
         )
             .then(res => {
@@ -110,21 +110,6 @@ const VerAula = () => {
             .catch(() => setDocumentos([]));
     };
 
-    if (loading) {
-        return (
-            <div className="container2 mt-5 text-center">
-                <div className="spinner-border text-primary" role="status" />
-            </div>
-        );
-    }
-
-    if (!aula) {
-        return (
-            <div className="container2 mt-5 text-center">
-                <p className="text-danger">Aula não encontrada.</p>
-            </div>
-        );
-    }
 
     function userCanDelete(doc) {
         const user = JSON.parse(localStorage.getItem("user"));
@@ -146,6 +131,23 @@ const VerAula = () => {
     useEffect(() => {
         document.title = "Aula / SoftSkills";
     }, []);
+
+
+    if (loading) {
+        return (
+            <div className="container2 mt-5 text-center">
+                <div className="spinner-border text-primary" role="status" />
+            </div>
+        );
+    }
+
+    if (!aula) {
+        return (
+            <div className="container2 mt-5 text-center">
+                <p className="text-danger">Aula não encontrada.</p>
+            </div>
+        );
+    }
 
     return (
         <>
@@ -255,7 +257,7 @@ const VerAula = () => {
                                                         Ver ficheiro
                                                     </a>
                                                     {userCanDelete(doc) && (
-                                                        <button className="btn btn-sm btn-danger ms-2" onClick={() => handleDeleteDocumento(doc.id)}>
+                                                        <button className="btn btn-sm btn-danger ms-2">
                                                             <i className="bi bi-trash"></i>
                                                         </button>
                                                     )}
