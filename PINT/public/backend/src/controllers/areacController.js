@@ -6,7 +6,6 @@ const controllers = {};
 // Listar area
 controllers.area_list = async (req, res) => {
   try {
-    console.log("Entrou em area_list");
     const area = await AreaC.findAll({
       include: [CategoriaC],
       order: [["id", "ASC"]],
