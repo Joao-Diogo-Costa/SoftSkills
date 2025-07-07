@@ -60,7 +60,7 @@ const Login = () => {
     } else {
       navigate("/paginaInicial");
     }
-    window.location.reload();
+    //window.location.reload();
   };
 
   const handleLogin = async (e) => {
