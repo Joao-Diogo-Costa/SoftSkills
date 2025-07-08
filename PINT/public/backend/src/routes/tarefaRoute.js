@@ -17,6 +17,6 @@ router.post("/create", middleware.checkToken, middleware.authorize(['gestor', 'f
 router.put("/update/:id", middleware.checkToken, middleware.authorize(['gestor', 'formador']), tarefaController.tarefa_update);
 
 // DELETE: Remover tarefa
-router.delete("/delete/:id", middleware.authorize(['gestor', 'formador']),  middleware.checkToken, tarefaController.tarefa_delete);
+router.delete("/delete/:id",  middleware.checkToken, middleware.authorize(['gestor', 'formador']), tarefaController.tarefa_delete);
 
 module.exports = router;
