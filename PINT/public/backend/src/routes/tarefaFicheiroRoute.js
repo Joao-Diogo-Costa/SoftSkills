@@ -9,7 +9,7 @@ const upload = require("../config/multerConfig");
 router.get("/:tarefaId/ficheiro", middleware.checkToken, tarefaFicheiroController.listarFicheirosTarefa);
 
 // Upload de ficheiros de enunciado da tarefa (formador)
-router.post("/:tarefaId/ficheiro", middleware.authorize(['gestor', 'formador']), middleware.checkToken, upload.array("ficheiros"), tarefaFicheiroController.uploadTarefaFicheiro);
+router.post("/:tarefaId/ficheiro", middleware.checkToken, middleware.authorize(['gestor', 'formador']), upload.array("ficheiros"), tarefaFicheiroController.uploadTarefaFicheiro);
 
 // Eliminar ficheiro de enunciado da tarefa
 router.delete("/ficheiro/:fileId", middleware.checkToken, middleware.authorize(['gestor', 'formador']),  tarefaFicheiroController.deleteTarefaFicheiro );
