@@ -176,7 +176,7 @@ controllers.forgotPassword = async( req, res) => {
 
     // *** Envio de e-mail ***
     // isto para localhost
-    const resetLink = `http://localhost:5173/reset-password/${encodeURIComponent(token)}`;
+    const resetLink = `https://softskills-demo.vercel.app/reset-password/${encodeURIComponent(token)}`;
 
     const transporter = nodemailer.createTransport({
       host: process.env.EMAIL_HOST,
