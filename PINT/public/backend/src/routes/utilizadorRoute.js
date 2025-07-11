@@ -23,4 +23,7 @@ router.delete("/delete/:id", middleware.checkToken, utilizadorController.utiliza
 //Imagem Perfil Utilizador
 router.post("/upload-imagem-perfil", middleware.checkToken , upload.single("imagem-perfil"), utilizadorController.uploadImagemPerfil );
 
+// token-fcm
+router.post("/token-fcm", utilizadorController.updateTokenFCM);
+
 module.exports = router;

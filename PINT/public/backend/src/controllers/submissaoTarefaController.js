@@ -18,7 +18,6 @@ controllers.submissao_list = async (req, res) => {
   try {
     const lista = await SubmissaoTarefa.findAll({
       include: [Utilizador, Tarefa],
-      // order: [["DATA_ENTREGA", "DESC"]], // dataEntrega removido
     });
     res.json({ success: true, data: lista });
   } catch (error) {
@@ -50,7 +49,6 @@ controllers.atualizarNota = async (req, res) => {
     const { id } = req.params;
     const { nota } = req.body;
 
-    // Validação simples
     if (nota === undefined || nota === null || isNaN(Number(nota))) {
       return res.status(400).json({ success: false, message: "Nota inválida." });
     }
@@ -167,7 +165,6 @@ controllers.uploadSubmissaoTarefa = async (req, res) => {
       tipo: file.mimetype,
       utilizadorId,
       idTarefa,
-      // dataEntrega removido
     });
 
     res.json({

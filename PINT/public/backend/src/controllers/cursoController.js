@@ -180,14 +180,13 @@ controllers.notasTarefasPorUtilizador = async (req, res) => {
   try {
     const { cursoId, utilizadorId } = req.params;
 
-    // Vai buscar todas as tarefas do curso
     const tarefas = await Tarefa.findAll({
       where: { cursoId },
       attributes: ["id", "titulo"],
       raw: true,
     });
 
-    // Vai buscar todas as submissões desse utilizador nessas tarefas
+
     const submissoes = await SubmissaoTarefa.findAll({
       where: {
         utilizadorId,
@@ -197,7 +196,6 @@ controllers.notasTarefasPorUtilizador = async (req, res) => {
       raw: true,
     });
 
-    // Junta tarefas e submissões
     const resultado = tarefas.map(tarefa => {
       const sub = submissoes.find(s => s.idTarefa === tarefa.id);
       return {

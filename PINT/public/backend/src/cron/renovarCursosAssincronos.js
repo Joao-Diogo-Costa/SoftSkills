@@ -4,18 +4,17 @@ const { Op } = require("sequelize");
 async function renovarCursosAssincronos() {
   const hoje = new Date();
 
-  // 1. Encontrar cursos assíncronos terminados e ainda visíveis
   const cursos = await Curso.findAll({
     where: {
       tipoCurso: "Online",
       dataFim: { [Op.lt]: hoje },
-      estado: 2, // Terminado
+      estado: 2,
       visibilidadeStatus: "visivel"
     }
   });
 
   for (const curso of cursos) {
-    // 2. Criar novo curso (cópia)
+    // 2. Criar novo curso cópia
     const dataUpload = new Date();
     const dataInicio = new Date(dataUpload);
     dataInicio.setMonth(dataInicio.getMonth() + 1);
@@ -27,14 +26,14 @@ async function renovarCursosAssincronos() {
     cursoData.dataUpload = dataUpload;
     cursoData.dataInicio = dataInicio;
     cursoData.dataFim = dataFim;
-    cursoData.estado = 0; // pendente
+    cursoData.estado = 0; 
     cursoData.visibilidadeStatus = "visivel";
     cursoData.previousCursoId = curso.id;
     cursoData.numParticipante = 0;
 
     const novoCurso = await Curso.create(cursoData);
 
-    // 3. Copiar aulas assíncronas e respetivos documentos
+    // Copiar aulas assíncronas e  documentos
     const aulas = await AulaAssincrona.findAll({ where: { cursoId: curso.id } });
     for (const aula of aulas) {
       const aulaData = aula.toJSON();
@@ -44,7 +43,7 @@ async function renovarCursosAssincronos() {
 
       const novaAula = await AulaAssincrona.create(aulaData);
 
-      // Copiar documentos da aula, se existirem
+
       const docs = await DocumentoAula.findAll({ where: { aulaAssincronaId: oldAulaId } });
       for (const doc of docs) {
         const docData = doc.toJSON();

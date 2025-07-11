@@ -26,7 +26,6 @@ controllers.register = async (req, res) => {
       return res.status(409).json({ message: "Este email já está registado." });
     }
 
-    // Criar novo utilizador
     const utilizador = await Utilizador.create({
       nomeUtilizador,
       dataNasc,
@@ -307,12 +306,10 @@ controllers.forceUpdatePassword = async (req, res) => {
       return res.status(404).json({ message: "Utilizador não encontrado." });
     }
 
-    // VERIFICAÇÃO CRUCIAL: O utilizador só pode usar esta rota se mustChangePassword for true
     if (!utilizador.mustChangePassword) {
       return res.status(403).json({ message: "Não é necessário alterar a palavra-passe. Por favor, use a rota de login normal." });
     }
 
-    // Hashear a nova password
     const hashedPassword = await bcrypt.hash(newPassword, 10); 
 
     await utilizador.update({

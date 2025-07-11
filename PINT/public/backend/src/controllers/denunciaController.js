@@ -27,7 +27,6 @@ controllers.denuncia_list = async (req, res) => {
 
 controllers.utilizador_mais_denunciado = async (req, res) => {
   try {
-    // Conta quantas vezes cada utilizador foi denunciado (pelo comentário)
     const result = await Denuncia.findAll({
       attributes: [
         [fn("COUNT", col("Comentario.ID_UTILIZADOR")), "totalDenuncias"],
@@ -50,7 +49,6 @@ controllers.utilizador_mais_denunciado = async (req, res) => {
       return res.json({ success: true, data: null });
     }
 
-    // Buscar info do utilizador mais denunciado
     const utilizador = await Utilizador.findByPk(result[0].utilizadorDenunciadoId);
 
     res.json({
@@ -90,13 +88,11 @@ controllers.denuncia_create = async (req, res) => {
       return res.status(400).json({ success: false, message: "Campos obrigatórios faltando." });
     }
 
-    // Validar se utilizador existe
     const utilizador = await Utilizador.findByPk(utilizadorId);
     if (!utilizador) {
       return res.status(400).json({ success: false, message: "Utilizador inválido." });
     }
 
-    // Validar se comentário existe
     const comentario = await Comentario.findByPk(comentarioId);
     if (!comentario) {
       return res.status(400).json({ success: false, message: "Comentário inválido." });

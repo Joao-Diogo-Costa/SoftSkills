@@ -33,18 +33,6 @@ var Utilizador = sequelize.define(
       allowNull: false,
       unique: true,
     },
-    emailConfirmado: {
-      type: Sequelize.BOOLEAN,
-      field: "EMAIL_CONFIRMADO",
-      allowNull: false,
-      defaultValue: false,
-    },
-    tokenConfirmacaoEmail: {
-      type: Sequelize.STRING,
-      field: "TOKEN_CONFIRMACAO_EMAIL",
-      allowNull: true,
-      unique: true,
-    },
     password: {
       type: Sequelize.STRING,
       field: "PASSWORD",
@@ -88,6 +76,11 @@ var Utilizador = sequelize.define(
       allowNull: false,
       defaultValue: Sequelize.NOW,
       field: "DATA_REGISTO",
+    },
+    tokenFCM: { 
+      type: Sequelize.STRING,
+      allowNull: true, 
+      field: "TOKEN_FCM",
     },
   },
   {

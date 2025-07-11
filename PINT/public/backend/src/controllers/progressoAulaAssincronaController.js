@@ -11,14 +11,13 @@ const atualizarStatusConclusaoCurso = async (utilizadorId, cursoId) => {
   try {
     const Inscricao = require("../model/Inscricao");
 
-    // Usar a função existente para calcular o progresso
     const mockReq = { params: { utilizadorId, cursoId } };
     const mockRes = {
       json: (data) => data,
       status: () => mockRes
     };
 
-    // Chamar a função existente
+
     const progressoData = await new Promise((resolve, reject) => {
       const originalJson = mockRes.json;
       mockRes.json = (data) => {
@@ -57,13 +56,11 @@ controllers.marcarAulaConcluida = async (req, res) => {
       return res.status(400).json({ success: false, message: "ID da aula é obrigatório." });
     }
 
-    // Verificar se a aula existe
     const aula = await AulaAssincrona.findByPk(aulaId);
     if (!aula) {
       return res.status(404).json({ success: false, message: "Aula não encontrada." });
     }
 
-    // Verificar se já existe progresso
     const progressoExistente = await ProgressoAulaAssincrona.findOne({
       where: { utilizadorId, aulaAssincronaId: aulaId },
     });
@@ -72,7 +69,7 @@ controllers.marcarAulaConcluida = async (req, res) => {
       return res.status(200).json({ success: true, message: "Aula já estava marcada como concluída." });
     }
 
-    // Criar progresso
+
     const novoProgresso = await ProgressoAulaAssincrona.create({
       utilizadorId,
       aulaAssincronaId: aulaId,
@@ -80,7 +77,7 @@ controllers.marcarAulaConcluida = async (req, res) => {
       dataConclusao: new Date(),
     });
 
-    // CORRIGIR: usar aula.cursoId em vez de aulaAssincrona.cursoId
+
     await atualizarStatusConclusaoCurso(utilizadorId, aula.cursoId);
 
     res.status(201).json({ 

@@ -107,7 +107,6 @@ controllers.inscricao_create = async (req, res) => {
 
     await curso.increment('numParticipante', { by: 1, transaction: t });
 
-    // Decrementar as vagas restantes do curso se o curso for presencial 
     if (curso.tipoCurso === 'Presencial' && curso.vaga !== null) {
       await curso.decrement('vaga', { by: 1, transaction: t });
     }
@@ -168,7 +167,6 @@ controllers.inscricao_create = async (req, res) => {
         await transporter.sendMail(mailOptions);
       }
     } catch (err) {
-      // Apenas log, não falha a inscrição se o email falhar
       console.error("Erro ao enviar email de confirmação de inscrição:", err);
     }
 
@@ -201,7 +199,6 @@ controllers.inscricao_update = async (req, res) => {
     if (dataConclusao !== undefined) dadosParaAtualizar.dataConclusao = dataConclusao;
     if (certificadoGerado !== undefined) dadosParaAtualizar.certificadoGerado = certificadoGerado;
 
-    // Se nenhum campo válido para atualização for fornecido
     if (Object.keys(dadosParaAtualizar).length === 0) {
       await t.rollback();
       return res.status(400).json({ success: false, message: "Nenhum campo válido fornecido para atualização." });
@@ -233,12 +230,10 @@ controllers.inscricao_delete = async (req, res) => {
 
     const curso = await Curso.findByPk(inscricao.cursoId, { transaction: t });
 
-    // Decrementar o número de participantes do curso
     if (curso && curso.numParticipante > 0) {
         await curso.decrement('numParticipante', { by: 1, transaction: t });
     }
 
-    // Devolver a vaga ao curso (incrementar vagas restantes) APENAS SE FOR PRESENCIAL
     if (curso && curso.tipoCurso === 'Presencial' && curso.vaga !== null) {
         await curso.increment('vaga', { by: 1, transaction: t });
     }

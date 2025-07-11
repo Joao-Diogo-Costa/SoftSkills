@@ -49,7 +49,6 @@ controllers.comentario_create = async (req, res) => {
       return res.status(400).json({ success: false, message: "Campos obrigatórios faltando." });
     }
 
-    // Verificar existência de forum e utilizador
     const forum = await Forum.findByPk(forumId);
     if (!forum) {
       return res.status(400).json({ success: false, message: "Fórum inválido." });
@@ -86,7 +85,6 @@ controllers.comentario_update = async (req, res) => {
       return res.status(404).json({ success: false, message: "Comentário não encontrado." });
     }
 
-    // Se for atualizar forumId ou utilizadorId, validar
     if (forumId) {
       const forum = await Forum.findByPk(forumId);
       if (!forum) {

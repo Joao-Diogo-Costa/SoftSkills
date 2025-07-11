@@ -4,6 +4,7 @@ const Utilizador = require("../model/Utilizador");
 const Inscricao = require("../model/Inscricao");
 const Notificacao = require("../model/Notificacao");
 const nodemailer = require("nodemailer");
+const admin = require("../config/firebaseConfig");
 require("dotenv").config();
 
 const controllers = {};
@@ -18,7 +19,13 @@ controllers.aviso_list = async (req, res) => {
 
     res.json({ success: true, data: avisos });
   } catch (error) {
-    res.status(500).json({success: false, message: "Erro ao listar avisos.", details: error.message, });
+    res
+      .status(500)
+      .json({
+        success: false,
+        message: "Erro ao listar avisos.",
+        details: error.message,
+      });
   }
 };
 
@@ -31,34 +38,48 @@ controllers.aviso_detail = async (req, res) => {
     });
 
     if (!aviso) {
-      return res.status(404).json({ success: false, message: "Aviso não encontrado." });
+      return res
+        .status(404)
+        .json({ success: false, message: "Aviso não encontrado." });
     }
 
     res.json({ success: true, data: aviso });
   } catch (error) {
-    res.status(500).json({success: false, message: "Erro ao buscar aviso.", details: error.message,});
+    res
+      .status(500)
+      .json({
+        success: false,
+        message: "Erro ao buscar aviso.",
+        details: error.message,
+      });
   }
 };
-
 
 // Criar aviso
 controllers.aviso_create = async (req, res) => {
   try {
-    const { descricao, titulo, cursoId, utilizadorId, dataPublicacao, tipo } = req.body;
+    const { descricao, titulo, cursoId, utilizadorId, dataPublicacao, tipo } =
+      req.body;
 
     if (!descricao || !titulo || !cursoId || !utilizadorId) {
-      return res.status(400).json({ success: false, message: "Campos obrigatórios ausentes." });
+      return res
+        .status(400)
+        .json({ success: false, message: "Campos obrigatórios ausentes." });
     }
 
     const curso = await Curso.findByPk(cursoId);
     const utilizador = await Utilizador.findByPk(utilizadorId);
 
     if (!curso) {
-      return res.status(400).json({ success: false, message: "ID de curso inválido." });
+      return res
+        .status(400)
+        .json({ success: false, message: "ID de curso inválido." });
     }
 
     if (!utilizador) {
-      return res.status(400).json({ success: false, message: "ID de utilizador inválido." });
+      return res
+        .status(400)
+        .json({ success: false, message: "ID de utilizador inválido." });
     }
 
     const novoAviso = await AvisoCurso.create({
@@ -67,19 +88,18 @@ controllers.aviso_create = async (req, res) => {
       cursoId,
       utilizadorId,
       dataPublicacao: dataPublicacao || new Date(),
-      tipo
+      tipo,
     });
 
     const inscricoesDoCurso = await Inscricao.findAll({
       where: { cursoId: cursoId },
-      attributes: ['utilizadorId']
+      attributes: ["utilizadorId"],
     });
 
-    // Buscar emails dos inscritos
-    const utilizadoresIds = inscricoesDoCurso.map(i => i.utilizadorId);
+    const utilizadoresIds = inscricoesDoCurso.map((i) => i.utilizadorId);
     const utilizadores = await Utilizador.findAll({
       where: { id: utilizadoresIds },
-      attributes: ['email', 'nomeUtilizador']
+      attributes: ["email", "nomeUtilizador", "tokenFCM"],
     });
 
     const tipoLabels = {
@@ -87,12 +107,11 @@ controllers.aviso_create = async (req, res) => {
       alteracao_data: "Alteração de Data",
       nova_aula: "Nova Aula",
       novo_material: "Novo Material",
-      avaliacao_disponivel: "Avaliação Disponível"
+      avaliacao_disponivel: "Avaliação Disponível",
     };
 
     const tipoLabel = tipoLabels[tipo] || "Aviso Geral";
 
-    // Criar notificações na BD
     const notificacoesCriadas = [];
     for (const inscricao of inscricoesDoCurso) {
       const notificacao = await Notificacao.create({
@@ -109,7 +128,7 @@ controllers.aviso_create = async (req, res) => {
 
     res.status(201).json({ success: true, data: novoAviso });
 
-    // Enviar emails 
+    // Envio de emails
     try {
       const transporter = require("nodemailer").createTransport({
         host: process.env.EMAIL_HOST,
@@ -132,9 +151,13 @@ controllers.aviso_create = async (req, res) => {
                   <img src="https://pint-2025.s3.eu-north-1.amazonaws.com/softskills_logo.png" alt="SoftSkills" style="height: 60px; margin-bottom: 8px;" />
                 </div>
                 <h2 style="color: #39639D; text-align: center;">${tipoLabel}</h2>
-                <p style="color: #333;">Olá <strong>${u.nomeUtilizador}</strong>,</p>
+                <p style="color: #333;">Olá <strong>${
+                  u.nomeUtilizador
+                }</strong>,</p>
                 <p style="color: #333;">
-                  Foi publicado um novo aviso no curso <strong>${curso.nome}</strong>.
+                  Foi publicado um novo aviso no curso <strong>${
+                    curso.nome
+                  }</strong>.
                 </p>
                 <div style="background: #f5f9ff; border-left: 4px solid #39639D; padding: 16px 20px; margin: 24px 0; border-radius: 6px;">
                   <span style="display: block; color: #294873; font-weight: bold; margin-bottom: 8px; word-break: break-word; white-space: pre-line;">${titulo}</span>
@@ -160,8 +183,33 @@ controllers.aviso_create = async (req, res) => {
     } catch (emailError) {
       console.error("Erro ao enviar email de aviso:", emailError);
     }
+
+    // Envio de notificações push
+    try {
+      const tokens = utilizadores.map((u) => u.tokenFCM).filter(Boolean);
+      if (tokens.length > 0) {
+        const message = {
+          notification: {
+            title: `Aviso: ${curso.nome} - ${titulo}`,
+            body: descricao.substring(0, 100) + "...",
+          },
+          tokens: tokens,
+        };
+        const response = await admin.messaging().sendMulticast(message);
+        console.log(response);
+      }
+    } catch (pushError) {
+      console.error("Erro ao enviar push notification:", pushError);
+    }
+
   } catch (error) {
-    res.status(500).json({ success: false, message: "Erro ao criar aviso.", details: error.message });
+    res
+      .status(500)
+      .json({
+        success: false,
+        message: "Erro ao criar aviso.",
+        details: error.message,
+      });
   }
 };
 
@@ -173,29 +221,38 @@ controllers.aviso_update = async (req, res) => {
 
     const aviso = await AvisoCurso.findByPk(id);
     if (!aviso) {
-      return res.status(404).json({ success: false, message: "Aviso não encontrado." });
+      return res
+        .status(404)
+        .json({ success: false, message: "Aviso não encontrado." });
     }
 
-    // Só valida utilizadorId se vier no body
     if (utilizadorId) {
       const utilizador = await Utilizador.findByPk(utilizadorId);
       if (!utilizador) {
-        return res.status(400).json({ success: false, message: "ID de utilizador inválido." });
+        return res
+          .status(400)
+          .json({ success: false, message: "ID de utilizador inválido." });
       }
     }
 
-    // Atualiza só os campos enviados
     const updateFields = {};
     if (descricao !== undefined) updateFields.descricao = descricao;
     if (titulo !== undefined) updateFields.titulo = titulo;
     if (utilizadorId !== undefined) updateFields.utilizadorId = utilizadorId;
-    if (dataPublicacao !== undefined) updateFields.dataPublicacao = dataPublicacao;
+    if (dataPublicacao !== undefined)
+      updateFields.dataPublicacao = dataPublicacao;
 
     await aviso.update(updateFields);
 
     res.json({ success: true, data: aviso });
   } catch (error) {
-    res.status(500).json({success: false, message: "Erro ao atualizar aviso.", details: error.message,});
+    res
+      .status(500)
+      .json({
+        success: false,
+        message: "Erro ao atualizar aviso.",
+        details: error.message,
+      });
   }
 };
 
@@ -206,14 +263,22 @@ controllers.aviso_delete = async (req, res) => {
     const aviso = await AvisoCurso.findByPk(id);
 
     if (!aviso) {
-      return res.status(404).json({ success: false, message: "Aviso não encontrado." });
+      return res
+        .status(404)
+        .json({ success: false, message: "Aviso não encontrado." });
     }
 
     await aviso.destroy();
 
     res.json({ success: true, message: "Aviso apagado com sucesso." });
   } catch (error) {
-    res.status(500).json({success: false,message: "Erro ao apagar aviso.",details: error.message,});
+    res
+      .status(500)
+      .json({
+        success: false,
+        message: "Erro ao apagar aviso.",
+        details: error.message,
+      });
   }
 };
 

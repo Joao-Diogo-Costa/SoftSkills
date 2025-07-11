@@ -131,7 +131,7 @@ controllers.gerarCertificado = async (req, res) => {
 
   console.log(JSON.stringify(inscricao, null, 2));
 
-  // Verificar se a inscrição existe
+
     if (!inscricao) {
       return res.status(404).json({ success: false, message: "Inscrição não encontrada." });
     }
@@ -142,14 +142,13 @@ controllers.gerarCertificado = async (req, res) => {
       return res.status(400).json({ success: false, message: "Curso não encontrado na inscrição." });
     }
 
-  // Verificar se o curso foi concluído (apenas para cursos presenciais)
+
   if (inscricao.CURSO.tipoCurso === "Presencial" && !inscricao.concluido) {
     return res
       .status(403)
       .json({ success: false, message: "O curso ainda não foi concluído para esta inscrição." });
   }
 
-  // Se for curso online, verificar se viu todas as aulas
   if (inscricao.CURSO.tipoCurso === "Online") {
     const totalAulas = await AulaAssincrona.count({ where: { cursoId: inscricao.CURSO.id } });
     
@@ -170,7 +169,7 @@ controllers.gerarCertificado = async (req, res) => {
   const formandoNome = inscricao.UTILIZADOR.nomeUtilizador;
   const cursoNome = inscricao.CURSO.nome;
 
-  // Formatar a data de conclusão
+  // Formatar a data 
   let dataConclusaoFormatada = '';
   const options = { day: 'numeric', month: 'long', year: 'numeric' };
 
@@ -196,22 +195,22 @@ controllers.gerarCertificado = async (req, res) => {
 
   // Criar PDF
   const doc = new PDFDocument({
-    size: "A4", // Tamanho do papel
-    layout: "portrait", // Orientação paisagem
-    margins: { top: 50, bottom: 50, left: 72, right: 72 }, // Margens padrão
+    size: "A4", 
+    layout: "portrait",
+    margins: { top: 50, bottom: 50, left: 72, right: 72 }, 
   });
 
-  // Configurar os cabeçalhos da resposta HTTP para download do PDF
+  // Configurar download do PDF
   res.setHeader("Content-Type", "application/pdf");
   res.setHeader("Content-Disposition",`attachment; filename="certificado-${formandoNome.replace(/\s/g, "_")}.pdf"`
   );
 
-  // Pipe o documento para a resposta HTTP
+
   doc.pipe(res);
 
   // --- Conteúdo do Certificado ---
 
-  // Fonte
+  // Font
   doc.registerFont("Madina",path.join(__dirname, "../assets/fonts/Madina.ttf"));
   doc.registerFont("Fraunces-Regular",path.join(__dirname, "../assets/fonts/Fraunces-Regular.ttf"));
   // Imagem de fundo
@@ -222,7 +221,7 @@ controllers.gerarCertificado = async (req, res) => {
   const imageWidth = 50;
   const imageHeight = 60;
 
-  // Calcular X centralizado
+
   const xCenter = (doc.page.width - imageWidth) / 2;
 
   doc.image( path.join(__dirname, "../assets/certificado/badge_shaded_blue.png"), xCenter, 100,{ width: imageWidth, height: imageHeight, });
@@ -233,20 +232,20 @@ controllers.gerarCertificado = async (req, res) => {
     .text("CERTIFICADO", { align: "center", continued: false })
     .moveDown(0.5);
 
-  // Título "Certificamos que"
+
   doc
     .fontSize(28)
     .font("Helvetica")
     .text("Certificamos que", { align: "center", continued: false })
     .moveDown(0.5);
 
-  // Nome do Formando
+
   doc
     .fontSize(60)
     .font("Madina")
     .text(formandoNome, { align: "center", continued: false });
 
-  // Texto "concluiu com sucesso o curso:"
+
   doc
     .fontSize(20)
     .font("Helvetica")
@@ -255,7 +254,7 @@ controllers.gerarCertificado = async (req, res) => {
       continued: false,
     });
 
-  // Nome do Curso
+
   doc
     .fontSize(20)
     .font("Helvetica-Bold")
@@ -270,18 +269,18 @@ controllers.gerarCertificado = async (req, res) => {
     )
     .moveDown(5);
 
-  // Data de Conclusão
+
   doc
     .fontSize(16)
     .font("Helvetica")
     .text(`${dataConclusaoFormatada}`, { align: "center", continued: false })
     .moveDown(0.5);
 
-  // Linhas de Assinatura
-  const signatureLineY = doc.page.height - 175; // Posição Y para as linhas de assinatura
-  const commonMargin = 100; // Margem desejada de cada lado
+  // Assinatura
+  const signatureLineY = doc.page.height - 175; 
+  const commonMargin = 100; 
 
-  // --- Empresa (assinatura da esquerda) ---
+  // Empresa esquerda
   doc.image(
     path.join(__dirname, "../assets/certificado/SOFTINSA.png"),
     commonMargin,
@@ -299,7 +298,7 @@ controllers.gerarCertificado = async (req, res) => {
       align: "left",
     });
 
-  // --- Formador (assinatura da direita) ---
+  // Formador direita
   const formadorTextWidth = doc.widthOfString("Assinatura Formador");
   const formadorX = doc.page.width - commonMargin - formadorTextWidth;
 
@@ -319,7 +318,6 @@ controllers.gerarCertificado = async (req, res) => {
     align: "left",
   });
 
-  // 4. Finalizar o documento
   doc.end();
 };
 

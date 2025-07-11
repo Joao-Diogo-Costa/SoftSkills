@@ -65,7 +65,6 @@ controllers.avaliacao_create = async (req, res) => {
       return res.status(404).json({ success: false, message: "ID de utilizador inválido." });
     }
 
-    // VERIFICAR SE O UTILIZADOR ESTÁ INSCRITO NO CURSO
     const inscricao = await Inscricao.findOne({
       where: {
         utilizadorId: utilizadorId,
@@ -83,9 +82,8 @@ controllers.avaliacao_create = async (req, res) => {
     console.log("Nota final da inscrição:", inscricao.notaFinal);
     console.log("Concluído:", inscricao.concluido);
 
-    // VERIFICAÇÃO MAIS INTELIGENTE: Permitir avaliação baseada no tipo de curso
     if (curso.tipoCurso === 'Presencial') {
-      // Para cursos presenciais, verificar se tem nota final
+
       console.log("Verificando curso presencial...");
       if (!inscricao.notaFinal) {
         console.log("ERRO: Curso presencial sem nota final");
@@ -95,7 +93,7 @@ controllers.avaliacao_create = async (req, res) => {
         });
       }
     } else {
-      // Para cursos online, verificar se está concluído
+
       console.log("Verificando curso online...");
       if (!inscricao.concluido) {
         console.log("ERRO: Curso online não concluído");
@@ -106,7 +104,6 @@ controllers.avaliacao_create = async (req, res) => {
       }
     }
 
-    // Verificar se já existe uma avaliação para este utilizador e curso
     const avaliacaoExistente = await AvaliacaoCursoUtilizador.findOne({
       where: {
         utilizadorId: utilizadorId,
