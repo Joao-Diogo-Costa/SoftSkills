@@ -7,6 +7,9 @@ const middleware = require("../middlewares/middleware");
 // GET: Listar todas as avaliações
 router.get("/list", avaliacaoController.avaliacao_list);
 
+//GET : média das notas
+router.get("/media/:cursoId", avaliacaoController.media_avaliacao_curso);
+
 // GET: Detalhes de uma avaliação pelo ID
 router.get("/get/:id", avaliacaoController.avaliacao_detail);
 
