@@ -2,6 +2,7 @@ const Curso = require("../model/Curso");
 const AvaliacaoCursoUtilizador = require("../model/AvaliacaoCursoUtilizador");
 const Inscricao = require("../model/Inscricao");
 const Utilizador = require("../model/Utilizador");
+const { Sequelize } = require("sequelize");
 
 const controllers = {};
 
@@ -18,6 +19,35 @@ controllers.avaliacao_list = async (req, res) => {
     res.status(500).json({ success: false, message: "Erro ao listar avaliações.", details: error.message, });
   }
 };
+
+controllers.media_avaliacao_curso = async (req, res) => {
+  try {
+    const cursoId = req.params.cursoId;
+    const mediaArr = await AvaliacaoCursoUtilizador.findAll({
+      attributes: [
+        [Sequelize.fn("AVG", Sequelize.col('"NOTA"')), "mediaNota"],
+        [Sequelize.fn("COUNT", Sequelize.col('"ID_AVALIACAO"')), "totalAvaliacoes"]
+      ],
+      where: { cursoId },
+      include: [{ model: Curso, attributes: ["nome"] }],
+      group: [
+        '"AVALIACAO_CURSO_UTILIZADOR"."ID_CURSO"',
+        '"CURSO"."ID_CURSO"',
+        '"CURSO"."NOMECURSO"'
+      ]
+    });
+
+    let media = mediaArr && mediaArr[0] ? mediaArr[0].toJSON() : null;
+    if (media && media.mediaNota !== null) {
+      media.mediaNota = parseFloat(media.mediaNota).toFixed(1);
+    }
+
+    res.json({ success: true, data: media });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Erro ao calcular média.", details: error.message });
+  }
+};
+
 // Detail avaliação
 controllers.avaliacao_detail = async (req, res) => {
   try {
