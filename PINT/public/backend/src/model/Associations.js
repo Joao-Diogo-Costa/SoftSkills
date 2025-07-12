@@ -2,6 +2,7 @@ const AreaC = require("./AreaC");
 const AulaSincrona = require("./AulaSincrona");
 const AulaAssincrona = require("./AulaAssincrona");
 const AvaliacaoCursoUtilizador = require("./AvaliacaoCursoUtilizador");
+const AvaliacaoForumUtilizador = require("./AvaliacaoForumUtilizador");
 const AvisoCurso = require("./AvisoCurso");
 const CategoriaC = require("./CategoriaC");
 const Certificado = require("./Certificado");
@@ -38,6 +39,12 @@ AvaliacaoCursoUtilizador.belongsTo(Utilizador, { foreignKey: 'utilizadorId'});
 Utilizador.hasMany(AvaliacaoCursoUtilizador, { foreignKey: 'utilizadorId'});
 AvaliacaoCursoUtilizador.belongsTo(Curso, { foreignKey: 'cursoId'});
 Curso.hasMany(AvaliacaoCursoUtilizador, { foreignKey: 'cursoId' });
+
+// AvaliacaoForumUtilizador
+AvaliacaoForumUtilizador.belongsTo(Utilizador, { foreignKey: 'utilizadorId'});
+Utilizador.hasMany(AvaliacaoForumUtilizador, { foreignKey: 'utilizadorId'});
+AvaliacaoForumUtilizador.belongsTo(Forum, { foreignKey: 'forumId'});
+Forum.hasMany(AvaliacaoForumUtilizador, { foreignKey: 'forumId' });
 
 // AvisoCurso
 AvisoCurso.belongsTo(Utilizador, { foreignKey: 'utilizadorId' });
@@ -162,6 +169,7 @@ module.exports = {
   Inscricao,
   Certificado,
   AvaliacaoCursoUtilizador,
+  AvaliacaoForumUtilizador,
   AvisoCurso,
   Notificacao,
   Forum,
