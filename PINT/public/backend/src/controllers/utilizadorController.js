@@ -88,14 +88,12 @@ controllers.utilizador_create = async (req, res) => {
         });
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-
     const novoUtilizador = await Utilizador.create({
       nomeUtilizador,
       dataNasc,
       nTel,
       email,
-      password: hashedPassword,
+      password,
       imagemPerfil: imagemPerfil ?? null,
       role: role ?? "formando",
     });
