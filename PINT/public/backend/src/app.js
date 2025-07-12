@@ -33,6 +33,10 @@ app.use("/aula-sincrona", aulaSincronaRoute);
 const avaliacaoRoute = require("./routes/avaliacaoCursoUtilizadorRoute");
 app.use("/avaliacao", avaliacaoRoute);
 
+
+const avalicaoForumUtilizadorRoute = require("./routes/avalicaoForumUtilizadorRoute");
+app.use("/avaliacao-forum", avalicaoForumUtilizadorRoute);
+
 const avisoRoute = require("./routes/avisoRoute");
 app.use("/aviso", avisoRoute);
 
