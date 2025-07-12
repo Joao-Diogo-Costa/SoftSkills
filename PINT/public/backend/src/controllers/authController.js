@@ -4,7 +4,7 @@ const crypto = require("crypto");
 const nodemailer = require("nodemailer");
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
-const { Op } = require('sequelize')
+const { Op } = require("sequelize");
 
 const controllers = {};
 
@@ -13,12 +13,15 @@ const { where } = require("sequelize");
 
 controllers.register = async (req, res) => {
   try {
-    const { nomeUtilizador, dataNasc, nTel, email, password, role } = req.body;
+    const { nomeUtilizador, dataNasc, nTel, email, role } = req.body;
 
-    console.log("Password recebida no registo:", req.body.password);
-
-    if (!nomeUtilizador || !dataNasc || !nTel || !email || !password) {
-      return res.status(400).json({ message: "Nome, data de nascimento, telefone, email e password são obrigatórios." });
+    if (!nomeUtilizador || !dataNasc || !nTel || !email) {
+      return res
+        .status(400)
+        .json({
+          message:
+            "Nome, data de nascimento, telefone e email são obrigatórios.",
+        });
     }
 
     const utilizadorExistente = await Utilizador.findOne({ where: { email } });
@@ -26,21 +29,62 @@ controllers.register = async (req, res) => {
       return res.status(409).json({ message: "Este email já está registado." });
     }
 
+    const hashTemporaria = await bcrypt.hash("pendente", 10);
+
     const utilizador = await Utilizador.create({
       nomeUtilizador,
       dataNasc,
       nTel,
       email,
-      password,
-      role: "formando", 
-      emailConfirmado: false,
-      tokenConfirmacaoEmail: null,
+      password: hashTemporaria,
+      role: "formando",
       mustChangePassword: true,
-      imagemPerfil: "https://pint-2025.s3.eu-north-1.amazonaws.com/imagem-perfil/default_profile_pic.jpg",
+      imagemPerfil:
+        "https://pint-2025.s3.eu-north-1.amazonaws.com/imagem-perfil/default_profile_pic.jpg",
       pontos: 0,
       dataRegisto: new Date(),
+      aprovado: false,
     });
 
+    res
+      .status(201)
+      .json({
+        success: true,
+        message:
+          "Utilizador registado com sucesso. Os dados serão enviados por e-mail após aprovação.",
+      });
+  } catch (error) {
+    res
+      .status(500)
+      .json({
+        message: "Erro ao registar utilizador.",
+        details: error.message,
+      });
+  }
+};
+
+controllers.aprovarUtilizador = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const utilizador = await Utilizador.findByPk(id);
+
+    if (!utilizador) {
+      return res.status(404).json({ message: "Utilizador não encontrado." });
+    }
+
+    if (utilizador.aprovado) {
+      return res.status(400).json({ message: "Utilizador já aprovado." });
+    }
+
+    const novaPassword = crypto.randomBytes(6).toString("hex");
+    const hashedPassword = await bcrypt.hash(novaPassword, 10);
+
+    utilizador.aprovado = true;
+    utilizador.password = hashedPassword;
+    utilizador.mustChangePassword = true;
+
+    await utilizador.save();
 
     const transporter = nodemailer.createTransport({
       host: process.env.EMAIL_HOST,
@@ -54,28 +98,30 @@ controllers.register = async (req, res) => {
     const mailOptions = {
       from: process.env.EMAIL_FROM,
       to: utilizador.email,
-      subject: 'Bem-vindo à plataforma SoftSkills!',
+      subject: "Bem-vindo à plataforma SoftSkills!",
       html: `
         <div style="font-family: Arial, Helvetica, sans-serif; background: #f6f8fa; padding: 32px;">
           <div style="max-width: 520px; margin: auto; background: #fff; border-radius: 8px; box-shadow: 0 2px 8px #e0e7ef; padding: 32px;">
             <div style="text-align: center; margin-bottom: 24px;">
               <img src="https://pint-2025.s3.eu-north-1.amazonaws.com/softskills_logo.png" alt="SoftSkills" style="height: 60px; margin-bottom: 8px;" />
             </div>
-            <h3 style="color: #39639D;">Bem-vindo(a), ${nomeUtilizador}!</h3>
-            <p style="color: #333;">O seu registo na plataforma <strong>SoftSkills</strong> foi efetuado com sucesso.</p>
+            <h3 style="color: #39639D;">Bem-vindo(a), ${
+              utilizador.nomeUtilizador
+            }!</h3>
+            <p style="color: #333;">O seu registo na plataforma <strong>SoftSkills</strong> foi aprovado com sucesso.</p>
             <p style="color: #333;">Segue abaixo os seus dados de acesso:</p>
             <table style="width: 100%; margin: 16px 0 24px 0; border-collapse: collapse;">
               <tr>
                 <td style="padding: 8px 0; color: #294873;"><strong>Nome de utilizador:</strong></td>
-                <td style="padding: 8px 0;">${nomeUtilizador}</td>
+                <td style="padding: 8px 0;">${utilizador.nomeUtilizador}</td>
               </tr>
               <tr>
                 <td style="padding: 8px 0; color: #294873;"><strong>Email:</strong></td>
-                <td style="padding: 8px 0;">${email}</td>
+                <td style="padding: 8px 0;">${utilizador.email}</td>
               </tr>
               <tr>
                 <td style="padding: 8px 0; color: #294873;"><strong>Password:</strong></td>
-                <td style="padding: 8px 0;">${password}</td>
+                <td style="padding: 8px 0;">${novaPassword}</td>
               </tr>
             </table>
             <p style="color: #c0392b;"><strong>Por razões de segurança, vai ter de alterar a sua palavra-passe após o primeiro login.</strong></p>
@@ -91,16 +137,20 @@ controllers.register = async (req, res) => {
 
     await transporter.sendMail(mailOptions);
 
-    res.status(201).json({ success: true, message: "Utilizador registado com sucesso. Os dados foram enviados por e-mail",});
+    res
+      .status(201)
+      .json({ success: true, message: "Utilizador aprovado com sucesso." });
   } catch (error) {
-    res.status(500).json({ message: "Erro ao registar utilizador.", details: error.message });
+    res
+      .status(500)
+      .json({ message: "Erro ao aprovar utilizador.", details: error.message });
   }
 };
 
 // Função para gerar um token JWT
 const signToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRES_IN, 
+    expiresIn: process.env.JWT_EXPIRES_IN,
   });
 };
 
@@ -110,13 +160,23 @@ controllers.login = async (req, res) => {
     const { email, password } = req.body;
 
     if (!email || !password) {
-      return res.status(400).json({ message: "Email e password são obrigatórios." });
+      return res
+        .status(400)
+        .json({ message: "Email e password são obrigatórios." });
     }
 
     const utilizador = await Utilizador.findOne({ where: { email } });
 
     if (!utilizador) {
       return res.status(401).json({ message: "Credenciais inválidas." });
+    }
+
+    if (!utilizador.aprovado) {
+      return res
+        .status(403)
+        .json({
+          message: "A sua conta ainda não foi aprovada pelo administrador.",
+        });
     }
 
     const passValida = await bcrypt.compare(password, utilizador.password);
@@ -126,34 +186,45 @@ controllers.login = async (req, res) => {
     }
 
     const { password: _, ...utilizadorSemPassword } = utilizador.toJSON();
-    
+
     if (utilizador.mustChangePassword) {
-      return res.status(200).json({ success: true,message: "Primeiro login - alteração de palavra-passe necessária.", mustChangePassword: true,
-        data: utilizadorSemPassword,
-      });
+      return res
+        .status(200)
+        .json({
+          success: true,
+          message: "Primeiro login - alteração de palavra-passe necessária.",
+          mustChangePassword: true,
+          data: utilizadorSemPassword,
+        });
     }
 
     const token = signToken(utilizador.id);
 
-    res.json({success: true, message: "Login bem-sucedido.", token, data: utilizadorSemPassword });
+    res.json({
+      success: true,
+      message: "Login bem-sucedido.",
+      token,
+      data: utilizadorSemPassword,
+    });
   } catch (error) {
     res.status(500).json({ message: "Erro no login.", details: error.message });
   }
 };
 
 const createResetPasswordToken = () => {
+  const resetToken = crypto.randomBytes(32).toString("hex");
 
-    const resetToken = crypto.randomBytes(32).toString('hex');
+  const hashedToken = crypto
+    .createHash("sha256")
+    .update(resetToken)
+    .digest("hex");
 
-    const hashedToken = crypto.createHash('sha256').update(resetToken).digest('hex');
-
-    return {token: resetToken, hashedToken};
-
+  return { token: resetToken, hashedToken };
 };
 
-controllers.forgotPassword = async( req, res) => {
+controllers.forgotPassword = async (req, res) => {
   try {
-    const {email} = req.body;
+    const { email } = req.body;
 
     if (!email) {
       return res.status(400).json({ message: "Email é obrigatório." });
@@ -165,7 +236,7 @@ controllers.forgotPassword = async( req, res) => {
       return res.status(401).json({ message: "Este e-mail não existe" });
     }
 
-    const { token , hashedToken } = createResetPasswordToken();
+    const { token, hashedToken } = createResetPasswordToken();
     const passwordResetTokenExpires = Date.now() + 10 * 60 * 1000; // 10 minutos
 
     await utilizador.update({
@@ -175,7 +246,9 @@ controllers.forgotPassword = async( req, res) => {
 
     // *** Envio de e-mail ***
     // isto para localhost
-    const resetLink = `https://softskills-demo.vercel.app/reset-password/${encodeURIComponent(token)}`;
+    const resetLink = `https://softskills-demo.vercel.app/reset-password/${encodeURIComponent(
+      token
+    )}`;
 
     const transporter = nodemailer.createTransport({
       host: process.env.EMAIL_HOST,
@@ -189,7 +262,7 @@ controllers.forgotPassword = async( req, res) => {
     const mailOptions = {
       from: process.env.EMAIL_FROM,
       to: utilizador.email,
-      subject: 'SoftSkills - Redefinição de palavra-passe',
+      subject: "SoftSkills - Redefinição de palavra-passe",
       html: `
         <div style="font-family: Arial, Helvetica, sans-serif; background: #f6f8fa; padding: 32px;">
           <div style="max-width: 520px; margin: auto; background: #fff; border-radius: 8px; box-shadow: 0 2px 8px #e0e7ef; padding: 32px;">
@@ -219,26 +292,35 @@ controllers.forgotPassword = async( req, res) => {
 
     await transporter.sendMail(mailOptions);
 
-    res.status(200).json({ message: "Um link para resetar a sua senha foi enviado para o seu e-mail." });
-
-    
+    res
+      .status(200)
+      .json({
+        message:
+          "Um link para resetar a sua senha foi enviado para o seu e-mail.",
+      });
   } catch (error) {
     res.status(500).json({ message: "Erro no login.", details: error.message });
   }
 };
 
-
-controllers.resetPassword = async( req, res) => {
+controllers.resetPassword = async (req, res) => {
   try {
-    
-    const token =  crypto.createHash('sha256').update(req.params.token).digest('hex');
+    const token = crypto
+      .createHash("sha256")
+      .update(req.params.token)
+      .digest("hex");
 
-    const utilizador = await Utilizador.findOne({ where: { passwordResetToken: token, passwordResetTokenExpires: {[Op.gt]: Date.now()}} });
+    const utilizador = await Utilizador.findOne({
+      where: {
+        passwordResetToken: token,
+        passwordResetTokenExpires: { [Op.gt]: Date.now() },
+      },
+    });
 
-    if(!utilizador){
+    if (!utilizador) {
       return res.status(400).json({ message: "Token é inválido ou expirou!" });
     }
-    
+
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
     utilizador.password = hashedPassword;
@@ -247,10 +329,19 @@ controllers.resetPassword = async( req, res) => {
 
     await utilizador.save();
 
-    res.status(200).json({ success: true, message: "Palavra-passe redefinida com sucesso." });
-
+    res
+      .status(200)
+      .json({
+        success: true,
+        message: "Palavra-passe redefinida com sucesso.",
+      });
   } catch (error) {
-    res.status(500).json({ message: "Erro ao redefinir palavra-passe.", details: error.message });
+    res
+      .status(500)
+      .json({
+        message: "Erro ao redefinir palavra-passe.",
+        details: error.message,
+      });
   }
 };
 
@@ -259,7 +350,9 @@ controllers.updatePassword = async (req, res) => {
     const { currentPassword, newPassword } = req.body;
 
     if (!currentPassword || !newPassword) {
-      return res.status(400).json({ message: "As passwords atual e nova são obrigatórias." });
+      return res
+        .status(400)
+        .json({ message: "As passwords atual e nova são obrigatórias." });
     }
 
     const utilizador = req.utilizador;
@@ -283,21 +376,39 @@ controllers.updatePassword = async (req, res) => {
   } catch (error) {
     res
       .status(500)
-      .json({ message: "Erro ao redefinir palavra-passe.", details: error.message, });
+      .json({
+        message: "Erro ao redefinir palavra-passe.",
+        details: error.message,
+      });
   }
 };
 
 controllers.forceUpdatePassword = async (req, res) => {
   try {
     const { email, newPassword, confirmNewPassword } = req.body;
-    
 
     if (!email || !newPassword || !confirmNewPassword) {
-      return res.status(400).json({ message: "Email, nova palavra-passe e confirmação são obrigatórios." });
+      return res
+        .status(400)
+        .json({
+          message: "Email, nova palavra-passe e confirmação são obrigatórios.",
+        });
+    }
+
+    if (newPassword.length < 8) {
+      return res
+        .status(400)
+        .json({
+          message: "A nova palavra-passe deve ter pelo menos 8 caracteres.",
+        });
     }
 
     if (newPassword !== confirmNewPassword) {
-      return res.status(400).json({ message: "A nova palavra-passe e a confirmação não coincidem." });
+      return res
+        .status(400)
+        .json({
+          message: "A nova palavra-passe e a confirmação não coincidem.",
+        });
     }
 
     const utilizador = await Utilizador.findOne({ where: { email } });
@@ -307,15 +418,20 @@ controllers.forceUpdatePassword = async (req, res) => {
     }
 
     if (!utilizador.mustChangePassword) {
-      return res.status(403).json({ message: "Não é necessário alterar a palavra-passe. Por favor, use a rota de login normal." });
+      return res
+        .status(403)
+        .json({
+          message:
+            "Não é necessário alterar a palavra-passe. Por favor, use a rota de login normal.",
+        });
     }
 
-    const hashedPassword = await bcrypt.hash(newPassword, 10); 
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
 
     await utilizador.update({
       password: hashedPassword,
       mustChangePassword: false,
-      passwordResetToken: null, 
+      passwordResetToken: null,
       passwordResetTokenExpires: null,
     });
 
@@ -328,10 +444,14 @@ controllers.forceUpdatePassword = async (req, res) => {
       token,
       data: utilizadorSemPassword,
     });
-
   } catch (error) {
     console.error("Erro ao forçar atualização de palavra-passe:", error);
-    res.status(500).json({ message: "Erro ao forçar atualização de palavra-passe.", details: error.message });
+    res
+      .status(500)
+      .json({
+        message: "Erro ao forçar atualização de palavra-passe.",
+        details: error.message,
+      });
   }
 };
 

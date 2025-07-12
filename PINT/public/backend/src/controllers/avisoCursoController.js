@@ -151,13 +151,9 @@ controllers.aviso_create = async (req, res) => {
                   <img src="https://pint-2025.s3.eu-north-1.amazonaws.com/softskills_logo.png" alt="SoftSkills" style="height: 60px; margin-bottom: 8px;" />
                 </div>
                 <h2 style="color: #39639D; text-align: center;">${tipoLabel}</h2>
-                <p style="color: #333;">Olá <strong>${
-                  u.nomeUtilizador
-                }</strong>,</p>
+                <p style="color: #333;">Olá <strong>${u.nomeUtilizador}</strong>,</p>
                 <p style="color: #333;">
-                  Foi publicado um novo aviso no curso <strong>${
-                    curso.nome
-                  }</strong>.
+                  Foi publicado um novo aviso no curso <strong>${curso.nome}</strong>.
                 </p>
                 <div style="background: #f5f9ff; border-left: 4px solid #39639D; padding: 16px 20px; margin: 24px 0; border-radius: 6px;">
                   <span style="display: block; color: #294873; font-weight: bold; margin-bottom: 8px; word-break: break-word; white-space: pre-line;">${titulo}</span>

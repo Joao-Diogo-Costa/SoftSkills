@@ -70,12 +70,16 @@ var Utilizador = sequelize.define(
       allowNull: false,
       defaultValue: "formando",
     },
-
     dataRegisto: {
       type: Sequelize.DATE,
       allowNull: false,
       defaultValue: Sequelize.NOW,
       field: "DATA_REGISTO",
+    },
+    aprovado: {
+      type: Sequelize.BOOLEAN,
+      allowNull: true,
+      defaultValue: false,
     },
     tokenFCM: { 
       type: Sequelize.STRING,

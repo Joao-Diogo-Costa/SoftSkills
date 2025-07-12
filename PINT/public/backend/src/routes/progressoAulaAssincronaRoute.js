@@ -18,4 +18,5 @@ router.get("/concluidas/:utilizadorId/:cursoId", middleware.checkToken, progress
 
 // GET verificar se aula está concluída
 router.get("/concluida/:utilizadorId/:aulaAssincronaId", middleware.checkToken, progressoAulaAssincronaController.aulaEstaConcluida);
+
 module.exports = router;
