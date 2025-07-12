@@ -4,8 +4,15 @@ const Utilizador = require("../model/Utilizador");
 const Inscricao = require("../model/Inscricao");
 const Notificacao = require("../model/Notificacao");
 const nodemailer = require("nodemailer");
-const admin = require("../config/firebaseConfig");
+const admin = require('firebase-admin');
+const serviceAccount = require('../config/serviceAccountKey.json');
 require("dotenv").config();
+
+if (!admin.apps.length) {
+  admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+  });
+}
 
 const controllers = {};
 
@@ -184,15 +191,17 @@ controllers.aviso_create = async (req, res) => {
     try {
       const tokens = utilizadores.map((u) => u.tokenFCM).filter(Boolean);
       if (tokens.length > 0) {
-        const message = {
-          notification: {
-            title: `Aviso: ${curso.nome} - ${titulo}`,
-            body: descricao.substring(0, 100) + "...",
-          },
-          tokens: tokens,
-        };
-        const response = await admin.messaging().sendMulticast(message);
-        console.log(response);
+        for (const token of tokens) {
+          const message = {
+            notification: {
+              title: `Aviso: ${curso.nome} - ${titulo}`,
+              body: descricao.substring(0, 100) + "...",
+            },
+            token: token,
+          };
+          const response = await admin.messaging().send(message);
+          console.log(response);
+        }
       }
     } catch (pushError) {
       console.error("Erro ao enviar push notification:", pushError);
