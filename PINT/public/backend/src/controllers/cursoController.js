@@ -55,13 +55,16 @@ controllers.listarCursosPorCategoria = async (req, res) => {
       include: [
         {
           model: TopicoC,
+          required: true,
           include: [
             {
               model: AreaC,
+              required: true,
               include: [
                 {
                   model: CategoriaC,
                   where: { id: idCategoria },
+                  required: true
                 },
               ],
             },
@@ -88,10 +91,12 @@ controllers.listarCursosPorArea = async (req, res) => {
       include: [
         {
           model: TopicoC,
+          required: true,
           include: [
             {
               model: AreaC,
               where: { id: idArea },
+              required: true 
             },
           ],
         },
