@@ -14,6 +14,6 @@ router.get("/total/:comentarioId", avaliacaoController.total_likes);
 router.post("/create", middleware.checkToken, avaliacaoController.avaliacao_create);
 
 // DELETE: Remover um like (avaliação) de um comentário
-router.delete("/delete", middleware.checkToken, avaliacaoController.avaliacao_delete);
+router.delete("/delete/:id", middleware.checkToken, avaliacaoController.avaliacao_delete);
 
 module.exports = router;
