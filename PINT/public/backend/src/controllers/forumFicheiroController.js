@@ -21,7 +21,7 @@ controllers.listarFicheirosForum = async (req, res) => {
 
     const ficheiros = await ForumFicheiro.findAll({
       where: { forumId },
-      order: [["ID_FORUM_FICHEIRO", "DESC"]]
+      include: [Utilizador]
     });
 
     res.json({
@@ -31,7 +31,14 @@ controllers.listarFicheirosForum = async (req, res) => {
         nomeOriginal: f.nomeOriginal,
         url: f.url,
         tipo: f.tipo,
-        utilizadorId: f.utilizadorId
+        utilizadorId: f.utilizadorId,
+        dataUpload: f.dataUpload,
+        Utilizador: f.UTILIZADOR
+          ? {
+              id: f.UTILIZADOR.id,
+              nomeUtilizador: f.UTILIZADOR.nomeUtilizador
+            }
+          : null
       }))
     });
   } catch (err) {
