@@ -28,11 +28,11 @@ controllers.media_avaliacao_ficheiro = async (req, res) => {
         [Sequelize.fn("COUNT", Sequelize.col('"ID_AVALIACAO"')), "totalAvaliacoes"]
       ],
       where: { forumFicheiroId },
-      include: [{ model: ForumFicheiro, attributes: ["nome"] }],
+      include: [{ model: ForumFicheiro, attributes: ["nomeOriginal"] }],
       group: [
         '"AVALIACAO_FORUM_FICHEIRO"."ID_FORUM_FICHEIRO"',
         '"FORUM_FICHEIRO"."ID_FORUM_FICHEIRO"',
-        '"FORUM_FICHEIRO"."NOME"'
+        '"FORUM_FICHEIRO"."NOME_ORIGINAL_FICHEIRO"'
       ]
     });
 
