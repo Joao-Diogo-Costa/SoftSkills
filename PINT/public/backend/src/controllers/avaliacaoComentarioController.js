@@ -58,19 +58,19 @@ controllers.avaliacao_create = async (req, res) => {
 // Remover avaliação de um comentário
 controllers.avaliacao_delete = async (req, res) => {
   try {
-    const { comentarioId, utilizadorId } = req.body;
+    const id = req.params.id;
 
-    if (!comentarioId || !utilizadorId) {
-      return res.status(400).json({ success: false, message: "Campos obrigatórios ausentes." });
+    if (!id) {
+      return res.status(400).json({ success: false, message: "ID da avaliação é obrigatório." });
     }
 
-    const avalicao = await AvaliacaoComentario.findOne({ where: { comentarioId, utilizadorId } });
-    if (!avalicao) {
-      return res.status(404).json({ success: false, message: "Avalição não encontrada." });
+    const avaliacao = await AvaliacaoComentario.findByPk(id);
+    if (!avaliacao) {
+      return res.status(404).json({ success: false, message: "Avaliação não encontrada." });
     }
 
-    await like.destroy();
-    res.json({ success: true, message: "Avaliação removido com sucesso." });
+    await avaliacao.destroy();
+    res.json({ success: true, message: "Avaliação removida com sucesso." });
   } catch (error) {
     res.status(500).json({ success: false, message: "Erro ao remover avaliação.", details: error.message });
   }
