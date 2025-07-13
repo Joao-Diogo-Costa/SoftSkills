@@ -1,8 +1,10 @@
 const AreaC = require("./AreaC");
 const AulaSincrona = require("./AulaSincrona");
 const AulaAssincrona = require("./AulaAssincrona");
+const AvaliacaoComentario = require("./AvaliacaoComentario");
 const AvaliacaoCursoUtilizador = require("./AvaliacaoCursoUtilizador");
 const AvaliacaoForumUtilizador = require("./AvaliacaoForumUtilizador");
+const AvaliacaoForumFicheiro = require("./AvaliacaoForumFicheiro");
 const AvisoCurso = require("./AvisoCurso");
 const CategoriaC = require("./CategoriaC");
 const Certificado = require("./Certificado");
@@ -34,6 +36,12 @@ AulaAssincrona.belongsTo(Curso, { foreignKey: "cursoId" });
 // AulaSincrona
 AulaSincrona.belongsTo(Curso, { foreignKey: "cursoId" });
 
+// AvaliacaoComentario
+AvaliacaoComentario.belongsTo(Comentario, { foreignKey: 'comentarioId' });
+Comentario.hasMany(AvaliacaoComentario, { foreignKey: 'comentarioId' });
+AvaliacaoComentario.belongsTo(Utilizador, { foreignKey: 'utilizadorId' });
+Utilizador.hasMany(AvaliacaoComentario, { foreignKey: 'utilizadorId' });
+
 // AvaliacaoCursoUtilizador
 AvaliacaoCursoUtilizador.belongsTo(Utilizador, { foreignKey: 'utilizadorId'});
 Utilizador.hasMany(AvaliacaoCursoUtilizador, { foreignKey: 'utilizadorId'});
@@ -45,6 +53,12 @@ AvaliacaoForumUtilizador.belongsTo(Utilizador, { foreignKey: 'utilizadorId'});
 Utilizador.hasMany(AvaliacaoForumUtilizador, { foreignKey: 'utilizadorId'});
 AvaliacaoForumUtilizador.belongsTo(Forum, { foreignKey: 'forumId'});
 Forum.hasMany(AvaliacaoForumUtilizador, { foreignKey: 'forumId' });
+
+// AvaliacaoForumFicheiro
+AvaliacaoForumFicheiro.belongsTo(ForumFicheiro, { foreignKey: 'forumFicheiroId' });
+ForumFicheiro.hasMany(AvaliacaoForumFicheiro, { foreignKey: 'forumFicheiroId' });
+AvaliacaoForumFicheiro.belongsTo(Utilizador, { foreignKey: 'utilizadorId' });
+Utilizador.hasMany(AvaliacaoForumFicheiro, { foreignKey: 'utilizadorId' });
 
 // AvisoCurso
 AvisoCurso.belongsTo(Utilizador, { foreignKey: 'utilizadorId' });
@@ -168,8 +182,10 @@ module.exports = {
   ConteudoFicheiro,
   Inscricao,
   Certificado,
+  AvaliacaoComentario,
   AvaliacaoCursoUtilizador,
   AvaliacaoForumUtilizador,
+  AvaliacaoForumFicheiro,
   AvisoCurso,
   Notificacao,
   Forum,

@@ -1471,7 +1471,7 @@ async function initializeData() {
       },
       {
         nome: "Adobe Photoshop - Design para Web",
-        dataUpload: new Date(),
+        dataUpload: new Date("2024-05-20"),
         tipoCurso: "Presencial",
         vaga: 20,
         capacidadeMaxima: 20,
@@ -1481,10 +1481,14 @@ async function initializeData() {
         nivel: "Intermediário",
         pontuacao: 140,
         imagemBanner: "https://pint-2025.s3.eu-north-1.amazonaws.com/imagem-curso/photoshop_course.jpeg",
-        dataInicio: dataInicioCurso,
-        dataFim: dataFimCurso,
+        dataInicio: new Date("2024-06-01"),
+        dataFim: new Date("2024-07-01"),
+        dataLimiteInscricao: new Date("2024-05-29"),
+        visibilidadeStatus: "arquivado",
+        numParticipante: 0,
         topicoId: 44,
         formadorId: 2,
+        previousCursoId: null,
       },
 
       // Cursos para Adobe Illustrator (topicoId: 45)
@@ -2284,7 +2288,17 @@ async function initializeData() {
       },
     ]);
 
-    // await checkAndInsert(Inscricao, []);
+    await checkAndInsert(Inscricao, [
+      {
+        dataInscricao: new Date("2024-06-02"), 
+        notaFinal: 18.5,
+        concluido: true, 
+        dataConclusao: new Date("2024-07-01"), 
+        certificadoGerado: true, 
+        utilizadorId: 11,
+        cursoId: 40,
+      },
+    ]);
 
     // await checkAndInsert(AvaliacaoCursoUtilizador, []);
 

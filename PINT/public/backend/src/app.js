@@ -30,12 +30,17 @@ app.use("/aula-assincrona", aulaAssincronaRoute );
 const aulaSincronaRoute = require("./routes/aulaSincronaRoute");
 app.use("/aula-sincrona", aulaSincronaRoute);
 
+const avalicaoComentarioRoute = require("./routes/avaliacaoComentarioRoute.js");
+app.use("/avaliacao-comentario", avalicaoComentarioRoute);
+
 const avaliacaoRoute = require("./routes/avaliacaoCursoUtilizadorRoute");
 app.use("/avaliacao", avaliacaoRoute);
 
+const avaliacaoForumUtilizadorRoute = require("./routes/avaliacaoForumUtilizadorRoute");
+app.use("/avaliacao-forum", avaliacaoForumUtilizadorRoute);
 
-const avalicaoForumUtilizadorRoute = require("./routes/avalicaoForumUtilizadorRoute");
-app.use("/avaliacao-forum", avalicaoForumUtilizadorRoute);
+const avaliacaoForumFicheiroRoute = require("./routes/avaliacaoForumFicheiroRoute");
+app.use("/avaliacao-forum-ficheiro", avaliacaoForumFicheiroRoute);
 
 const avisoRoute = require("./routes/avisoRoute");
 app.use("/aviso", avisoRoute);
