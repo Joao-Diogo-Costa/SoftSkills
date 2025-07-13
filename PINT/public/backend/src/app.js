@@ -66,6 +66,9 @@ app.use("/curso", cursoRoute);
 const denunciaRoute = require("./routes/denunciaRoute");
 app.use("/denuncia", denunciaRoute);
 
+const denunciaFicheiroForumRoute = require("./routes/denunciaFicheiroForumRoute.js");
+app.use("/denuncia-forum-ficheiro", denunciaFicheiroForumRoute);
+
 const documentoAulaRoute = require("./routes/documentoAulaRoute");
 app.use("/documento-aula", documentoAulaRoute);
 

@@ -13,6 +13,7 @@ const Conteudo = require("./Conteudo");
 const ConteudoFicheiro = require("./ConteudoFicheiro");
 const Curso = require("./Curso");
 const Denuncia = require("./Denuncia");
+const DenunciaFicheiroForum = require("./DenunciaFicheiroForum");
 const DocumentoAula = require("./DocumentoAula");
 const Forum = require("./Forum");
 const ForumFicheiro = require("./ForumFicheiro");
@@ -99,6 +100,13 @@ Utilizador.hasMany(Denuncia, { foreignKey: "utilizadorId" });
 
 Denuncia.belongsTo(Comentario, { foreignKey: "comentarioId", as: "Comentario" });
 Comentario.hasMany(Denuncia, { foreignKey: "comentarioId"});
+
+// Denuncia Ficheiro Forum
+DenunciaFicheiroForum.belongsTo(ForumFicheiro, { foreignKey: 'forumFicheiroId' });
+ForumFicheiro.hasMany(DenunciaFicheiroForum, { foreignKey: 'forumFicheiroId' });
+
+DenunciaFicheiroForum.belongsTo(Utilizador, { foreignKey: 'utilizadorId' });
+Utilizador.hasMany(DenunciaFicheiroForum, { foreignKey: 'utilizadorId' });
 
 // DocumentoAula
 DocumentoAula.belongsTo(AulaAssincrona, { foreignKey: 'aulaAssincronaId'});
@@ -192,6 +200,7 @@ module.exports = {
   ForumFicheiro,
   Comentario,
   Denuncia,
+  DenunciaFicheiroForum,
   SugestaoForum,
   Tarefa,
   SubmissaoTarefa,

@@ -1,39 +1,28 @@
 var Sequelize = require("sequelize");
 var sequelize = require("./database");
 
-var Forum = require("./Forum");
+var ForumFicheiro = require("./ForumFicheiro");
 var Utilizador = require("./Utilizador");
 
-var ForumFicheiro = sequelize.define(
-  "FORUM_FICHEIRO",
+var DenunciaFicheiroForum = sequelize.define(
+  "DENUNCIA_FORUM_FICHEIRO",
   {
     id: {
       type: Sequelize.INTEGER,
-      field: "ID_FORUM_FICHEIRO",
-      autoIncrement: true,
+      field: "ID_DENUNCIA",
       primaryKey: true,
+      autoIncrement: true,
     },
 
-    nomeOriginal: {
+    descricao: {
       type: Sequelize.STRING,
-      field: "NOME_ORIGINAL_FICHEIRO",
+      field: "DESCRICAO",
       allowNull: false,
     },
 
-    url: {
-      type: Sequelize.STRING,
-      field: "URL_FICHEIRO",
-      allowNull: false,
-    },
-    tipo: {
-      type: Sequelize.STRING,
-      allowNull: true,
-      field: "TIPO_FICHEIRO",
-    },
-
-    dataUpload: {
+    dataDenuncia: {
       type: Sequelize.DATE,
-      field: "DATA_UPLOAD",
+      field: "DATA_DENUNCIA",
       allowNull: false,
       defaultValue: Sequelize.NOW,
     },
@@ -49,13 +38,13 @@ var ForumFicheiro = sequelize.define(
       onDelete: "CASCADE",
     },
 
-    forumId: {
+    forumFicheiroId: {
       type: Sequelize.INTEGER,
-      field: "ID_FORUM",
+      field: "ID_FORUM_FICHEIRO",
       allowNull: false,
       references: {
-        model: "FORUM",
-        key: "ID_FORUM",
+        model: "FORUM_FICHEIRO",
+        key: "ID_FORUM_FICHEIRO",
       },
       onDelete: "CASCADE",
     },
@@ -66,4 +55,4 @@ var ForumFicheiro = sequelize.define(
   }
 );
 
-module.exports = ForumFicheiro;
+module.exports = DenunciaFicheiroForum;
