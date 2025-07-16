@@ -8,6 +8,9 @@ const upload = require("../config/multerConfig");
 // GET: Listar todos os cursos
 router.get("/list", cursoController.curso_list);
 
+// GET: Listar todos os cursos ativos
+router.get('/list/ativos', cursoController.curso_list_ativos);
+
 // GET: Listar cursos do formador 
 router.get("/list-formador", middleware.checkToken, cursoController.listarCursosPorFormador);
 
