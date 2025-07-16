@@ -47,6 +47,29 @@ controllers.curso_list = async (req, res) => {
   }
 };
 
+// Listar cursos ativos e visíveis
+controllers.curso_list_ativos = async (req, res) => {
+  try {
+    const cursos = await Curso.findAll({
+      where: {
+        estado: 0,
+        [Op.or]: [
+          { visibilidadeStatus: "visivel" },
+        ]
+      },
+      include: TopicoC,
+      order: [["dataUpload", "DESC"]],
+    });
+    res.json({ success: true, data: cursos });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Erro ao listar cursos ativos e visíveis.",
+      details: error.message,
+    });
+  }
+};
+
 controllers.listarCursosPorCategoria = async (req, res) => {
   try {
     const { idCategoria } = req.params;
