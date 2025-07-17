@@ -88,13 +88,15 @@ controllers.utilizador_create = async (req, res) => {
         });
     }
 
+    const DEFAULT_PROFILE_URL = "https://pint-2025.s3.eu-north-1.amazonaws.com/imagem-perfil/default_profile_pic.jpg";
+
     const novoUtilizador = await Utilizador.create({
       nomeUtilizador,
       dataNasc,
       nTel,
       email,
       password,
-      imagemPerfil: imagemPerfil ?? null,
+      imagemPerfil: imagemPerfil ?? DEFAULT_PROFILE_URL,
       role: role ?? "formando",
     });
 
