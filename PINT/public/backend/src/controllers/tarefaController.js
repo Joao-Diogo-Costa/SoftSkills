@@ -2,6 +2,17 @@ const Tarefa = require("../model/Tarefa");
 const Curso = require("../model/Curso");
 const Utilizador = require("../model/Utilizador");
 const TarefaFicheiro = require("../model/TarefaFicheiro");
+const Inscricao = require("../model/Inscricao"); 
+const Notificacao = require("../model/Notificacao");
+const admin = require('firebase-admin');
+const serviceAccount = require('../config/serviceAccountKey.json');
+
+if (!admin.apps.length) {
+  admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+  });
+}
+
 
 const controllers = {};
 
@@ -76,6 +87,49 @@ controllers.tarefa_create = async (req, res) => {
       utilizadorId,
       cursoId,
     });
+    
+    try {
+      const inscricoesDoCurso = await Inscricao.findAll({
+        where: { cursoId },
+        attributes: ["utilizadorId"],
+      });
+
+      const utilizadoresIds = inscricoesDoCurso.map(i => i.utilizadorId);
+      const utilizadores = await Utilizador.findAll({
+        where: { id: utilizadoresIds },
+        attributes: ["email", "nomeUtilizador", "tokenFCM"],
+      });
+
+      // Criar notificações na base de dados
+      for (const inscricao of inscricoesDoCurso) {
+        await Notificacao.create({
+          utilizadorId: inscricao.utilizadorId,
+          titulo: `Nova tarefa: ${titulo}`,
+          mensagem: `"${descricao.substring(0, 100)}..."`,
+          dataEnvio: new Date(),
+          lida: false,
+          cursoId: cursoId,
+          tipo: "nova_tarefa",
+        });
+      }
+
+      // Enviar notificações push
+      const tokens = utilizadores.map(u => u.tokenFCM).filter(Boolean);
+      if (tokens.length > 0) {
+        for (const token of tokens) {
+          const message = {
+            notification: {
+              title: `Nova tarefa: ${titulo}`,
+              body: descricao.substring(0, 100) + "...",
+            },
+            token: token,
+          };
+          await admin.messaging().send(message);
+        }
+      }
+    } catch (pushError) {
+      console.error("Erro ao enviar push notification de tarefa:", pushError);
+    }
 
     res.status(201).json({ success: true, data: novaTarefa });
   } catch (error) {
