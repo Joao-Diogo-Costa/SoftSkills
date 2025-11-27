@@ -5,12 +5,14 @@ const TarefaFicheiro = require("../model/TarefaFicheiro");
 const Inscricao = require("../model/Inscricao"); 
 const Notificacao = require("../model/Notificacao");
 const admin = require('firebase-admin');
-const serviceAccount = require('../config/serviceAccountKey.json');
+const fs = require('fs');
 
-if (!admin.apps.length) {
-  admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
-  });
+let serviceAccount;
+if (fs.existsSync('/etc/secrets/serviceAccountKey.json')) {
+    serviceAccount = require('/etc/secrets/serviceAccountKey.json');
+} 
+else {
+    serviceAccount = require('../config/serviceAccountKey.json');
 }
 
 
@@ -186,3 +188,4 @@ controllers.tarefa_delete = async (req, res) => {
 };
 
 module.exports = controllers;
+

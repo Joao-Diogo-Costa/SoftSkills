@@ -5,9 +5,16 @@ const Inscricao = require("../model/Inscricao");
 const Notificacao = require("../model/Notificacao");
 const nodemailer = require("nodemailer");
 const admin = require('firebase-admin');
-//const serviceAccount = require('../config/serviceAccountKey.json');
 require("dotenv").config();
+const fs = require('fs');
 
+let serviceAccount;
+if (fs.existsSync('/etc/secrets/serviceAccountKey.json')) {
+    serviceAccount = require('/etc/secrets/serviceAccountKey.json');
+} 
+else {
+    serviceAccount = require('../config/serviceAccountKey.json');
+}
 if (!admin.apps.length) {
   admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
@@ -288,3 +295,4 @@ controllers.aviso_delete = async (req, res) => {
 };
 
 module.exports = controllers;
+
