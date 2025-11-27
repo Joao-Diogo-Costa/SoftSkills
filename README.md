@@ -35,6 +35,6 @@ Foi desenvolvido no âmbito da unidade curricular de **Projeto Integrado** no 2.
 * **Dashboard do Instrutor:** Criação e edição de cursos, upload de vídeos e gestão de módulos.
 * **Player de Vídeo:** Interface dedicada para o aluno assistir às aulas e marcar como "concluído".
 * **Inscrição:** Fluxo de inscrição em novos cursos.
+__
 
----
 
