@@ -13,6 +13,8 @@ Pedro Fernandes
 ![Status do Projeto](https://img.shields.io/badge/Status-Concluído-success)
 ![Stack](https://img.shields.io/badge/Stack-PERN-blue)
 
+Link de Acesso ->  https://softskills-demo.vercel.app/
+
 ## 📖 Sobre o Projeto
 
 Este projeto consiste numa plataforma completa (Web e Mobile) para gestão e visualização de cursos online. O objetivo foi criar uma solução robusta que permitisse a instrutores publicar conteúdos e a alunos assistir às aulas, realizar inscrições e visualizar o seu progresso.
