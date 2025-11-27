@@ -1,4 +1,4 @@
-# PINT
+# SoftSkills
 Projeto WEB de Projeto Integrado realizado por:
 João Costa,
 Carlos Almeida,
