@@ -5,7 +5,7 @@ const Inscricao = require("../model/Inscricao");
 const Notificacao = require("../model/Notificacao");
 const nodemailer = require("nodemailer");
 const admin = require('firebase-admin');
-const serviceAccount = require('../config/serviceAccountKey.json');
+//const serviceAccount = require('../config/serviceAccountKey.json');
 require("dotenv").config();
 
 if (!admin.apps.length) {
