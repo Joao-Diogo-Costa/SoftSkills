@@ -1,0 +1,6 @@
+# Ficheiros de configuração e credenciais
+.env
+/src/config/serviceAccountKey.json
+
+# Pasta de dependências
+node_modules
